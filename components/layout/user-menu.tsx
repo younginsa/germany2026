@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LogOut, UserRound, Users } from "lucide-react";
+import { LogOut, Settings, UserRound, Users } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -83,6 +84,12 @@ export function UserMenu() {
           </>
         )}
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href="/settings">
+            <Settings className="h-4 w-4" />
+            설정
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={logout}>
           <LogOut className="h-4 w-4" />
           로그아웃
