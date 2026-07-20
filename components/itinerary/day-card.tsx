@@ -1,0 +1,259 @@
+"use client";
+
+/**
+ * DayCard — 펼침/접힘 가능한 일차 카드.
+ * 모든 텍스트 섹션은 CommentableText를 통해 렌더링되어
+ * 드래그-댓글과 하이라이트를 지원합니다.
+ */
+
+import { useMemo, type ReactNode } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, MessageCircle } from "lucide-react";
+import { useComments } from "@/hooks/use-app-data";
+import { useInlineComments } from "@/hooks/use-inline-comments";
+import { CommentableText } from "@/components/itinerary/commentable-text";
+import { Card } from "@/components/ui/card";
+import { cn, formatDateKo } from "@/lib/utils";
+import type { ItineraryDay } from "@/lib/types";
+
+function hasValue(v: string): boolean {
+  const t = v.trim();
+  return t.length > 0 && t !== "-";
+}
+
+function Section({
+  icon,
+  label,
+  className,
+  children,
+}: {
+  icon: string;
+  label: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <section className={className}>
+      <h4 className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold tracking-tight text-muted-foreground">
+        <span aria-hidden>{icon}</span>
+        {label}
+      </h4>
+      <div className="text-sm leading-relaxed">{children}</div>
+    </section>
+  );
+}
+
+export function DayCard({ day }: { day: ItineraryDay }) {
+  const { isDayExpanded, toggleDay, openPanel, showResolved } = useInlineComments();
+  const allComments = useComments();
+  const expanded = isDayExpanded(day.id);
+
+  const commentCount = useMemo(
+    () =>
+      allComments.filter(
+        (c) =>
+          c.anchor.targetType === "itinerary" &&
+          c.anchor.targetId === day.id &&
+          (showResolved || !c.resolved)
+      ).length,
+    [allComments, day.id, showResolved]
+  );
+
+  const preview = hasValue(day.accommodation)
+    ? `🏨 ${day.accommodation}`
+    : hasValue(day.transportation)
+      ? `🚗 ${day.transportation}`
+      : "";
+
+  return (
+    <Card
+      id={`day-card-${day.id}`}
+      className={cn(
+        "scroll-mt-24 overflow-hidden transition-shadow",
+        expanded && "shadow-[var(--shadow-lifted)]"
+      )}
+    >
+      {/* 헤더 (접힘 상태 요약) */}
+      <div className="relative">
+        <button
+          type="button"
+          onClick={() => toggleDay(day.id)}
+          aria-expanded={expanded}
+          className="flex w-full items-center gap-3 p-4 pr-20 text-left transition-colors hover:bg-secondary/40 sm:gap-4 sm:p-5 sm:pr-24"
+        >
+          <span className="flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-xl bg-accent text-accent-foreground">
+            <span className="text-[9px] font-semibold leading-none tracking-widest">DAY</span>
+            <span className="mt-0.5 text-base font-bold leading-none tabular-nums">
+              {day.dayNumber}
+            </span>
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-xs text-muted-foreground">
+              {formatDateKo(day.date, { weekday: true })}
+            </span>
+            <span className="mt-0.5 block truncate text-base font-semibold">
+              <span aria-hidden className="mr-1">
+                {day.cityEmoji}
+              </span>
+              {day.city}
+            </span>
+            {!expanded && preview && (
+              <span className="mt-0.5 block truncate text-xs text-muted-foreground">
+                {preview}
+              </span>
+            )}
+          </span>
+        </button>
+
+        <div className="pointer-events-none absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-1.5 sm:right-5">
+          {commentCount > 0 && (
+            <button
+              type="button"
+              onClick={() => openPanel(day.id)}
+              aria-label={`${day.dayNumber}일차 댓글 ${commentCount}개 보기`}
+              className="pointer-events-auto flex items-center gap-1 rounded-full bg-[var(--highlight)] px-2 py-1 text-[11px] font-semibold text-foreground/80 transition-transform hover:scale-105 active:scale-95"
+            >
+              <MessageCircle className="size-3" />
+              {commentCount}
+            </button>
+          )}
+          <motion.span
+            animate={{ rotate: expanded ? 180 : 0 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="text-muted-foreground"
+          >
+            <ChevronDown className="size-4" />
+          </motion.span>
+        </div>
+      </div>
+
+      {/* 펼침 콘텐츠 */}
+      <AnimatePresence initial={false}>
+        {expanded && (
+          <motion.div
+            key="content"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.25, 0.8, 0.35, 1] }}
+            className="overflow-hidden"
+          >
+            <div className="grid gap-x-6 gap-y-4 border-t px-4 pb-5 pt-4 sm:grid-cols-2 sm:px-5">
+              <Section icon="📅" label="날짜 / 도시">
+                <span className="text-muted-foreground">
+                  {formatDateKo(day.date, { weekday: true })} ·{" "}
+                </span>
+                <span aria-hidden className="mr-1">
+                  {day.cityEmoji}
+                </span>
+                <CommentableText dayId={day.id} fieldKey="city" text={day.city} />
+              </Section>
+
+              {hasValue(day.accommodation) && (
+                <Section icon="🏨" label="숙소">
+                  <CommentableText
+                    dayId={day.id}
+                    fieldKey="accommodation"
+                    text={day.accommodation}
+                  />
+                </Section>
+              )}
+
+              {hasValue(day.transportation) && (
+                <Section icon="🚗" label="이동" className="sm:col-span-2">
+                  <CommentableText
+                    dayId={day.id}
+                    fieldKey="transportation"
+                    text={day.transportation}
+                  />
+                </Section>
+              )}
+
+              {day.schedule.length > 0 && (
+                <Section icon="🕐" label="일정" className="sm:col-span-2">
+                  <ol className="space-y-2.5">
+                    {day.schedule.map((item, i) => (
+                      <li key={i} className="flex items-start gap-3">
+                        <span className="mt-0.5 w-12 shrink-0 rounded-md bg-secondary py-0.5 text-center text-[11px] font-medium tabular-nums text-secondary-foreground">
+                          {item.time}
+                        </span>
+                        <CommentableText
+                          dayId={day.id}
+                          fieldKey={`schedule.${i}`}
+                          text={`${item.title}${item.description ? ` — ${item.description}` : ""}`}
+                          className="min-w-0 flex-1"
+                        />
+                      </li>
+                    ))}
+                  </ol>
+                </Section>
+              )}
+
+              {day.restaurants.some(hasValue) && (
+                <Section icon="🍽" label="맛집" className="sm:col-span-2">
+                  <ul className="space-y-1.5">
+                    {day.restaurants.map((restaurant, i) =>
+                      hasValue(restaurant) ? (
+                        <li key={i} className="flex items-start gap-2">
+                          <span aria-hidden className="mt-1.5 size-1 shrink-0 rounded-full bg-muted-foreground/60" />
+                          <CommentableText
+                            dayId={day.id}
+                            fieldKey={`restaurants.${i}`}
+                            text={restaurant}
+                            className="min-w-0 flex-1"
+                          />
+                        </li>
+                      ) : null
+                    )}
+                  </ul>
+                </Section>
+              )}
+
+              {hasValue(day.christmasMarket) && (
+                <Section icon="🎄" label="크리스마스 마켓" className="sm:col-span-2">
+                  <CommentableText
+                    dayId={day.id}
+                    fieldKey="christmasMarket"
+                    text={day.christmasMarket}
+                  />
+                </Section>
+              )}
+
+              {hasValue(day.parking) && (
+                <Section icon="🅿️" label="주차">
+                  <CommentableText dayId={day.id} fieldKey="parking" text={day.parking} />
+                </Section>
+              )}
+
+              {hasValue(day.notes) && (
+                <Section icon="📝" label="메모">
+                  <CommentableText dayId={day.id} fieldKey="notes" text={day.notes} />
+                </Section>
+              )}
+
+              {hasValue(day.rentalCarNotes) && (
+                <Section icon="🚙" label="렌터카 메모">
+                  <CommentableText
+                    dayId={day.id}
+                    fieldKey="rentalCarNotes"
+                    text={day.rentalCarNotes}
+                  />
+                </Section>
+              )}
+
+              {hasValue(day.winterDrivingNotes) && (
+                <Section icon="❄️" label="겨울 운전 참고">
+                  <CommentableText
+                    dayId={day.id}
+                    fieldKey="winterDrivingNotes"
+                    text={day.winterDrivingNotes}
+                  />
+                </Section>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </Card>
+  );
+}
