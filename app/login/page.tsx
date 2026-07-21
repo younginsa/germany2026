@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Mail, Snowflake, Sparkles, TreePine } from "lucide-react";
@@ -21,6 +21,16 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // 이미 로그인된 상태면 홈으로 (매직 링크 콜백 후 재방문 등)
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+    const sb = getSupabaseBrowserClient();
+    if (!sb) return;
+    sb.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) router.replace("/");
+    });
+  }, [router]);
 
   async function sendMagicLink(e: React.FormEvent) {
     e.preventDefault();

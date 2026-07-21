@@ -49,6 +49,8 @@ class TripStore {
   private data: AppData = seedData;
   private listeners = new Set<Listener>();
   private loaded = false;
+  private authReady = false;
+  private realtimeReady = false;
   private currentUserId: string = DEMO_CURRENT_USER_ID;
 
   /* ─── 구독 (useSyncExternalStore 용) ─────────────── */
@@ -79,8 +81,7 @@ class TripStore {
     if (savedUser) this.currentUserId = savedUser;
 
     if (isSupabaseConfigured) {
-      void this.hydrateFromSupabase();
-      this.subscribeRealtime();
+      void this.initSupabase();
     } else {
       const raw = window.localStorage.getItem(LS_KEY);
       if (raw) {
@@ -125,17 +126,90 @@ class TripStore {
 
   /* ─── Supabase 동기화 ────────────────────────────── */
 
+  /**
+   * Supabase 모드 부팅.
+   * 로그인 세션이 있을 때만 데이터를 읽고 씁니다 — 로그인 전에는
+   * RLS가 모든 요청을 거부하므로(401) 아무 것도 시도하지 않습니다.
+   * 매직 링크 로그인 완료(onAuthStateChange) 시 자동으로 합류/하이드레이션합니다.
+   */
+  private async initSupabase() {
+    const sb = getSupabaseBrowserClient();
+    if (!sb) return;
+
+    sb.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) void this.onAuthenticated();
+    });
+
+    const {
+      data: { session },
+    } = await sb.auth.getSession();
+    if (session?.user) void this.onAuthenticated();
+  }
+
+  /**
+   * 로그인 사용자를 공유 여행의 멤버로 등록(합류)한 뒤 데이터를 가져옵니다.
+   * 여행이 아직 없으면 최초 로그인 사용자가 트립+시드를 생성합니다.
+   * (멤버 등록·최초 생성 모두 마이그레이션의 RLS 정책이 허용)
+   */
+  private async onAuthenticated() {
+    if (this.authReady) return;
+    this.authReady = true;
+
+    const sb = getSupabaseBrowserClient();
+    if (!sb) {
+      this.authReady = false;
+      return;
+    }
+    const {
+      data: { user },
+    } = await sb.auth.getUser();
+    if (!user) {
+      this.authReady = false;
+      return;
+    }
+
+    const tripId = seedData.trip.id;
+
+    // 트립 생성 시도 — 성공하면 "내가 첫 사용자"이므로 시드를 채웁니다.
+    // 이미 있으면 유니크 충돌(23505)로 실패 → 시드하지 않고 하이드레이션.
+    const { error: insErr } = await sb
+      .from("trips")
+      .insert({ id: tripId, payload: seedData.trip });
+    const iCreatedTrip = !insErr;
+    if (insErr && insErr.code !== "23505") {
+      console.warn("[supabase] trip 생성 실패:", insErr.message);
+    }
+
+    // 공유 여행에 본인 등록 (멱등). FK 때문에 트립이 존재한 뒤에 실행.
+    await sb.from("trip_members").upsert(
+      { user_id: user.id, trip_id: tripId, profile_id: this.currentUserId },
+      { onConflict: "user_id,trip_id", ignoreDuplicates: true }
+    );
+
+    if (iCreatedTrip) {
+      await this.seedChildTables(tripId);
+      this.data = deepClone(seedData);
+      this.emit();
+    } else {
+      await this.hydrateFromSupabase();
+    }
+
+    if (!this.realtimeReady) {
+      this.realtimeReady = true;
+      this.subscribeRealtime();
+    }
+  }
+
+  /** 모든 도메인 테이블을 읽어 메모리 상태로 반영 (트립은 이미 존재한다고 가정) */
   private async hydrateFromSupabase() {
     const sb = getSupabaseBrowserClient();
     if (!sb) return;
 
-    const { data: tripRows } = await sb.from("trips").select("id, payload").limit(1);
-    if (!tripRows || tripRows.length === 0) {
-      // 빈 프로젝트 → 시드 데이터 업로드
-      await this.seedSupabase();
-      return;
-    }
-    const next: AppData = { ...deepClone(seedData), trip: tripRows[0].payload as Trip };
+    const { data: tripRows } = await sb.from("trips").select("payload").limit(1);
+    const next: AppData = {
+      ...deepClone(seedData),
+      trip: (tripRows?.[0]?.payload as Trip) ?? seedData.trip,
+    };
     await Promise.all(
       (Object.keys(TABLE_OF) as EntityKey[]).map(async (key) => {
         const { data: rows } = await sb.from(TABLE_OF[key]).select("payload");
@@ -148,11 +222,10 @@ class TripStore {
     this.emit();
   }
 
-  private async seedSupabase() {
+  /** 최초 생성자만 호출 — 시드의 자식 행들을 업로드 */
+  private async seedChildTables(tripId: string) {
     const sb = getSupabaseBrowserClient();
     if (!sb) return;
-    const tripId = seedData.trip.id;
-    await sb.from("trips").upsert({ id: tripId, payload: seedData.trip });
     for (const key of Object.keys(TABLE_OF) as EntityKey[]) {
       const rows = (seedData[key] as { id: string }[]).map((row) => ({
         id: row.id,
@@ -161,8 +234,6 @@ class TripStore {
       }));
       if (rows.length) await sb.from(TABLE_OF[key]).upsert(rows);
     }
-    this.data = deepClone(seedData);
-    this.emit();
   }
 
   private subscribeRealtime() {
@@ -252,7 +323,23 @@ class TripStore {
   importAll(data: AppData) {
     this.data = deepClone(data);
     this.afterChange();
-    if (isSupabaseConfigured) void this.seedSupabase();
+    if (isSupabaseConfigured) void this.uploadAll();
+  }
+
+  /** 현재 메모리 상태 전체를 Supabase에 업로드 (가져오기/초기화 시) */
+  private async uploadAll() {
+    const sb = getSupabaseBrowserClient();
+    if (!sb) return;
+    const tripId = this.data.trip.id;
+    await sb.from("trips").upsert({ id: tripId, payload: this.data.trip });
+    for (const key of Object.keys(TABLE_OF) as EntityKey[]) {
+      const rows = (this.data[key] as { id: string }[]).map((row) => ({
+        id: row.id,
+        trip_id: tripId,
+        payload: row,
+      }));
+      if (rows.length) await sb.from(TABLE_OF[key]).upsert(rows);
+    }
   }
 
   resetToSeed() {
