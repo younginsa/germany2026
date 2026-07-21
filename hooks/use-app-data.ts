@@ -26,6 +26,15 @@ export function useAppData(): AppData {
   );
 }
 
+/** 로그인 계정 ↔ 프로필 연결 상태 (프로필 선택 다이얼로그용) */
+export function useAuthProfileState() {
+  return useSyncExternalStore(
+    tripStore.subscribe,
+    tripStore.getAuthState,
+    tripStore.getAuthState
+  );
+}
+
 export function useTrip() {
   return useAppData().trip;
 }

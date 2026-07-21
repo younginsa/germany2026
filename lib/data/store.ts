@@ -45,12 +45,29 @@ function deepClone<T>(v: T): T {
     : JSON.parse(JSON.stringify(v));
 }
 
+/** 로그인 계정 ↔ 프로필 연결 상태 (프로필 선택 다이얼로그용) */
+export interface AuthProfileState {
+  /** 로그인은 됐지만 아직 어떤 프로필인지 연결되지 않음 */
+  needsProfileLink: boolean;
+  /** Google 계정에서 가져온 표시 이름 (새 프로필 이름 기본값) */
+  suggestedName: string;
+  email: string;
+}
+
+const AUTH_STATE_INITIAL: AuthProfileState = {
+  needsProfileLink: false,
+  suggestedName: "",
+  email: "",
+};
+
 class TripStore {
   private data: AppData = seedData;
   private listeners = new Set<Listener>();
   private loaded = false;
   private authReady = false;
   private realtimeReady = false;
+  private authUserId: string | null = null;
+  private authState: AuthProfileState = AUTH_STATE_INITIAL;
   private currentUserId: string = DEMO_CURRENT_USER_ID;
 
   /* ─── 구독 (useSyncExternalStore 용) ─────────────── */
@@ -64,6 +81,13 @@ class TripStore {
   getServerSnapshot = (): AppData => seedData;
 
   getCurrentUserId = () => this.currentUserId;
+
+  getAuthState = (): AuthProfileState => this.authState;
+
+  private setAuthState(partial: Partial<AuthProfileState>) {
+    this.authState = { ...this.authState, ...partial };
+    this.emit();
+  }
 
   private emit() {
     this.data = { ...this.data };
@@ -112,7 +136,24 @@ class TripStore {
   setCurrentUser(id: string) {
     this.currentUserId = id;
     if (typeof window !== "undefined") window.localStorage.setItem(LS_USER_KEY, id);
+    // Supabase 모드: 계정 ↔ 프로필 연결을 서버에도 기록해 기기 간에 유지
+    if (this.authUserId) {
+      const sb = getSupabaseBrowserClient();
+      if (sb) {
+        void sb
+          .from("trip_members")
+          .update({ profile_id: id })
+          .eq("user_id", this.authUserId)
+          .eq("trip_id", this.data.trip.id);
+      }
+    }
     this.emit();
+  }
+
+  /** 프로필 선택 다이얼로그에서 호출 — 연결 후 다이얼로그 닫기 */
+  linkProfile(profileId: string) {
+    this.setCurrentUser(profileId);
+    this.setAuthState({ needsProfileLink: false });
   }
 
   private persistLocal() {
@@ -181,8 +222,9 @@ class TripStore {
     }
 
     // 공유 여행에 본인 등록 (멱등). FK 때문에 트립이 존재한 뒤에 실행.
+    // profile_id는 아직 미정(null) — 프로필 선택 다이얼로그에서 연결합니다.
     await sb.from("trip_members").upsert(
-      { user_id: user.id, trip_id: tripId, profile_id: this.currentUserId },
+      { user_id: user.id, trip_id: tripId, profile_id: null },
       { onConflict: "user_id,trip_id", ignoreDuplicates: true }
     );
 
@@ -194,9 +236,47 @@ class TripStore {
       await this.hydrateFromSupabase();
     }
 
+    this.authUserId = user.id;
+    await this.resolveProfileLink(user.id, tripId, {
+      suggestedName:
+        (user.user_metadata?.full_name as string | undefined) ??
+        (user.user_metadata?.name as string | undefined) ??
+        user.email?.split("@")[0] ??
+        "",
+      email: user.email ?? "",
+    });
+
     if (!this.realtimeReady) {
       this.realtimeReady = true;
       this.subscribeRealtime();
+    }
+  }
+
+  /**
+   * 서버에 기록된 계정 ↔ 프로필 연결을 확인합니다.
+   * 연결이 있으면 그 프로필로 로그인 처리, 없으면 선택 다이얼로그 표시.
+   */
+  private async resolveProfileLink(
+    userId: string,
+    tripId: string,
+    google: { suggestedName: string; email: string }
+  ) {
+    const sb = getSupabaseBrowserClient();
+    if (!sb) return;
+    const { data: rows } = await sb
+      .from("trip_members")
+      .select("profile_id")
+      .eq("user_id", userId)
+      .eq("trip_id", tripId)
+      .limit(1);
+    const linkedId = rows?.[0]?.profile_id as string | null | undefined;
+
+    if (linkedId && this.data.profiles.some((p) => p.id === linkedId)) {
+      this.currentUserId = linkedId;
+      if (typeof window !== "undefined") window.localStorage.setItem(LS_USER_KEY, linkedId);
+      this.emit();
+    } else {
+      this.setAuthState({ needsProfileLink: true, ...google });
     }
   }
 
