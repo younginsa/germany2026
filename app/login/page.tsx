@@ -39,17 +39,6 @@ function GoogleIcon({ className }: { className?: string }) {
   );
 }
 
-function KakaoIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" aria-hidden>
-      <path
-        fill="#191600"
-        d="M12 3C6.48 3 2 6.58 2 11c0 2.83 1.87 5.31 4.68 6.72-.2.72-.74 2.66-.85 3.07-.13.51.19.5.4.37.16-.11 2.6-1.77 3.66-2.49.69.1 1.4.15 2.11.15 5.52 0 10-3.58 10-8s-4.48-8-10-8Z"
-      />
-    </svg>
-  );
-}
-
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -66,15 +55,15 @@ export default function LoginPage() {
     });
   }, [router]);
 
-  async function signInWithProvider(provider: "google" | "kakao") {
+  async function signInWithGoogle() {
     const sb = getSupabaseBrowserClient();
     if (!sb) return;
     setLoading(true);
     const { error } = await sb.auth.signInWithOAuth({
-      provider,
+      provider: "google",
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
-    // 성공 시 브라우저가 제공자 페이지로 리다이렉트됩니다.
+    // 성공 시 브라우저가 구글 페이지로 리다이렉트됩니다.
     if (error) {
       setLoading(false);
       toast.error("로그인을 시작할 수 없습니다. 잠시 후 다시 시도해주세요.");
@@ -145,22 +134,12 @@ export default function LoginPage() {
                 <div className="space-y-3">
                   <button
                     type="button"
-                    onClick={() => signInWithProvider("google")}
+                    onClick={signInWithGoogle}
                     disabled={loading}
                     className="flex w-full items-center justify-center gap-2.5 rounded-xl border bg-card px-4 py-3 text-sm font-medium shadow-[var(--shadow-soft)] transition-all hover:bg-secondary/50 active:scale-[0.99] disabled:opacity-60"
                   >
                     <GoogleIcon className="h-5 w-5" />
                     Google로 로그인
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => signInWithProvider("kakao")}
-                    disabled={loading}
-                    className="flex w-full items-center justify-center gap-2.5 rounded-xl px-4 py-3 text-sm font-medium text-[#191600] shadow-[var(--shadow-soft)] transition-all hover:brightness-95 active:scale-[0.99] disabled:opacity-60"
-                    style={{ backgroundColor: "#FEE500" }}
-                  >
-                    <KakaoIcon className="h-5 w-5" />
-                    카카오로 로그인
                   </button>
 
                   <div className="flex items-center gap-3 py-1">
