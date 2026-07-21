@@ -9,12 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { seedData } from "@/lib/data/seed";
-import { tripStore } from "@/lib/data/store";
-import { initialsOf } from "@/lib/utils";
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
@@ -87,12 +83,9 @@ export default function LoginPage() {
     }
   }
 
-  function enterAsDemo(profileId: string) {
-    tripStore.setCurrentUser(profileId);
+  function enterAsDemo() {
     router.push("/");
   }
-
-  const adults = seedData.profiles.filter((p) => p.role !== "아이");
 
   return (
     <main className="relative flex min-h-dvh items-center justify-center overflow-hidden px-4">
@@ -113,7 +106,7 @@ export default function LoginPage() {
           </div>
           <h1 className="text-2xl font-bold tracking-tight">독일 크리스마스 마켓 여행</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            두 가족이 함께 만드는 여행 워크스페이스
+            함께 만드는 여행 워크스페이스
           </p>
         </div>
 
@@ -175,31 +168,12 @@ export default function LoginPage() {
               <div className="space-y-4">
                 <div className="flex items-center gap-2 rounded-xl bg-accent px-3 py-2 text-xs text-accent-foreground">
                   <Sparkles className="h-3.5 w-3.5 shrink-0" />
-                  데모 모드 — 프로필을 선택해 바로 시작하세요. Supabase 연결 시 이메일
-                  로그인으로 전환됩니다.
+                  데모 모드 — 로그인 없이 이 브라우저에만 저장됩니다. Supabase 연결 시
+                  Google 로그인으로 전환됩니다.
                 </div>
-                <div className="grid grid-cols-2 gap-2">
-                  {adults.map((p) => {
-                    const family = seedData.families.find((f) => f.id === p.familyId);
-                    return (
-                      <button
-                        key={p.id}
-                        onClick={() => enterAsDemo(p.id)}
-                        className="group flex items-center gap-3 rounded-xl border bg-card p-3 text-left transition-all hover:border-primary/40 hover:shadow-[var(--shadow-soft)] active:scale-[0.98]"
-                      >
-                        <Avatar>
-                          <AvatarFallback hue={family?.hue}>{initialsOf(p.name)}</AvatarFallback>
-                        </Avatar>
-                        <div className="min-w-0">
-                          <p className="truncate text-sm font-medium">{p.name}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {family?.name} · {p.role}
-                          </p>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
+                <Button className="w-full" size="lg" onClick={enterAsDemo}>
+                  시작하기
+                </Button>
               </div>
             )}
           </CardContent>

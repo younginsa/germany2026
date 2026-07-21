@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     default: "독일 2026 · 여행 워크스페이스",
     template: "%s · 독일 2026",
   },
-  description: "두 가족이 함께 만드는 독일 크리스마스 마켓 여행 계획",
+  description: "함께 만드는 독일 크리스마스 마켓 여행 계획",
 };
 
 export const viewport: Viewport = {

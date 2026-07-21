@@ -6,7 +6,6 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   tripStore,
   useCurrentUser,
-  useFamilyById,
   useProfileById,
 } from "@/hooks/use-app-data";
 import type { Post } from "@/lib/types";
@@ -19,7 +18,6 @@ import { cn, initialsOf } from "@/lib/utils";
 export function PollOptions({ post }: { post: Post }) {
   const me = useCurrentUser();
   const profileById = useProfileById();
-  const familyById = useFamilyById();
 
   const options = post.pollOptions ?? [];
   const totalVotes = options.reduce((sum, o) => sum + o.voterIds.length, 0);
@@ -84,10 +82,9 @@ export function PollOptions({ post }: { post: Post }) {
                 <span className="flex shrink-0 -space-x-1.5">
                   {option.voterIds.slice(0, 4).map((voterId) => {
                     const p = profileById(voterId);
-                    const fam = p ? familyById(p.familyId) : undefined;
                     return (
                       <Avatar key={voterId} className="size-4 border border-card">
-                        <AvatarFallback hue={fam?.hue} className="text-[7px]">
+                        <AvatarFallback hue={p?.hue} className="text-[7px]">
                           {p ? initialsOf(p.name) : "?"}
                         </AvatarFallback>
                       </Avatar>

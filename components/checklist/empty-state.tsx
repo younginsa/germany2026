@@ -45,7 +45,7 @@ export function EmptyState({ onCreate }: EmptyStateProps) {
       <div className="space-y-1.5">
         <h2 className="text-lg font-semibold tracking-tight">아직 체크리스트가 없어요</h2>
         <p className="mx-auto max-w-sm text-sm leading-relaxed text-muted-foreground">
-          여권, 보험, 짐 싸기까지 — 두 가족이 함께 준비 상황을
+          여권, 보험, 짐 싸기까지 — 함께 가는 사람들과 준비 상황을
           <br className="hidden sm:block" /> 나란히 체크할 수 있는 표를 만들어 보세요.
         </p>
       </div>

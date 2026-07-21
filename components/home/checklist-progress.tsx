@@ -4,31 +4,32 @@ import Link from "next/link";
 import { ArrowRight, CheckSquare } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { useChecklistItems, useFamilies } from "@/hooks/use-app-data";
+import { useChecklistItems, useProfiles } from "@/hooks/use-app-data";
+import { memberDotColor } from "@/components/checklist/checklist-utils";
 
 /** 체크리스트 전체 진행률 — "checked"만 완료로 집계, "na" 칸은 분모에서 제외 */
 export function ChecklistProgress() {
-  const families = useFamilies();
+  const members = useProfiles();
   const items = useChecklistItems();
 
   let done = 0;
   let total = 0;
-  const perFamily = families.map((family) => {
-    let familyDone = 0;
-    let familyTotal = 0;
+  const perMember = members.map((member) => {
+    let memberDone = 0;
+    let memberTotal = 0;
     for (const item of items) {
-      const state = item.checks[family.id];
+      const state = item.checks[member.id];
       if (!state || state === "na") continue;
-      familyTotal += 1;
-      if (state === "checked") familyDone += 1;
+      memberTotal += 1;
+      if (state === "checked") memberDone += 1;
     }
-    done += familyDone;
-    total += familyTotal;
+    done += memberDone;
+    total += memberTotal;
     return {
-      family,
-      done: familyDone,
-      total: familyTotal,
-      pct: familyTotal === 0 ? 0 : Math.round((familyDone / familyTotal) * 100),
+      member,
+      done: memberDone,
+      total: memberTotal,
+      pct: memberTotal === 0 ? 0 : Math.round((memberDone / memberTotal) * 100),
     };
   });
   const overall = total === 0 ? 0 : Math.round((done / total) * 100);
@@ -62,16 +63,16 @@ export function ChecklistProgress() {
         </div>
 
         <div className="space-y-3">
-          {perFamily.map(({ family, done: fd, total: ft, pct }) => (
-            <div key={family.id}>
+          {perMember.map(({ member, done: fd, total: ft, pct }) => (
+            <div key={member.id}>
               <div className="mb-1.5 flex items-center justify-between text-sm">
                 <span className="flex items-center gap-1.5 font-medium">
                   <span
                     className="h-2 w-2 rounded-full"
-                    style={{ backgroundColor: family.color }}
+                    style={{ backgroundColor: memberDotColor(member.hue) }}
                     aria-hidden
                   />
-                  {family.name}
+                  {member.name}
                 </span>
                 <span className="text-xs tabular-nums text-muted-foreground">
                   {fd}/{ft} · {pct}%
@@ -80,7 +81,7 @@ export function ChecklistProgress() {
               <div className="h-2 overflow-hidden rounded-full bg-secondary">
                 <div
                   className="h-full rounded-full transition-all duration-500 ease-out"
-                  style={{ width: `${pct}%`, backgroundColor: family.color }}
+                  style={{ width: `${pct}%`, backgroundColor: memberDotColor(member.hue) }}
                 />
               </div>
             </div>

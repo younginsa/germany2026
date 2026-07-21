@@ -20,7 +20,6 @@ const LS_KEY = "germany2026:data:v1";
 const LS_USER_KEY = "germany2026:user";
 
 const TABLE_OF: Record<EntityKey, string> = {
-  families: "families",
   profiles: "profiles",
   itineraryDays: "itinerary_days",
   comments: "comments",
@@ -45,20 +44,8 @@ function deepClone<T>(v: T): T {
     : JSON.parse(JSON.stringify(v));
 }
 
-/** 로그인 계정 ↔ 프로필 연결 상태 (프로필 선택 다이얼로그용) */
-export interface AuthProfileState {
-  /** 로그인은 됐지만 아직 어떤 프로필인지 연결되지 않음 */
-  needsProfileLink: boolean;
-  /** Google 계정에서 가져온 표시 이름 (새 프로필 이름 기본값) */
-  suggestedName: string;
-  email: string;
-}
-
-const AUTH_STATE_INITIAL: AuthProfileState = {
-  needsProfileLink: false,
-  suggestedName: "",
-  email: "",
-};
+/** 새 멤버 아바타 hue 팔레트 */
+const MEMBER_HUE_PALETTE = [275, 155, 30, 200, 330, 90, 250] as const;
 
 class TripStore {
   private data: AppData = seedData;
@@ -67,7 +54,6 @@ class TripStore {
   private authReady = false;
   private realtimeReady = false;
   private authUserId: string | null = null;
-  private authState: AuthProfileState = AUTH_STATE_INITIAL;
   private currentUserId: string = DEMO_CURRENT_USER_ID;
 
   /* ─── 구독 (useSyncExternalStore 용) ─────────────── */
@@ -82,11 +68,13 @@ class TripStore {
 
   getCurrentUserId = () => this.currentUserId;
 
-  getAuthState = (): AuthProfileState => this.authState;
-
-  private setAuthState(partial: Partial<AuthProfileState>) {
-    this.authState = { ...this.authState, ...partial };
-    this.emit();
+  /** 사용 중이지 않은 아바타 hue 선택 */
+  private nextHue(): number {
+    const used = new Set(this.data.profiles.map((p) => p.hue));
+    return (
+      MEMBER_HUE_PALETTE.find((h) => !used.has(h)) ??
+      MEMBER_HUE_PALETTE[this.data.profiles.length % MEMBER_HUE_PALETTE.length]
+    );
   }
 
   private emit() {
@@ -117,6 +105,20 @@ class TripStore {
       } else {
         this.data = deepClone(seedData);
         this.persistLocal();
+      }
+      // 데모 모드: 게스트 프로필 보장 (가입 절차 없이 바로 사용)
+      if (!this.data.profiles.some((p) => p.id === this.currentUserId)) {
+        this.currentUserId = DEMO_CURRENT_USER_ID;
+        if (!this.data.profiles.some((p) => p.id === DEMO_CURRENT_USER_ID)) {
+          this.data = {
+            ...this.data,
+            profiles: [
+              ...this.data.profiles,
+              { id: DEMO_CURRENT_USER_ID, name: "나", isOwner: true, hue: 275 },
+            ],
+          };
+          this.persistLocal();
+        }
       }
       // 탭 간 실시간 동기화 (데모 모드의 "realtime")
       window.addEventListener("storage", (e) => {
@@ -150,11 +152,6 @@ class TripStore {
     this.emit();
   }
 
-  /** 프로필 선택 다이얼로그에서 호출 — 연결 후 다이얼로그 닫기 */
-  linkProfile(profileId: string) {
-    this.setCurrentUser(profileId);
-    this.setAuthState({ needsProfileLink: false });
-  }
 
   private persistLocal() {
     if (typeof window === "undefined") return;
@@ -237,12 +234,12 @@ class TripStore {
     }
 
     this.authUserId = user.id;
-    await this.resolveProfileLink(user.id, tripId, {
-      suggestedName:
+    await this.ensureProfile(user.id, tripId, {
+      name:
         (user.user_metadata?.full_name as string | undefined) ??
         (user.user_metadata?.name as string | undefined) ??
         user.email?.split("@")[0] ??
-        "",
+        "여행자",
       email: user.email ?? "",
     });
 
@@ -253,13 +250,15 @@ class TripStore {
   }
 
   /**
-   * 서버에 기록된 계정 ↔ 프로필 연결을 확인합니다.
-   * 연결이 있으면 그 프로필로 로그인 처리, 없으면 선택 다이얼로그 표시.
+   * 로그인 계정의 프로필을 보장합니다.
+   * 1) trip_members에 연결된 프로필이 있으면 그대로 사용
+   * 2) 같은 이메일의 프로필이 있으면(설정에서 미리 추가된 동행인) 연결
+   * 3) 없으면 Google 이름으로 새 프로필을 만들어 연결
    */
-  private async resolveProfileLink(
+  private async ensureProfile(
     userId: string,
     tripId: string,
-    google: { suggestedName: string; email: string }
+    google: { name: string; email: string }
   ) {
     const sb = getSupabaseBrowserClient();
     if (!sb) return;
@@ -271,13 +270,23 @@ class TripStore {
       .limit(1);
     const linkedId = rows?.[0]?.profile_id as string | null | undefined;
 
-    if (linkedId && this.data.profiles.some((p) => p.id === linkedId)) {
-      this.currentUserId = linkedId;
-      if (typeof window !== "undefined") window.localStorage.setItem(LS_USER_KEY, linkedId);
-      this.emit();
-    } else {
-      this.setAuthState({ needsProfileLink: true, ...google });
+    let profile =
+      (linkedId && this.data.profiles.find((p) => p.id === linkedId)) ||
+      (google.email && this.data.profiles.find((p) => p.email === google.email)) ||
+      null;
+
+    if (!profile) {
+      profile = {
+        id: newId("p"),
+        name: google.name,
+        email: google.email || undefined,
+        isOwner: this.data.profiles.length === 0,
+        hue: this.nextHue(),
+      };
+      this.upsertRow("profiles", profile);
     }
+    // setCurrentUser가 trip_members.profile_id도 갱신합니다
+    this.setCurrentUser(profile.id);
   }
 
   /** 모든 도메인 테이블을 읽어 메모리 상태로 반영 (트립은 이미 존재한다고 가정) */

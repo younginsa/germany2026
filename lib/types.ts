@@ -12,21 +12,17 @@ export interface Trip {
   description: string;
 }
 
-export interface Family {
-  id: ID;
-  name: string; // 예: 섭섭이네
-  color: string; // oklch hue (0-360)
-  hue: number;
-}
-
+/** 여행 멤버(동행인) — 로그인 시 자동 생성되거나 설정에서 직접 추가 */
 export interface Profile {
   id: ID;
-  familyId: ID;
   name: string;
-  role: "아빠" | "엄마" | "아이";
+  /** 관계 메모 (예: 친구, 배우자, 동생) — 선택 */
+  role?: string;
   age?: number;
   email?: string;
   isOwner?: boolean;
+  /** 아바타 색상 hue (0-360) */
+  hue?: number;
 }
 
 export interface ScheduleItem {
@@ -92,7 +88,7 @@ export interface ChecklistItem {
   groupId: ID;
   label: string;
   order: number;
-  /** familyId -> 상태 */
+  /** profileId(멤버) -> 상태 */
   checks: Record<ID, CheckState>;
 }
 
@@ -101,8 +97,8 @@ export interface ChecklistGroup {
   tripId: ID;
   title: string;
   order: number;
-  /** 이 그룹에 참여하는 가족 컬럼 */
-  familyIds: ID[];
+  /** 이 그룹에 참여하는 멤버(동행인) 컬럼 */
+  memberIds: ID[];
 }
 
 export type PlaceCategory =
@@ -246,7 +242,6 @@ export interface ActivityLog {
 /** 데모 모드에서 localStorage에 저장되는 전체 앱 상태 */
 export interface AppData {
   trip: Trip;
-  families: Family[];
   profiles: Profile[];
   itineraryDays: ItineraryDay[];
   comments: Comment[];
@@ -262,7 +257,6 @@ export interface AppData {
 export type EntityKey = keyof Omit<AppData, "trip">;
 
 export type EntityOf = {
-  families: Family;
   profiles: Profile;
   itineraryDays: ItineraryDay;
   comments: Comment;

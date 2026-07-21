@@ -3,7 +3,7 @@
 import { History } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { useFamilyById, useProfileById } from "@/hooks/use-app-data";
+import { useProfileById } from "@/hooks/use-app-data";
 import { formatBytes, initialsOf, relativeTimeKo } from "@/lib/utils";
 import type { TripDocument } from "@/lib/types";
 
@@ -14,7 +14,6 @@ interface VersionHistoryProps {
 /** 버전 기록 — 최신 버전이 위로 오도록 정렬해 표시 */
 export function VersionHistory({ doc }: VersionHistoryProps) {
   const profileById = useProfileById();
-  const familyById = useFamilyById();
 
   const versions = doc.versions
     .map((v, i) => ({ ...v, n: i + 1 }))
@@ -33,7 +32,6 @@ export function VersionHistory({ doc }: VersionHistoryProps) {
       <ol className="space-y-1.5">
         {versions.map((v, idx) => {
           const uploader = profileById(v.uploadedBy);
-          const family = uploader ? familyById(uploader.familyId) : undefined;
           const isLatest = idx === 0;
 
           return (
@@ -63,7 +61,7 @@ export function VersionHistory({ doc }: VersionHistoryProps) {
               </div>
 
               <Avatar className="h-6 w-6 shrink-0">
-                <AvatarFallback hue={family?.hue} className="text-[10px]">
+                <AvatarFallback hue={uploader?.hue} className="text-[10px]">
                   {uploader ? initialsOf(uploader.name) : "?"}
                 </AvatarFallback>
               </Avatar>

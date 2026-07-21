@@ -23,10 +23,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { newId, tripStore } from "@/hooks/use-app-data";
-import type { CheckState, ChecklistGroup, ChecklistItem, Family } from "@/lib/types";
+import type { CheckState, ChecklistGroup, ChecklistItem, Profile } from "@/lib/types";
 import {
   computeStats,
-  familyDotColor,
+  memberDotColor,
   matchesFilter,
   type ChecklistFilter,
 } from "./checklist-utils";
@@ -36,24 +36,24 @@ interface GroupCardProps {
   group: ChecklistGroup;
   items: ChecklistItem[]; // 이 그룹의 항목 (order 정렬)
   allItems: ChecklistItem[]; // 전체 체크리스트 항목 (replaceAll 용)
-  families: Family[];
+  members: Profile[];
   search: string;
   filter: ChecklistFilter;
 }
 
-function emptyChecks(familyIds: string[]): Record<string, CheckState> {
+function emptyChecks(memberIds: string[]): Record<string, CheckState> {
   const checks: Record<string, CheckState> = {};
-  for (const fid of familyIds) checks[fid] = "empty";
+  for (const fid of memberIds) checks[fid] = "empty";
   return checks;
 }
 
-export function GroupCard({ group, items, allItems, families, search, filter }: GroupCardProps) {
-  const groupFamilies = useMemo(
+export function GroupCard({ group, items, allItems, members, search, filter }: GroupCardProps) {
+  const groupMembers = useMemo(
     () =>
-      group.familyIds
-        .map((fid) => families.find((f) => f.id === fid))
-        .filter((f): f is Family => Boolean(f)),
-    [group.familyIds, families]
+      group.memberIds
+        .map((mid) => members.find((m) => m.id === mid))
+        .filter((m): m is Profile => Boolean(m)),
+    [group.memberIds, members]
   );
 
   /* ─── 로컬 순서 상태 (드래그 중 스토어와 분리, 드롭 시 커밋) ─── */
@@ -77,16 +77,16 @@ export function GroupCard({ group, items, allItems, families, search, filter }: 
     const item = itemById.get(id);
     if (!item) return false;
     if (query && !item.label.toLowerCase().includes(query)) return false;
-    return matchesFilter(item, group.familyIds, filter);
+    return matchesFilter(item, group.memberIds, filter);
   });
   const canReorder = !isFiltering;
 
   /* ─── 통계 ─── */
-  const stats = computeStats(items, group.familyIds);
+  const stats = computeStats(items, group.memberIds);
 
   /* ─── 그리드 ─── */
-  const gridTemplate = `minmax(220px, 1fr) repeat(${groupFamilies.length}, 76px) 44px`;
-  const minWidth = 220 + groupFamilies.length * 76 + 44;
+  const gridTemplate = `minmax(220px, 1fr) repeat(${groupMembers.length}, 76px) 44px`;
+  const minWidth = 220 + groupMembers.length * 76 + 44;
 
   /* ─── 변경 API ─── */
   const commitOrder = () => {
@@ -107,7 +107,7 @@ export function GroupCard({ group, items, allItems, families, search, filter }: 
       groupId: group.id,
       label,
       order: 0,
-      checks: emptyChecks(group.familyIds),
+      checks: emptyChecks(group.memberIds),
     };
     const next = [...current];
     next.splice(Math.max(0, Math.min(index, next.length)), 0, newItem);
@@ -123,7 +123,7 @@ export function GroupCard({ group, items, allItems, families, search, filter }: 
       groupId: group.id,
       label,
       order: maxOrder + 1,
-      checks: emptyChecks(group.familyIds),
+      checks: emptyChecks(group.memberIds),
     });
   };
 
@@ -219,17 +219,17 @@ export function GroupCard({ group, items, allItems, families, search, filter }: 
             <div className="sticky left-0 z-10 bg-card py-2.5 pl-4 pr-3 text-xs font-medium text-muted-foreground">
               항목
             </div>
-            {groupFamilies.map((family) => (
+            {groupMembers.map((member) => (
               <div
-                key={family.id}
+                key={member.id}
                 className="flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium"
               >
                 <span
                   aria-hidden
                   className="h-2 w-2 shrink-0 rounded-full"
-                  style={{ backgroundColor: familyDotColor(family.hue) }}
+                  style={{ backgroundColor: memberDotColor(member.hue) }}
                 />
-                <span className="truncate">{family.name}</span>
+                <span className="truncate">{member.name}</span>
               </div>
             ))}
             <span />
@@ -253,7 +253,7 @@ export function GroupCard({ group, items, allItems, families, search, filter }: 
                   <MatrixRow
                     key={id}
                     item={item}
-                    families={groupFamilies}
+                    members={groupMembers}
                     gridTemplate={gridTemplate}
                     canReorder={canReorder}
                     onDragEnd={commitOrder}

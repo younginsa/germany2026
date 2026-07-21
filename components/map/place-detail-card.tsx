@@ -8,7 +8,6 @@ import type { ItineraryDay, Place } from "@/lib/types";
 import {
   tripStore,
   useCurrentUser,
-  useFamilyById,
   useProfileById,
 } from "@/hooks/use-app-data";
 import { cn, initialsOf, relativeTimeKo } from "@/lib/utils";
@@ -35,11 +34,9 @@ interface PlaceDetailCardProps {
 export function PlaceDetailCard({ place, days, onClose }: PlaceDetailCardProps) {
   const me = useCurrentUser();
   const profileById = useProfileById();
-  const familyById = useFamilyById();
 
   const meta = CATEGORY_META[place.category];
   const author = profileById(place.authorId);
-  const family = author ? familyById(author.familyId) : undefined;
   const linkedDays = days
     .filter((d) => place.dayIds.includes(d.id))
     .sort((a, b) => a.dayNumber - b.dayNumber);
@@ -114,7 +111,7 @@ export function PlaceDetailCard({ place, days, onClose }: PlaceDetailCardProps) 
       <div className="mt-3 flex items-center justify-between gap-2">
         <div className="flex min-w-0 items-center gap-1.5">
           <Avatar className="h-6 w-6">
-            <AvatarFallback hue={family?.hue} className="text-[10px]">
+            <AvatarFallback hue={author?.hue} className="text-[10px]">
               {author ? initialsOf(author.name) : "?"}
             </AvatarFallback>
           </Avatar>

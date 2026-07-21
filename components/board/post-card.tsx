@@ -17,7 +17,6 @@ import { POST_TYPE_META } from "@/components/board/post-meta";
 import {
   tripStore,
   useCurrentUser,
-  useFamilyById,
   useProfileById,
 } from "@/hooks/use-app-data";
 import type { Post } from "@/lib/types";
@@ -33,10 +32,8 @@ interface PostCardProps {
 export function PostCard({ post, index, onOpen, onEdit }: PostCardProps) {
   const me = useCurrentUser();
   const profileById = useProfileById();
-  const familyById = useFamilyById();
 
   const author = profileById(post.authorId);
-  const family = author ? familyById(author.familyId) : undefined;
   const isMine = post.authorId === me.id;
   const liked = post.likedBy.includes(me.id);
   const meta = POST_TYPE_META[post.type];
@@ -137,7 +134,7 @@ export function PostCard({ post, index, onOpen, onEdit }: PostCardProps) {
         <div className="flex items-center justify-between border-t pt-3">
           <div className="flex min-w-0 items-center gap-2">
             <Avatar className="size-6">
-              <AvatarFallback hue={family?.hue} className="text-[9px]">
+              <AvatarFallback hue={author?.hue} className="text-[9px]">
                 {author ? initialsOf(author.name) : "?"}
               </AvatarFallback>
             </Avatar>

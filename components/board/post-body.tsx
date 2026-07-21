@@ -16,7 +16,6 @@ import {
   useChecklistGroups,
   useChecklistItems,
   useComments,
-  useFamilyById,
   usePlaces,
   useProfileById,
 } from "@/hooks/use-app-data";
@@ -32,7 +31,6 @@ export function PostBody({ post, detail = false }: { post: Post; detail?: boolea
   const checklistGroups = useChecklistGroups();
   const comments = useComments();
   const profileById = useProfileById();
-  const familyById = useFamilyById();
 
   const bodyText = post.body ? (
     <p
@@ -169,7 +167,6 @@ export function PostBody({ post, detail = false }: { post: Post; detail?: boolea
     case "comment_ref": {
       const comment = comments.find((c) => c.id === post.refId);
       const author = comment ? profileById(comment.authorId) : undefined;
-      const fam = author ? familyById(author.familyId) : undefined;
       return (
         <div className="space-y-2.5">
           {bodyText}
@@ -178,7 +175,7 @@ export function PostBody({ post, detail = false }: { post: Post; detail?: boolea
               <div className="flex items-center gap-2">
                 <MessageSquareQuote className="size-3.5 shrink-0 text-primary" />
                 <Avatar className="size-5">
-                  <AvatarFallback hue={fam?.hue} className="text-[9px]">
+                  <AvatarFallback hue={author?.hue} className="text-[9px]">
                     {author ? initialsOf(author.name) : "?"}
                   </AvatarFallback>
                 </Avatar>

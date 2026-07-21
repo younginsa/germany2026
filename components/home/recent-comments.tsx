@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   useComments,
-  useFamilyById,
   useProfileById,
 } from "@/hooks/use-app-data";
 import { initialsOf, relativeTimeKo } from "@/lib/utils";
@@ -15,7 +14,6 @@ import { initialsOf, relativeTimeKo } from "@/lib/utils";
 export function RecentComments() {
   const comments = useComments();
   const profileById = useProfileById();
-  const familyById = useFamilyById();
 
   const recent = [...comments]
     .sort(
@@ -46,7 +44,6 @@ export function RecentComments() {
         )}
         {recent.map((comment) => {
           const author = profileById(comment.authorId);
-          const family = author ? familyById(author.familyId) : undefined;
           return (
             <Link
               key={comment.id}
@@ -54,7 +51,7 @@ export function RecentComments() {
               className="-mx-2 flex items-start gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-accent"
             >
               <Avatar className="mt-0.5">
-                <AvatarFallback hue={family?.hue}>
+                <AvatarFallback hue={author?.hue}>
                   {author ? initialsOf(author.name) : "?"}
                 </AvatarFallback>
               </Avatar>

@@ -11,13 +11,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { tripStore } from "@/hooks/use-app-data";
-import type { ChecklistItem, Family } from "@/lib/types";
+import type { ChecklistItem, Profile } from "@/lib/types";
 import { CheckCell } from "./check-cell";
 import { NEXT_STATE } from "./checklist-utils";
 
 interface MatrixRowProps {
   item: ChecklistItem;
-  families: Family[]; // 그룹 familyIds 순서로 정렬된 가족
+  members: Profile[]; // 그룹 memberIds 순서로 정렬된 멤버
   gridTemplate: string;
   canReorder: boolean;
   onDragEnd: () => void;
@@ -29,7 +29,7 @@ interface MatrixRowProps {
 /** 체크리스트 매트릭스의 한 행 — 드래그 재정렬 + 셀 상태 순환 + 행 액션 */
 export function MatrixRow({
   item,
-  families,
+  members,
   gridTemplate,
   canReorder,
   onDragEnd,
@@ -39,11 +39,11 @@ export function MatrixRow({
 }: MatrixRowProps) {
   const controls = useDragControls();
 
-  const cycle = (familyId: string) => {
-    const current = item.checks[familyId] ?? "empty";
+  const cycle = (memberId: string) => {
+    const current = item.checks[memberId] ?? "empty";
     tripStore.upsertRow("checklistItems", {
       ...item,
-      checks: { ...item.checks, [familyId]: NEXT_STATE[current] },
+      checks: { ...item.checks, [memberId]: NEXT_STATE[current] },
     });
   };
 
@@ -85,13 +85,13 @@ export function MatrixRow({
         </span>
       </div>
 
-      {/* 가족별 상태 셀 */}
-      {families.map((family) => (
+      {/* 멤버별 상태 셀 */}
+      {members.map((member) => (
         <CheckCell
-          key={family.id}
-          state={item.checks[family.id] ?? "empty"}
-          familyName={family.name}
-          onCycle={() => cycle(family.id)}
+          key={member.id}
+          state={item.checks[member.id] ?? "empty"}
+          memberName={member.name}
+          onCycle={() => cycle(member.id)}
         />
       ))}
 

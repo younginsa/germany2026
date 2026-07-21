@@ -23,7 +23,6 @@ import {
   pushNotification,
   tripStore,
   useCurrentUser,
-  useFamilyById,
   usePosts,
   useProfileById,
 } from "@/hooks/use-app-data";
@@ -40,13 +39,11 @@ export function PostDetailDialog({ postId, onClose, onEdit }: PostDetailDialogPr
   const posts = usePosts();
   const me = useCurrentUser();
   const profileById = useProfileById();
-  const familyById = useFamilyById();
   const [draft, setDraft] = useState("");
 
   const post = postId ? posts.find((p) => p.id === postId) ?? null : null;
 
   const author = post ? profileById(post.authorId) : undefined;
-  const authorFamily = author ? familyById(author.familyId) : undefined;
   const liked = post ? post.likedBy.includes(me.id) : false;
   const meta = post ? POST_TYPE_META[post.type] : null;
 
@@ -118,7 +115,7 @@ export function PostDetailDialog({ postId, onClose, onEdit }: PostDetailDialogPr
                   <DialogTitle className="pr-6 text-lg leading-snug">{post.title}</DialogTitle>
                   <DialogDescription className="flex items-center gap-2">
                     <Avatar className="size-5">
-                      <AvatarFallback hue={authorFamily?.hue} className="text-[9px]">
+                      <AvatarFallback hue={author?.hue} className="text-[9px]">
                         {author ? initialsOf(author.name) : "?"}
                       </AvatarFallback>
                     </Avatar>
@@ -195,11 +192,10 @@ export function PostDetailDialog({ postId, onClose, onEdit }: PostDetailDialogPr
                   )}
                   {post.comments.map((comment) => {
                     const cAuthor = profileById(comment.authorId);
-                    const cFamily = cAuthor ? familyById(cAuthor.familyId) : undefined;
                     return (
                       <div key={comment.id} className="flex gap-2.5">
                         <Avatar className="size-7 shrink-0">
-                          <AvatarFallback hue={cFamily?.hue} className="text-[10px]">
+                          <AvatarFallback hue={cAuthor?.hue} className="text-[10px]">
                             {cAuthor ? initialsOf(cAuthor.name) : "?"}
                           </AvatarFallback>
                         </Avatar>
@@ -231,7 +227,7 @@ export function PostDetailDialog({ postId, onClose, onEdit }: PostDetailDialogPr
               <div className="flex items-end gap-2">
                 <Avatar className="size-7 shrink-0">
                   <AvatarFallback
-                    hue={familyById(me.familyId)?.hue}
+                    hue={me.hue}
                     className="text-[10px]"
                   >
                     {initialsOf(me.name)}

@@ -13,12 +13,12 @@ export const STATE_LABEL: Record<CheckState, string> = {
   na: "해당 없음",
 };
 
-/** 새 가족 생성 시 배정하는 hue 팔레트 */
-export const FAMILY_HUE_PALETTE = [275, 155, 30, 200, 330] as const;
+/** 새 멤버 생성 시 배정하는 hue 팔레트 */
+export const MEMBER_HUE_PALETTE = [275, 155, 30, 200, 330, 90, 250] as const;
 
-/** 가족 컬러 도트 색상 */
-export function familyDotColor(hue: number): string {
-  return `oklch(0.62 0.15 ${hue})`;
+/** 멤버 컬러 도트 색상 */
+export function memberDotColor(hue?: number): string {
+  return `oklch(0.62 0.15 ${hue ?? 275})`;
 }
 
 export type ChecklistFilter = "all" | "todo" | "done" | "na";
@@ -30,19 +30,19 @@ export const FILTER_OPTIONS: { key: ChecklistFilter; label: string }[] = [
   { key: "na", label: "N/A" },
 ];
 
-/** 항목의 가족별 셀 상태 배열 (누락된 키는 empty 취급) */
-export function cellStates(item: ChecklistItem, familyIds: string[]): CheckState[] {
-  return familyIds.map((fid) => item.checks[fid] ?? "empty");
+/** 항목의 멤버별 셀 상태 배열 (누락된 키는 empty 취급) */
+export function cellStates(item: ChecklistItem, memberIds: string[]): CheckState[] {
+  return memberIds.map((mid) => item.checks[mid] ?? "empty");
 }
 
-/** 행이 필터에 매칭되는지 — 어느 한 가족 셀이라도 해당 상태면 매칭 */
+/** 행이 필터에 매칭되는지 — 어느 한 멤버 셀이라도 해당 상태면 매칭 */
 export function matchesFilter(
   item: ChecklistItem,
-  familyIds: string[],
+  memberIds: string[],
   filter: ChecklistFilter
 ): boolean {
   if (filter === "all") return true;
-  const states = cellStates(item, familyIds);
+  const states = cellStates(item, memberIds);
   if (filter === "todo") return states.some((s) => s === "empty");
   if (filter === "done") return states.some((s) => s === "checked");
   return states.some((s) => s === "na");
@@ -56,11 +56,11 @@ export interface ChecklistStats {
 }
 
 /** 완료 통계 — total은 N/A 셀을 제외한 셀 수 */
-export function computeStats(items: ChecklistItem[], familyIds: string[]): ChecklistStats {
+export function computeStats(items: ChecklistItem[], memberIds: string[]): ChecklistStats {
   let checked = 0;
   let total = 0;
   for (const item of items) {
-    for (const s of cellStates(item, familyIds)) {
+    for (const s of cellStates(item, memberIds)) {
       if (s === "na") continue;
       total += 1;
       if (s === "checked") checked += 1;

@@ -22,7 +22,6 @@ import {
   tripStore,
   useComments,
   useCurrentUser,
-  useFamilyById,
   useItineraryDays,
   useProfileById,
   useProfiles,
@@ -78,9 +77,8 @@ function BodyWithMentions({ body, profiles }: { body: string; profiles: Profile[
 
 function AuthorAvatar({ authorId, className }: { authorId: string; className?: string }) {
   const profileById = useProfileById();
-  const familyById = useFamilyById();
   const profile = profileById(authorId);
-  const hue = profile ? familyById(profile.familyId)?.hue : undefined;
+  const hue = profile?.hue;
   return (
     <Avatar className={cn("h-7 w-7", className)}>
       <AvatarFallback hue={hue} className="text-[10px]">

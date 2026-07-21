@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { AnimatePresence } from "framer-motion";
 import { MapPinOff } from "lucide-react";
 import type { ItineraryDay, Place } from "@/lib/types";
-import { useFamilyById, useProfileById } from "@/hooks/use-app-data";
+import { useProfileById } from "@/hooks/use-app-data";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PlaceCard } from "./place-card";
 
@@ -18,7 +18,6 @@ interface PlaceListProps {
 /** 스크롤 장소 목록 — 선택된 카드로 자동 스크롤 */
 export function PlaceList({ places, days, selectedId, onSelect }: PlaceListProps) {
   const profileById = useProfileById();
-  const familyById = useFamilyById();
   const viewportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -43,13 +42,12 @@ export function PlaceList({ places, days, selectedId, onSelect }: PlaceListProps
         <AnimatePresence initial={false} mode="popLayout">
           {places.map((place, i) => {
             const author = profileById(place.authorId);
-            const family = author ? familyById(author.familyId) : undefined;
             return (
               <PlaceCard
                 key={place.id}
                 place={place}
                 author={author}
-                authorHue={family?.hue}
+                authorHue={author?.hue}
                 days={days}
                 selected={place.id === selectedId}
                 onSelect={() => onSelect(place.id)}

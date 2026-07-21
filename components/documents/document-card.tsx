@@ -19,7 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useFamilyById, useProfileById } from "@/hooks/use-app-data";
+import { useProfileById } from "@/hooks/use-app-data";
 import { fileKindMeta } from "@/components/documents/file-type";
 import { cn, formatBytes, initialsOf, relativeTimeKo } from "@/lib/utils";
 import { DOCUMENT_CATEGORY_LABEL, type TripDocument } from "@/lib/types";
@@ -46,10 +46,8 @@ export function DocumentCard({
   onDelete,
 }: DocumentCardProps) {
   const profileById = useProfileById();
-  const familyById = useFamilyById();
 
   const uploader = profileById(doc.uploadedBy);
-  const family = uploader ? familyById(uploader.familyId) : undefined;
   const meta = fileKindMeta(doc.fileType, doc.fileName);
   const showThumbnail = meta.kind === "image" && Boolean(doc.url);
 
@@ -174,7 +172,7 @@ export function DocumentCard({
         <div className="mt-auto flex items-center justify-between gap-2 border-t pt-3">
           <div className="flex min-w-0 items-center gap-2">
             <Avatar className="h-6 w-6">
-              <AvatarFallback hue={family?.hue} className="text-[10px]">
+              <AvatarFallback hue={uploader?.hue} className="text-[10px]">
                 {uploader ? initialsOf(uploader.name) : "?"}
               </AvatarFallback>
             </Avatar>

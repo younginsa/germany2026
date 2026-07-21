@@ -26,21 +26,9 @@ export function useAppData(): AppData {
   );
 }
 
-/** 로그인 계정 ↔ 프로필 연결 상태 (프로필 선택 다이얼로그용) */
-export function useAuthProfileState() {
-  return useSyncExternalStore(
-    tripStore.subscribe,
-    tripStore.getAuthState,
-    tripStore.getAuthState
-  );
-}
 
 export function useTrip() {
   return useAppData().trip;
-}
-
-export function useFamilies() {
-  return useAppData().families;
 }
 
 export function useProfiles() {
@@ -91,30 +79,28 @@ export function useNotifications() {
   );
 }
 
-/** 현재 로그인한(데모: 선택된) 사용자 프로필 */
+/** 프로필이 아직 준비되지 않은 짧은 순간에 쓰는 플레이스홀더 */
+const PENDING_PROFILE: Profile = { id: "p-pending", name: "나" };
+
+/** 현재 로그인한 사용자 프로필 (로그인 직후 생성 전에는 플레이스홀더) */
 export function useCurrentUser(): Profile {
   const data = useAppData();
   const id = useSyncExternalStore(
     tripStore.subscribe,
     tripStore.getCurrentUserId,
-    () => "p-seoyeon"
+    tripStore.getCurrentUserId
   );
-  return data.profiles.find((p) => p.id === id) ?? data.profiles[0];
+  return data.profiles.find((p) => p.id === id) ?? data.profiles[0] ?? PENDING_PROFILE;
 }
 
 export function useIsDemo() {
   return !isSupabaseConfigured;
 }
 
-/** 프로필 id → 프로필/가족 조회 유틸 */
+/** 프로필 id → 프로필 조회 유틸 */
 export function useProfileById() {
   const data = useAppData();
   return (id: string) => data.profiles.find((p) => p.id === id);
-}
-
-export function useFamilyById() {
-  const data = useAppData();
-  return (id: string) => data.families.find((f) => f.id === id);
 }
 
 /** 알림 발행 헬퍼 — 각 기능에서 변경 시 호출 */

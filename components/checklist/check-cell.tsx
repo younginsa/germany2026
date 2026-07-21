@@ -9,18 +9,18 @@ const spring = { type: "spring", stiffness: 560, damping: 30 } as const;
 
 interface CheckCellProps {
   state: CheckState;
-  familyName: string;
+  memberName: string;
   onCycle: () => void;
 }
 
 /** 매트릭스 셀 — 탭할 때마다 미완료 → 완료 → N/A 순환 */
-export function CheckCell({ state, familyName, onCycle }: CheckCellProps) {
+export function CheckCell({ state, memberName, onCycle }: CheckCellProps) {
   return (
     <button
       type="button"
       onClick={onCycle}
-      title={`${familyName} · ${STATE_LABEL[state]} (탭하여 변경)`}
-      aria-label={`${familyName} ${STATE_LABEL[state]}`}
+      title={`${memberName} · ${STATE_LABEL[state]} (탭하여 변경)`}
+      aria-label={`${memberName} ${STATE_LABEL[state]}`}
       className="group/cell flex h-11 w-full items-center justify-center rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       <AnimatePresence mode="wait" initial={false}>

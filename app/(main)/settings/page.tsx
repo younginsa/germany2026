@@ -11,7 +11,9 @@ import {
   Palette,
   RotateCcw,
   Upload,
+  UserRoundPlus,
   Users,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -33,12 +35,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   useAppData,
+  newId,
   useCurrentUser,
-  useFamilies,
   useProfiles,
   useTrip,
   tripStore,
 } from "@/hooks/use-app-data";
+import { MEMBER_HUE_PALETTE as HUE_PALETTE } from "@/components/checklist/checklist-utils";
 import { isGoogleMapsConfigured, isSupabaseConfigured } from "@/lib/supabase/config";
 import { initialsOf } from "@/lib/utils";
 import type { AppData } from "@/lib/types";
@@ -50,11 +53,12 @@ const fadeUp = {
 
 export default function SettingsPage() {
   const trip = useTrip();
-  const families = useFamilies();
   const profiles = useProfiles();
   const me = useCurrentUser();
   const data = useAppData();
 
+  const [companionName, setCompanionName] = useState("");
+  const [companionRole, setCompanionRole] = useState("");
   const [title, setTitle] = useState(trip.title);
   const [destination, setDestination] = useState(trip.destination);
   const [startDate, setStartDate] = useState(trip.startDate);
@@ -110,6 +114,28 @@ export default function SettingsPage() {
     tripStore.resetToSeed();
     setResetOpen(false);
     toast.success("데모 데이터로 초기화되었습니다");
+  }
+
+  function addCompanion(e: React.FormEvent) {
+    e.preventDefault();
+    const name = companionName.trim();
+    if (!name) return;
+    const usedHues = new Set(profiles.map((p) => p.hue));
+    const hue = HUE_PALETTE.find((h) => !usedHues.has(h)) ?? HUE_PALETTE[profiles.length % HUE_PALETTE.length];
+    tripStore.upsertRow("profiles", {
+      id: newId("p"),
+      name,
+      role: companionRole.trim() || undefined,
+      hue,
+    });
+    setCompanionName("");
+    setCompanionRole("");
+    toast.success(`${name}님을 동행인에 추가했습니다`);
+  }
+
+  function removeCompanion(id: string) {
+    tripStore.deleteRow("profiles", id);
+    toast.success("동행인을 삭제했습니다");
   }
 
   return (
@@ -180,59 +206,77 @@ export default function SettingsPage() {
         </Card>
       </motion.div>
 
-      {/* 가족 & 멤버 */}
+      {/* 동행인 */}
       <motion.div {...fadeUp} transition={{ duration: 0.4, delay: 0.1 }}>
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Users className="h-4 w-4 text-primary" />
-              가족 & 멤버
+              동행인
             </CardTitle>
             <CardDescription>
-              멤버는 자신이 속한 여행의 모든 콘텐츠를 보고 편집할 수 있습니다. 문서 삭제와
-              댓글 삭제는 작성자 본인만 가능합니다.
+              로그인한 사람은 자동으로 추가됩니다. 계정 없이 함께 가는 사람도 직접 추가할
+              수 있어요 — 혼자 여행이라면 비워 두어도 됩니다.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {families.map((family) => (
-              <div key={family.id} className="rounded-xl border p-4">
-                <div className="mb-3 flex items-center gap-2">
-                  <span
-                    className="h-2.5 w-2.5 rounded-full"
-                    style={{ backgroundColor: family.color }}
-                  />
-                  <p className="font-semibold">{family.name}</p>
-                  <Badge variant="secondary" className="ml-auto">
-                    {profiles.filter((p) => p.familyId === family.id).length}명
-                  </Badge>
-                </div>
-                <ul className="space-y-2">
-                  {profiles
-                    .filter((p) => p.familyId === family.id)
-                    .map((p) => (
-                      <li key={p.id} className="flex items-center gap-3">
-                        <Avatar className="h-7 w-7">
-                          <AvatarFallback hue={family.hue}>{initialsOf(p.name)}</AvatarFallback>
-                        </Avatar>
-                        <span className="text-sm font-medium">{p.name}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {p.role}
-                          {p.age ? ` · ${p.age}세` : ""}
-                        </span>
-                        <span className="ml-auto flex items-center gap-1.5">
-                          {p.isOwner && (
-                            <Badge variant="warning">
-                              <Crown className="h-3 w-3" />
-                              소유자
-                            </Badge>
-                          )}
-                          {p.id === me.id && <Badge variant="accent">나</Badge>}
-                        </span>
-                      </li>
-                    ))}
-                </ul>
-              </div>
-            ))}
+            <ul className="space-y-2">
+              {profiles.map((p) => (
+                <li key={p.id} className="flex items-center gap-3 rounded-xl border p-3">
+                  <Avatar className="h-7 w-7">
+                    <AvatarFallback hue={p.hue}>{initialsOf(p.name)}</AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm font-medium">{p.name}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {p.role ?? ""}
+                    {p.email ? ` ${p.email}` : ""}
+                  </span>
+                  <span className="ml-auto flex items-center gap-1.5">
+                    {p.isOwner && (
+                      <Badge variant="warning">
+                        <Crown className="h-3 w-3" />
+                        소유자
+                      </Badge>
+                    )}
+                    {p.id === me.id && <Badge variant="accent">나</Badge>}
+                    {p.id !== me.id && (
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        aria-label={`${p.name} 삭제`}
+                        className="text-muted-foreground hover:text-destructive"
+                        onClick={() => removeCompanion(p.id)}
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </Button>
+                    )}
+                  </span>
+                </li>
+              ))}
+              {profiles.length === 0 && (
+                <li className="rounded-xl border border-dashed p-4 text-center text-sm text-muted-foreground">
+                  아직 동행인이 없어요
+                </li>
+              )}
+            </ul>
+            <form onSubmit={addCompanion} className="flex flex-wrap gap-2">
+              <Input
+                value={companionName}
+                onChange={(e) => setCompanionName(e.target.value)}
+                placeholder="이름 (예: 지수)"
+                className="w-40 flex-1"
+              />
+              <Input
+                value={companionRole}
+                onChange={(e) => setCompanionRole(e.target.value)}
+                placeholder="관계 (선택 — 친구, 배우자…)"
+                className="w-44 flex-1"
+              />
+              <Button type="submit" variant="outline" disabled={!companionName.trim()}>
+                <UserRoundPlus className="h-4 w-4" />
+                추가
+              </Button>
+            </form>
           </CardContent>
         </Card>
       </motion.div>

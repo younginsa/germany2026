@@ -3,7 +3,6 @@
 import { CalendarDays, Car, MapPin, Users } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import {
-  useFamilies,
   useItineraryDays,
   useProfiles,
   useTrip,
@@ -17,7 +16,6 @@ function baseCity(city: string): string {
 export function StatCards() {
   const trip = useTrip();
   const days = useItineraryDays();
-  const families = useFamilies();
   const profiles = useProfiles();
 
   const dayMs = 86_400_000;
@@ -47,8 +45,8 @@ export function StatCards() {
     },
     {
       icon: Users,
-      label: "가족",
-      value: `${families.length}가족 ${profiles.length}명`,
+      label: "동행인",
+      value: `${profiles.length}명`,
       sub: `어른 ${adults} · 아이 ${kids}`,
     },
     {

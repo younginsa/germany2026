@@ -6,9 +6,6 @@ import type { AppData } from "@/lib/types";
  */
 
 const TRIP_ID = "trip-germany-2026";
-const F_SUB = "family-subsub"; // 섭섭이네
-const F_TAEO = "family-taeo"; // 태오네
-
 export const seedData: AppData = {
   trip: {
     id: TRIP_ID,
@@ -18,22 +15,10 @@ export const seedData: AppData = {
     endDate: "2026-12-27",
     coverEmoji: "🎄",
     description:
-      "두 가족이 함께 떠나는 10일간의 독일 로맨틱 가도 & 크리스마스 마켓 여행. 렌터카로 프랑크푸르트에서 뮌헨까지 이동합니다.",
+      "10일간의 독일 로맨틱 가도 & 크리스마스 마켓 여행. 렌터카로 프랑크푸르트에서 뮌헨까지 이동합니다.",
   },
 
-  families: [
-    { id: F_SUB, name: "섭섭이네", color: "oklch(0.62 0.16 275)", hue: 275 },
-    { id: F_TAEO, name: "태오네", color: "oklch(0.62 0.15 155)", hue: 155 },
-  ],
-
-  profiles: [
-    { id: "p-minjun", familyId: F_SUB, name: "김민준", role: "아빠", email: "minjun@example.com", isOwner: true },
-    { id: "p-seoyeon", familyId: F_SUB, name: "이서연", role: "엄마", email: "wow0726@gmail.com" },
-    { id: "p-subsub", familyId: F_SUB, name: "김섭섭", role: "아이", age: 5 },
-    { id: "p-jihun", familyId: F_TAEO, name: "박지훈", role: "아빠", email: "jihun@example.com" },
-    { id: "p-eunji", familyId: F_TAEO, name: "최은지", role: "엄마", email: "eunji@example.com" },
-    { id: "p-taeo", familyId: F_TAEO, name: "박태오", role: "아이", age: 6 },
-  ],
+  profiles: [],
 
   itineraryDays: [
     {
@@ -72,7 +57,7 @@ export const seedData: AppData = {
         { time: "10:30", title: "하이델베르크 성 관람", description: "푸니쿨라 탑승 — 아이들이 좋아함. 대형 와인통 필수 관람" },
         { time: "13:00", title: "점심 — 구시가 골목", description: "Schnitzelbank 예약 13:00" },
         { time: "15:00", title: "철학자의 길 산책 또는 카를 테오도르 다리", description: "유모차 접근 가능 코스로" },
-        { time: "17:00", title: "하이델베르크 크리스마스 마켓", description: "아이스링크 있음 — 태오 스케이트 도전!" },
+        { time: "17:00", title: "하이델베르크 크리스마스 마켓", description: "아이스링크 있음" },
       ],
       restaurants: ["Schnitzelbank (전통 슈니첼, 예약 완료)", "Cafe Knösel (초콜릿 '학생 키스' 유명)"],
       christmasMarket: "하이델베르크 크리스마스 마켓 — 구시가 5개 광장에 분산, 카를스플라츠의 아이스링크가 하이라이트",
@@ -270,273 +255,38 @@ export const seedData: AppData = {
     },
   ],
 
-  comments: [
-    {
-      id: "c-1",
-      tripId: TRIP_ID,
-      anchor: {
-        targetType: "itinerary",
-        targetId: "day-8",
-        fieldKey: "notes",
-        selectedText: "크리스마스 당일이라 방문객 적은 편",
-        startOffset: 32,
-        endOffset: 50,
-      },
-      authorId: "p-eunji",
-      body: "진짜인지 확인해봤는데, 작년 후기 보니까 크리스마스 당일 오전은 정말 한산했대요! 대신 내부 투어 예약은 필수라고 해요.",
-      createdAt: "2026-07-12T09:30:00+09:00",
-      resolved: false,
-      mentions: ["p-seoyeon"],
-      replies: [
-        {
-          id: "cr-1",
-          authorId: "p-seoyeon",
-          body: "오 좋은 정보! 10:30 티켓 이미 예매해뒀어요 😊 문서함에 올려둘게요.",
-          createdAt: "2026-07-12T10:15:00+09:00",
-          mentions: [],
-        },
-      ],
-    },
-    {
-      id: "c-2",
-      tripId: TRIP_ID,
-      anchor: {
-        targetType: "itinerary",
-        targetId: "day-1",
-        fieldKey: "rentalCarNotes",
-        selectedText: "국제운전면허증 + 한국면허증 지참 필수",
-        startOffset: 47,
-        endOffset: 68,
-      },
-      authorId: "p-jihun",
-      body: "국제면허증 이번 주에 발급받으러 갑니다. 민준님도 잊지 마세요!",
-      createdAt: "2026-07-14T20:00:00+09:00",
-      resolved: false,
-      mentions: ["p-minjun"],
-      replies: [],
-    },
-    {
-      id: "c-3",
-      tripId: TRIP_ID,
-      anchor: {
-        targetType: "itinerary",
-        targetId: "day-7",
-        fieldKey: "notes",
-        selectedText: "간식·물·아침거리 미리 구매 필수",
-        startOffset: 30,
-        endOffset: 47,
-      },
-      authorId: "p-seoyeon",
-      body: "23일 저녁에 REWE 마트 들러서 장보는 걸로 체크리스트에 추가했어요.",
-      createdAt: "2026-07-15T11:00:00+09:00",
-      resolved: true,
-      resolvedBy: "p-eunji",
-      mentions: [],
-      replies: [],
-    },
-  ],
+  comments: [],
 
-  checklistGroups: [
-    { id: "cg-1", tripId: TRIP_ID, title: "출발 전 준비", order: 0, familyIds: [F_SUB, F_TAEO] },
-    { id: "cg-2", tripId: TRIP_ID, title: "짐 싸기", order: 1, familyIds: [F_SUB, F_TAEO] },
-  ],
-
-  checklistItems: [
-    { id: "ci-1", groupId: "cg-1", label: "여권 유효기간 확인 (6개월 이상)", order: 0, checks: { [F_SUB]: "checked", [F_TAEO]: "checked" } },
-    { id: "ci-2", groupId: "cg-1", label: "여행자 보험 가입", order: 1, checks: { [F_SUB]: "checked", [F_TAEO]: "empty" } },
-    { id: "ci-3", groupId: "cg-1", label: "국제운전면허증 발급", order: 2, checks: { [F_SUB]: "empty", [F_TAEO]: "empty" } },
-    { id: "ci-4", groupId: "cg-1", label: "카시트 예약 확인 (렌터카)", order: 3, checks: { [F_SUB]: "checked", [F_TAEO]: "checked" } },
-    { id: "ci-5", groupId: "cg-1", label: "유심/로밍 신청", order: 4, checks: { [F_SUB]: "empty", [F_TAEO]: "checked" } },
-    { id: "ci-6", groupId: "cg-1", label: "노이슈반슈타인 티켓 예매", order: 5, checks: { [F_SUB]: "checked", [F_TAEO]: "na" } },
-    { id: "ci-7", groupId: "cg-2", label: "방한복 & 방수 부츠", order: 0, checks: { [F_SUB]: "empty", [F_TAEO]: "empty" } },
-    { id: "ci-8", groupId: "cg-2", label: "아이 상비약 (해열제, 밴드)", order: 1, checks: { [F_SUB]: "empty", [F_TAEO]: "checked" } },
-    { id: "ci-9", groupId: "cg-2", label: "유모차 (경량형)", order: 2, checks: { [F_SUB]: "na", [F_TAEO]: "empty" } },
-    { id: "ci-10", groupId: "cg-2", label: "멀티어댑터 (C타입)", order: 3, checks: { [F_SUB]: "empty", [F_TAEO]: "empty" } },
-  ],
+  checklistGroups: [],
+  checklistItems: [],
 
   places: [
-    { id: "pl-1", tripId: TRIP_ID, name: "프랑크푸르트 공항 (FRA)", category: "airport", lat: 50.0379, lng: 8.5622, authorId: "p-minjun", createdAt: "2026-07-01T10:00:00+09:00", dayIds: ["day-1"] },
-    { id: "pl-2", tripId: TRIP_ID, name: "뮌헨 공항 (MUC)", category: "airport", lat: 48.3538, lng: 11.7861, authorId: "p-minjun", createdAt: "2026-07-01T10:01:00+09:00", dayIds: ["day-10"] },
-    { id: "pl-3", tripId: TRIP_ID, name: "모벤픽 호텔 프랑크푸르트", category: "hotel", lat: 50.1109, lng: 8.6635, address: "Den Haager Str. 5, Frankfurt", authorId: "p-seoyeon", createdAt: "2026-07-02T09:00:00+09:00", dayIds: ["day-1"] },
-    { id: "pl-4", tripId: TRIP_ID, name: "뢰머베르크 크리스마스 마켓", category: "christmas_market", lat: 50.1106, lng: 8.6821, memo: "17시 이후 점등. 12/22까지", authorId: "p-eunji", createdAt: "2026-07-02T09:10:00+09:00", dayIds: ["day-1"] },
-    { id: "pl-5", tripId: TRIP_ID, name: "하이델베르크 성", category: "attraction", lat: 49.4106, lng: 8.7156, memo: "푸니쿨라 왕복권 구매", authorId: "p-seoyeon", createdAt: "2026-07-03T14:00:00+09:00", dayIds: ["day-2"] },
-    { id: "pl-6", tripId: TRIP_ID, name: "Schnitzelbank", category: "restaurant", lat: 49.4118, lng: 8.7075, memo: "12/19 13:00 예약 완료 (6인)", authorId: "p-jihun", createdAt: "2026-07-03T14:20:00+09:00", dayIds: ["day-2"] },
-    { id: "pl-7", tripId: TRIP_ID, name: "P12 Kornmarkt 주차장", category: "parking", lat: 49.4103, lng: 8.7108, memo: "구시가 도보 3분, 시간당 €2.5", authorId: "p-jihun", createdAt: "2026-07-03T14:25:00+09:00", dayIds: ["day-2"] },
-    { id: "pl-8", tripId: TRIP_ID, name: "케테 볼파르트", category: "attraction", lat: 49.3769, lng: 10.1797, memo: "크리스마스 오너먼트 쇼핑 — 부피 큰 건 마지막 날 사기", authorId: "p-eunji", createdAt: "2026-07-04T11:00:00+09:00", dayIds: ["day-3"] },
-    { id: "pl-9", tripId: TRIP_ID, name: "크리스킨들레스마르크트", category: "christmas_market", lat: 49.4539, lng: 11.0775, memo: "어린이 마켓은 16시 이전 방문", authorId: "p-seoyeon", createdAt: "2026-07-04T11:30:00+09:00", dayIds: ["day-4", "day-5"] },
-    { id: "pl-10", tripId: TRIP_ID, name: "Bratwursthäusle", category: "restaurant", lat: 49.4547, lng: 11.0757, memo: "뉘른베르크 소시지 원조집", authorId: "p-minjun", createdAt: "2026-07-05T19:00:00+09:00", dayIds: ["day-4"] },
-    { id: "pl-11", tripId: TRIP_ID, name: "호텔 바이에리셔 호프", category: "hotel", lat: 48.1405, lng: 11.5733, address: "Promenadeplatz 2-6, München", memo: "4박, 발렛 €45/박", authorId: "p-seoyeon", createdAt: "2026-07-05T19:30:00+09:00", dayIds: ["day-6", "day-7", "day-8", "day-9"] },
-    { id: "pl-12", tripId: TRIP_ID, name: "노이슈반슈타인 성", category: "attraction", lat: 47.5576, lng: 10.7498, memo: "10:30 입장 예매 완료. 셔틀버스로 올라가기", authorId: "p-seoyeon", createdAt: "2026-07-06T10:00:00+09:00", dayIds: ["day-8"] },
-    { id: "pl-13", tripId: TRIP_ID, name: "P4 호엔슈방가우 주차장", category: "parking", lat: 47.5558, lng: 10.7378, memo: "€8/일, 성까지 도보/셔틀", authorId: "p-jihun", createdAt: "2026-07-06T10:05:00+09:00", dayIds: ["day-8"] },
-    { id: "pl-14", tripId: TRIP_ID, name: "Sixt 프랑크푸르트 공항점", category: "rental_car", lat: 50.0503, lng: 8.5716, memo: "예약번호 SX-88214, 9인승 벤", authorId: "p-minjun", createdAt: "2026-07-01T10:05:00+09:00", dayIds: ["day-1"] },
-    { id: "pl-15", tripId: TRIP_ID, name: "호프브로이하우스", category: "restaurant", lat: 48.1376, lng: 11.5798, memo: "12/23 19:00 예약 (6인)", authorId: "p-eunji", createdAt: "2026-07-07T21:00:00+09:00", dayIds: ["day-6"] },
+    { id: "pl-1", tripId: TRIP_ID, name: "프랑크푸르트 공항 (FRA)", category: "airport", lat: 50.0379, lng: 8.5622, authorId: "", createdAt: "2026-07-01T10:00:00+09:00", dayIds: ["day-1"] },
+    { id: "pl-2", tripId: TRIP_ID, name: "뮌헨 공항 (MUC)", category: "airport", lat: 48.3538, lng: 11.7861, authorId: "", createdAt: "2026-07-01T10:01:00+09:00", dayIds: ["day-10"] },
+    { id: "pl-3", tripId: TRIP_ID, name: "모벤픽 호텔 프랑크푸르트", category: "hotel", lat: 50.1109, lng: 8.6635, address: "Den Haager Str. 5, Frankfurt", authorId: "", createdAt: "2026-07-02T09:00:00+09:00", dayIds: ["day-1"] },
+    { id: "pl-4", tripId: TRIP_ID, name: "뢰머베르크 크리스마스 마켓", category: "christmas_market", lat: 50.1106, lng: 8.6821, memo: "17시 이후 점등. 12/22까지", authorId: "", createdAt: "2026-07-02T09:10:00+09:00", dayIds: ["day-1"] },
+    { id: "pl-5", tripId: TRIP_ID, name: "하이델베르크 성", category: "attraction", lat: 49.4106, lng: 8.7156, memo: "푸니쿨라 왕복권 구매", authorId: "", createdAt: "2026-07-03T14:00:00+09:00", dayIds: ["day-2"] },
+    { id: "pl-6", tripId: TRIP_ID, name: "Schnitzelbank", category: "restaurant", lat: 49.4118, lng: 8.7075, memo: "12/19 13:00 예약 완료 (6인)", authorId: "", createdAt: "2026-07-03T14:20:00+09:00", dayIds: ["day-2"] },
+    { id: "pl-7", tripId: TRIP_ID, name: "P12 Kornmarkt 주차장", category: "parking", lat: 49.4103, lng: 8.7108, memo: "구시가 도보 3분, 시간당 €2.5", authorId: "", createdAt: "2026-07-03T14:25:00+09:00", dayIds: ["day-2"] },
+    { id: "pl-8", tripId: TRIP_ID, name: "케테 볼파르트", category: "attraction", lat: 49.3769, lng: 10.1797, memo: "크리스마스 오너먼트 쇼핑 — 부피 큰 건 마지막 날 사기", authorId: "", createdAt: "2026-07-04T11:00:00+09:00", dayIds: ["day-3"] },
+    { id: "pl-9", tripId: TRIP_ID, name: "크리스킨들레스마르크트", category: "christmas_market", lat: 49.4539, lng: 11.0775, memo: "어린이 마켓은 16시 이전 방문", authorId: "", createdAt: "2026-07-04T11:30:00+09:00", dayIds: ["day-4", "day-5"] },
+    { id: "pl-10", tripId: TRIP_ID, name: "Bratwursthäusle", category: "restaurant", lat: 49.4547, lng: 11.0757, memo: "뉘른베르크 소시지 원조집", authorId: "", createdAt: "2026-07-05T19:00:00+09:00", dayIds: ["day-4"] },
+    { id: "pl-11", tripId: TRIP_ID, name: "호텔 바이에리셔 호프", category: "hotel", lat: 48.1405, lng: 11.5733, address: "Promenadeplatz 2-6, München", memo: "4박, 발렛 €45/박", authorId: "", createdAt: "2026-07-05T19:30:00+09:00", dayIds: ["day-6", "day-7", "day-8", "day-9"] },
+    { id: "pl-12", tripId: TRIP_ID, name: "노이슈반슈타인 성", category: "attraction", lat: 47.5576, lng: 10.7498, memo: "10:30 입장 예매 완료. 셔틀버스로 올라가기", authorId: "", createdAt: "2026-07-06T10:00:00+09:00", dayIds: ["day-8"] },
+    { id: "pl-13", tripId: TRIP_ID, name: "P4 호엔슈방가우 주차장", category: "parking", lat: 47.5558, lng: 10.7378, memo: "€8/일, 성까지 도보/셔틀", authorId: "", createdAt: "2026-07-06T10:05:00+09:00", dayIds: ["day-8"] },
+    { id: "pl-14", tripId: TRIP_ID, name: "Sixt 프랑크푸르트 공항점", category: "rental_car", lat: 50.0503, lng: 8.5716, memo: "예약번호 SX-88214, 9인승 벤", authorId: "", createdAt: "2026-07-01T10:05:00+09:00", dayIds: ["day-1"] },
+    { id: "pl-15", tripId: TRIP_ID, name: "호프브로이하우스", category: "restaurant", lat: 48.1376, lng: 11.5798, memo: "12/23 19:00 예약 (6인)", authorId: "", createdAt: "2026-07-07T21:00:00+09:00", dayIds: ["day-6"] },
   ],
 
-  posts: [
-    {
-      id: "post-1",
-      tripId: TRIP_ID,
-      type: "poll",
-      title: "12/26 오후 일정 투표 🗳️",
-      body: "님펜부르크 궁전 vs BMW 벨트 — 어디로 갈까요?",
-      pollOptions: [
-        { id: "po-1", label: "님펜부르크 궁전 (겨울 정원 산책)", voterIds: ["p-seoyeon", "p-eunji"] },
-        { id: "po-2", label: "BMW 벨트 (아이들 자동차 체험)", voterIds: ["p-jihun"] },
-      ],
-      tags: ["뮌헨", "투표"],
-      authorId: "p-minjun",
-      createdAt: "2026-07-10T09:00:00+09:00",
-      likedBy: ["p-eunji"],
-      comments: [
-        { id: "pc-1", authorId: "p-jihun", body: "태오가 자동차를 너무 좋아해서... BMW 한 표!", createdAt: "2026-07-10T09:30:00+09:00" },
-      ],
-    },
-    {
-      id: "post-2",
-      tripId: TRIP_ID,
-      type: "link",
-      title: "뉘른베르크 마켓 공식 홈페이지",
-      body: "운영시간이랑 이벤트 일정 여기서 확인 가능해요",
-      linkUrl: "https://www.christkindlesmarkt.de",
-      tags: ["뉘른베르크", "크리스마스마켓"],
-      authorId: "p-eunji",
-      createdAt: "2026-07-11T14:00:00+09:00",
-      likedBy: ["p-seoyeon", "p-minjun"],
-      comments: [],
-    },
-    {
-      id: "post-3",
-      tripId: TRIP_ID,
-      type: "text",
-      title: "글뤼바인 컵 수집 계획 ☕",
-      body: "각 도시 마켓마다 글뤼바인 머그컵 디자인이 달라요! 보증금 €3-4인데 반납 안 하면 기념품으로 가질 수 있음. 도시별로 하나씩 모아오면 예쁠 듯!",
-      tags: ["쇼핑", "기념품"],
-      authorId: "p-seoyeon",
-      createdAt: "2026-07-13T16:00:00+09:00",
-      likedBy: ["p-eunji", "p-jihun", "p-minjun"],
-      comments: [
-        { id: "pc-2", authorId: "p-eunji", body: "완전 좋아요!! 캐리어에 뽁뽁이 챙겨가야겠네요", createdAt: "2026-07-13T16:20:00+09:00" },
-      ],
-    },
-    {
-      id: "post-4",
-      tripId: TRIP_ID,
-      type: "location",
-      title: "숨은 맛집 발견 — Zur Höll",
-      body: "로텐부르크에서 900년 된 건물의 와인 선술집이래요. 중세 분위기 최고!",
-      placeId: "pl-8",
-      tags: ["로텐부르크", "맛집"],
-      authorId: "p-jihun",
-      createdAt: "2026-07-14T22:00:00+09:00",
-      likedBy: ["p-minjun"],
-      comments: [],
-    },
-  ],
+  posts: [],
 
-  documents: [
-    {
-      id: "doc-1",
-      tripId: TRIP_ID,
-      title: "인천-프랑크푸르트 항공권 (전원)",
-      category: "flight",
-      fileName: "LH713_eticket_6pax.pdf",
-      fileType: "application/pdf",
-      fileSize: 482_000,
-      uploadedBy: "p-minjun",
-      uploadedAt: "2026-06-20T10:00:00+09:00",
-      versions: [
-        { id: "dv-1", fileName: "LH713_eticket_6pax.pdf", fileSize: 482_000, uploadedBy: "p-minjun", uploadedAt: "2026-06-20T10:00:00+09:00" },
-      ],
-    },
-    {
-      id: "doc-2",
-      tripId: TRIP_ID,
-      title: "렌터카 예약 확인서 (Sixt)",
-      category: "rental_car",
-      fileName: "sixt_SX-88214.pdf",
-      fileType: "application/pdf",
-      fileSize: 210_000,
-      uploadedBy: "p-jihun",
-      uploadedAt: "2026-06-25T15:00:00+09:00",
-      versions: [
-        { id: "dv-2", fileName: "sixt_SX-88214.pdf", fileSize: 210_000, uploadedBy: "p-jihun", uploadedAt: "2026-06-25T15:00:00+09:00" },
-      ],
-    },
-    {
-      id: "doc-3",
-      tripId: TRIP_ID,
-      title: "노이슈반슈타인 입장권 (12/25 10:30)",
-      category: "etc",
-      fileName: "neuschwanstein_tickets.pdf",
-      fileType: "application/pdf",
-      fileSize: 156_000,
-      uploadedBy: "p-seoyeon",
-      uploadedAt: "2026-07-12T10:30:00+09:00",
-      versions: [
-        { id: "dv-3", fileName: "neuschwanstein_tickets.pdf", fileSize: 156_000, uploadedBy: "p-seoyeon", uploadedAt: "2026-07-12T10:30:00+09:00" },
-      ],
-    },
-    {
-      id: "doc-4",
-      tripId: TRIP_ID,
-      title: "여행자 보험 증서 (섭섭이네)",
-      category: "insurance",
-      fileName: "insurance_subsub_family.pdf",
-      fileType: "application/pdf",
-      fileSize: 890_000,
-      uploadedBy: "p-seoyeon",
-      uploadedAt: "2026-07-08T09:00:00+09:00",
-      versions: [
-        { id: "dv-4", fileName: "insurance_subsub_family.pdf", fileSize: 890_000, uploadedBy: "p-seoyeon", uploadedAt: "2026-07-08T09:00:00+09:00" },
-      ],
-    },
-  ],
+  documents: [],
 
-  notifications: [
-    {
-      id: "n-1",
-      tripId: TRIP_ID,
-      type: "comment",
-      actorId: "p-jihun",
-      message: "박지훈님이 1일차 렌터카 메모에 댓글을 남겼습니다",
-      href: "/itinerary?day=day-1&comment=c-2",
-      createdAt: "2026-07-14T20:00:00+09:00",
-      readBy: [],
-    },
-    {
-      id: "n-2",
-      tripId: TRIP_ID,
-      type: "mention",
-      actorId: "p-eunji",
-      message: "최은지님이 회원님을 언급했습니다: \"진짜인지 확인해봤는데...\"",
-      href: "/itinerary?day=day-8&comment=c-1",
-      createdAt: "2026-07-12T09:30:00+09:00",
-      readBy: ["p-seoyeon"],
-    },
-    {
-      id: "n-3",
-      tripId: TRIP_ID,
-      type: "document",
-      actorId: "p-seoyeon",
-      message: "이서연님이 새 문서를 업로드했습니다: 노이슈반슈타인 입장권",
-      href: "/documents",
-      createdAt: "2026-07-12T10:30:00+09:00",
-      readBy: [],
-    },
-    {
-      id: "n-4",
-      tripId: TRIP_ID,
-      type: "board",
-      actorId: "p-minjun",
-      message: "김민준님이 투표를 시작했습니다: 12/26 오후 일정 투표",
-      href: "/board",
-      createdAt: "2026-07-10T09:00:00+09:00",
-      readBy: ["p-seoyeon", "p-eunji"],
-    },
-  ],
+  notifications: [],
 
   activityLogs: [],
 };
 
-export const DEMO_CURRENT_USER_ID = "p-seoyeon";
+/** 데모 모드 게스트 프로필 id — init 시 자동 생성됩니다 */
+export const DEMO_CURRENT_USER_ID = "p-me";
 export const TRIP_ID_CONST = TRIP_ID;

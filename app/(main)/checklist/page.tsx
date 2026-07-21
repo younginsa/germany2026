@@ -5,7 +5,7 @@ import { motion, type Variants } from "framer-motion";
 import { Plus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useChecklistGroups, useChecklistItems, useFamilies } from "@/hooks/use-app-data";
+import { useChecklistGroups, useChecklistItems, useProfiles } from "@/hooks/use-app-data";
 import { cn } from "@/lib/utils";
 import { EmptyState } from "@/components/checklist/empty-state";
 import { GroupCard } from "@/components/checklist/group-card";
@@ -25,7 +25,7 @@ const fadeUp: Variants = {
 export default function ChecklistPage() {
   const groups = useChecklistGroups();
   const items = useChecklistItems();
-  const families = useFamilies();
+  const members = useProfiles();
 
   const [wizardOpen, setWizardOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -46,7 +46,7 @@ export default function ChecklistPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">체크리스트</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            두 가족이 나란히 준비 상황을 체크해요
+            함께 가는 사람들과 나란히 준비 상황을 체크해요
           </p>
         </div>
         <Button onClick={() => setWizardOpen(true)}>
@@ -100,7 +100,7 @@ export default function ChecklistPage() {
 
           {/* 전체 진행률 요약 */}
           <motion.div variants={fadeUp}>
-            <SummaryCard groups={groups} items={items} families={families} />
+            <SummaryCard groups={groups} items={items} members={members} />
           </motion.div>
 
           {/* 그룹별 매트릭스 */}
@@ -110,7 +110,7 @@ export default function ChecklistPage() {
                 group={group}
                 items={items.filter((i) => i.groupId === group.id)}
                 allItems={items}
-                families={families}
+                members={members}
                 search={search}
                 filter={filter}
               />

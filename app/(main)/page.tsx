@@ -8,7 +8,7 @@ import { useTrip } from "@/hooks/use-app-data";
 import { Countdown } from "@/components/home/countdown";
 import { StatCards } from "@/components/home/stat-cards";
 import { WeatherStrip } from "@/components/home/weather-card";
-import { FamilyCards } from "@/components/home/family-cards";
+import { CompanionsCard } from "@/components/home/companions-card";
 import { QuickActions } from "@/components/home/quick-actions";
 import { RecentComments } from "@/components/home/recent-comments";
 import { ChecklistProgress } from "@/components/home/checklist-progress";
@@ -107,7 +107,7 @@ export default function HomePage() {
         <QuickActions />
       </Section>
 
-      {/* ─── 일정 미리보기 · 댓글 · 체크리스트 · 가족 ── */}
+      {/* ─── 일정 미리보기 · 댓글 · 체크리스트 · 동행인 ── */}
       <Section delay={0.24}>
         <div className="grid gap-4 lg:grid-cols-3">
           <div className="space-y-4 lg:col-span-2">
@@ -116,7 +116,7 @@ export default function HomePage() {
           </div>
           <div className="space-y-4">
             <ChecklistProgress />
-            <FamilyCards />
+            <CompanionsCard />
           </div>
         </div>
       </Section>

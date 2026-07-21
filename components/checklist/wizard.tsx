@@ -19,15 +19,15 @@ import {
   tripStore,
   useChecklistGroups,
   useCurrentUser,
-  useFamilies,
+  useProfiles,
   useTrip,
 } from "@/hooks/use-app-data";
-import type { CheckState, ChecklistGroup, ChecklistItem, Family } from "@/lib/types";
+import type { CheckState, ChecklistGroup, ChecklistItem, Profile } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { FAMILY_HUE_PALETTE, familyDotColor } from "./checklist-utils";
+import { MEMBER_HUE_PALETTE, memberDotColor } from "./checklist-utils";
 
 const STEPS = [
-  { title: "가족 입력", description: "누가 함께 체크하나요?" },
+  { title: "멤버 입력", description: "누가 함께 체크하나요?" },
   { title: "항목 입력", description: "무엇을 준비해야 하나요?" },
 ] as const;
 
@@ -42,25 +42,25 @@ interface ChecklistWizardProps {
   onOpenChange: (open: boolean) => void;
 }
 
-/** 2단계 체크리스트 생성 마법사 — 가족 컬럼 → 항목 목록 */
+/** 2단계 체크리스트 생성 마법사 — 멤버(동행인) 컬럼 → 항목 목록 */
 export function ChecklistWizard({ open, onOpenChange }: ChecklistWizardProps) {
   const trip = useTrip();
   const me = useCurrentUser();
-  const families = useFamilies();
+  const profiles = useProfiles();
   const groups = useChecklistGroups();
 
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
-  const [familiesText, setFamiliesText] = useState("");
+  const [membersText, setMembersText] = useState("");
   const [title, setTitle] = useState("새 체크리스트");
   const [itemsText, setItemsText] = useState("");
 
-  /* 열릴 때마다 초기화 — 기존 가족 이름을 미리 채움 */
+  /* 열릴 때마다 초기화 — 기존 멤버 이름을 미리 채움 */
   useEffect(() => {
     if (open) {
       setStep(0);
       setDirection(1);
-      setFamiliesText(tripStore.getSnapshot().families.map((f) => f.name).join(", "));
+      setMembersText(tripStore.getSnapshot().profiles.map((p) => p.name).join(", "));
       setTitle("새 체크리스트");
       setItemsText("");
     }
@@ -68,7 +68,7 @@ export function ChecklistWizard({ open, onOpenChange }: ChecklistWizardProps) {
 
   const parsedNames = Array.from(
     new Set(
-      familiesText
+      membersText
         .split(",")
         .map((s) => s.trim())
         .filter(Boolean)
@@ -94,27 +94,26 @@ export function ChecklistWizard({ open, onOpenChange }: ChecklistWizardProps) {
   const submit = () => {
     if (!canSubmit || !canNext) return;
 
-    /* 1) 가족 이름 → 기존 가족 매핑 or 새 가족 생성 */
-    const usedHues = new Set(families.map((f) => f.hue));
-    const familyIds: string[] = [];
+    /* 1) 멤버 이름 → 기존 멤버 매핑 or 새 동행인 생성 */
+    const usedHues = new Set(profiles.map((p) => p.hue));
+    const memberIds: string[] = [];
     for (const name of parsedNames) {
-      const existing = families.find((f) => f.name === name);
+      const existing = profiles.find((p) => p.name === name);
       if (existing) {
-        familyIds.push(existing.id);
+        memberIds.push(existing.id);
         continue;
       }
       const hue =
-        FAMILY_HUE_PALETTE.find((h) => !usedHues.has(h)) ??
-        FAMILY_HUE_PALETTE[familyIds.length % FAMILY_HUE_PALETTE.length];
+        MEMBER_HUE_PALETTE.find((h) => !usedHues.has(h)) ??
+        MEMBER_HUE_PALETTE[memberIds.length % MEMBER_HUE_PALETTE.length];
       usedHues.add(hue);
-      const family: Family = {
-        id: newId("family"),
+      const member: Profile = {
+        id: newId("p"),
         name,
         hue,
-        color: familyDotColor(hue),
       };
-      tripStore.upsertRow("families", family);
-      familyIds.push(family.id);
+      tripStore.upsertRow("profiles", member);
+      memberIds.push(member.id);
     }
 
     /* 2) 그룹 생성 (order = max + 1) */
@@ -124,14 +123,14 @@ export function ChecklistWizard({ open, onOpenChange }: ChecklistWizardProps) {
       tripId: trip.id,
       title: title.trim(),
       order: maxOrder + 1,
-      familyIds,
+      memberIds,
     };
     tripStore.upsertRow("checklistGroups", group);
 
-    /* 3) 항목 생성 — 모든 가족 셀을 empty로 초기화 */
+    /* 3) 항목 생성 — 모든 멤버 셀을 empty로 초기화 */
     parsedItems.forEach((label, index) => {
       const checks: Record<string, CheckState> = {};
-      for (const fid of familyIds) checks[fid] = "empty";
+      for (const fid of memberIds) checks[fid] = "empty";
       const item: ChecklistItem = {
         id: newId("ci"),
         groupId: group.id,
@@ -204,7 +203,7 @@ export function ChecklistWizard({ open, onOpenChange }: ChecklistWizardProps) {
           <AnimatePresence mode="wait" custom={direction} initial={false}>
             {step === 0 ? (
               <motion.div
-                key="step-families"
+                key="step-members"
                 custom={direction}
                 variants={slideVariants}
                 initial="enter"
@@ -213,25 +212,25 @@ export function ChecklistWizard({ open, onOpenChange }: ChecklistWizardProps) {
                 transition={{ duration: 0.22, ease: "easeOut" }}
                 className="space-y-3"
               >
-                <label htmlFor="wizard-families" className="text-sm font-medium">
-                  가족 입력
+                <label htmlFor="wizard-members" className="text-sm font-medium">
+                  함께 체크할 사람
                 </label>
                 <Input
-                  id="wizard-families"
+                  id="wizard-members"
                   autoFocus
-                  value={familiesText}
-                  onChange={(e) => setFamiliesText(e.target.value)}
-                  placeholder="섭섭이네, 태오네"
+                  value={membersText}
+                  onChange={(e) => setMembersText(e.target.value)}
+                  placeholder="나, 친구1, 친구2"
                 />
                 <p className="text-xs text-muted-foreground">쉼표로 구분해 입력하세요</p>
 
                 {parsedNames.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 pt-1">
                     {parsedNames.map((name, i) => {
-                      const existing = families.find((f) => f.name === name);
+                      const existing = profiles.find((p) => p.name === name);
                       const hue =
                         existing?.hue ??
-                        FAMILY_HUE_PALETTE[i % FAMILY_HUE_PALETTE.length];
+                        MEMBER_HUE_PALETTE[i % MEMBER_HUE_PALETTE.length];
                       return (
                         <span
                           key={name}
@@ -240,11 +239,11 @@ export function ChecklistWizard({ open, onOpenChange }: ChecklistWizardProps) {
                           <span
                             aria-hidden
                             className="h-2 w-2 rounded-full"
-                            style={{ backgroundColor: familyDotColor(hue) }}
+                            style={{ backgroundColor: memberDotColor(hue) }}
                           />
                           {name}
                           {!existing && (
-                            <span className="text-[10px] text-primary">새 가족</span>
+                            <span className="text-[10px] text-primary">새 동행인</span>
                           )}
                         </span>
                       );

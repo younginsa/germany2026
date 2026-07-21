@@ -11,7 +11,6 @@ import {
   useNotifications,
   useCurrentUser,
   useProfileById,
-  useFamilyById,
   tripStore,
 } from "@/hooks/use-app-data";
 import type { NotificationType } from "@/lib/types";
@@ -30,7 +29,6 @@ export function NotificationCenter() {
   const notifications = useNotifications();
   const me = useCurrentUser();
   const profileById = useProfileById();
-  const familyById = useFamilyById();
 
   const unread = notifications.filter((n) => !n.readBy.includes(me.id));
 
@@ -87,7 +85,6 @@ export function NotificationCenter() {
             <ul className="divide-y">
               {notifications.slice(0, 20).map((n) => {
                 const actor = profileById(n.actorId);
-                const family = actor ? familyById(actor.familyId) : undefined;
                 const Icon = TYPE_ICON[n.type];
                 const isUnread = !n.readBy.includes(me.id);
                 return (
@@ -102,7 +99,7 @@ export function NotificationCenter() {
                     >
                       <div className="relative shrink-0">
                         <Avatar className="h-8 w-8">
-                          <AvatarFallback hue={family?.hue}>
+                          <AvatarFallback hue={actor?.hue}>
                             {actor ? initialsOf(actor.name) : "?"}
                           </AvatarFallback>
                         </Avatar>

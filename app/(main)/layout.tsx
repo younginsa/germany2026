@@ -2,7 +2,6 @@ import { TopNav } from "@/components/layout/top-nav";
 import { BottomTabs } from "@/components/layout/bottom-tabs";
 import { MapSwitchCta } from "@/components/layout/map-switch-cta";
 import { AuthGuard } from "@/components/layout/auth-guard";
-import { ProfileLinkDialog } from "@/components/layout/profile-link-dialog";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -14,7 +13,6 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         </main>
         <MapSwitchCta />
         <BottomTabs />
-        <ProfileLinkDialog />
       </div>
     </AuthGuard>
   );
