@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { useTheme } from "next-themes";
 import { motion } from "framer-motion";
 import {
   Crown,
@@ -9,11 +8,8 @@ import {
   Download,
   Globe,
   Map as MapIcon,
-  Monitor,
-  Moon,
   Palette,
   RotateCcw,
-  Sun,
   Upload,
   Users,
 } from "lucide-react";
@@ -44,7 +40,7 @@ import {
   tripStore,
 } from "@/hooks/use-app-data";
 import { isGoogleMapsConfigured, isSupabaseConfigured } from "@/lib/supabase/config";
-import { cn, initialsOf } from "@/lib/utils";
+import { initialsOf } from "@/lib/utils";
 import type { AppData } from "@/lib/types";
 
 const fadeUp = {
@@ -58,7 +54,6 @@ export default function SettingsPage() {
   const profiles = useProfiles();
   const me = useCurrentUser();
   const data = useAppData();
-  const { theme, setTheme } = useTheme();
 
   const [title, setTitle] = useState(trip.title);
   const [destination, setDestination] = useState(trip.destination);
@@ -116,12 +111,6 @@ export default function SettingsPage() {
     setResetOpen(false);
     toast.success("데모 데이터로 초기화되었습니다");
   }
-
-  const themeOptions = [
-    { value: "light", label: "라이트", icon: Sun },
-    { value: "dark", label: "다크", icon: Moon },
-    { value: "system", label: "시스템", icon: Monitor },
-  ] as const;
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -256,27 +245,9 @@ export default function SettingsPage() {
               <Palette className="h-4 w-4 text-primary" />
               화면 설정
             </CardTitle>
-            <CardDescription>테마와 언어를 설정합니다</CardDescription>
+            <CardDescription>언어를 설정합니다</CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
-            <div className="space-y-2">
-              <Label>테마</Label>
-              <div className="grid grid-cols-3 gap-2">
-                {themeOptions.map((opt) => (
-                  <button
-                    key={opt.value}
-                    onClick={() => setTheme(opt.value)}
-                    className={cn(
-                      "flex flex-col items-center gap-1.5 rounded-xl border p-3 text-sm transition-all hover:bg-accent",
-                      theme === opt.value && "border-primary bg-accent ring-1 ring-primary"
-                    )}
-                  >
-                    <opt.icon className="h-4 w-4" />
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-            </div>
             <div className="space-y-2">
               <Label>언어</Label>
               <Select value="ko" disabled>

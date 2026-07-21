@@ -11,7 +11,6 @@ import {
   LayoutGrid,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { NotificationCenter } from "@/components/layout/notification-center";
 import { GlobalSearch } from "@/components/layout/global-search";
 import { UserMenu } from "@/components/layout/user-menu";
@@ -78,7 +77,6 @@ export function TopNav() {
         <div className="flex items-center gap-1">
           <GlobalSearch />
           <NotificationCenter />
-          <ThemeToggle />
           <UserMenu />
         </div>
       </div>
