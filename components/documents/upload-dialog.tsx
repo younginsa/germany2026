@@ -31,6 +31,7 @@ import {
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { fileKindMeta } from "@/components/documents/file-type";
+import { CATEGORY_ICON } from "@/components/documents/category-icon";
 import { cn, formatBytes } from "@/lib/utils";
 import {
   DOCUMENT_CATEGORY_LABEL,
@@ -40,16 +41,6 @@ import {
 } from "@/lib/types";
 
 const ACCEPT = ".pdf,.png,.jpg,.jpeg,.webp,.doc,.docx,.xls,.xlsx";
-
-const CATEGORY_ICON: Record<DocumentCategory, string> = {
-  flight: "✈️",
-  hotel: "🏨",
-  rental_car: "🚗",
-  insurance: "🛡️",
-  passport: "📕",
-  vaccination: "💉",
-  etc: "📎",
-};
 
 /** 파일을 스토리지에 저장하고 접근 URL을 돌려줍니다 (실패/데모 시 object URL 폴백). */
 async function storeFile(file: File, docId: string): Promise<string | undefined> {
@@ -324,12 +315,15 @@ export function UploadDialog({
                       DocumentCategory,
                       string,
                     ][]
-                  ).map(([key, label]) => (
-                    <SelectItem key={key} value={key}>
-                      <span className="mr-1.5">{CATEGORY_ICON[key]}</span>
-                      {label}
-                    </SelectItem>
-                  ))}
+                  ).map(([key, label]) => {
+                    const Icon = CATEGORY_ICON[key];
+                    return (
+                      <SelectItem key={key} value={key}>
+                        <Icon className="mr-1.5 inline h-3.5 w-3.5 align-[-2px]" aria-hidden />
+                        {label}
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
             </div>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Mail, Snowflake, Sparkles } from "lucide-react";
+import { Mail, Snowflake, Sparkles, TreePine } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -60,8 +60,8 @@ export default function LoginPage() {
         className="w-full max-w-md"
       >
         <div className="mb-8 text-center">
-          <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-3xl">
-            🎄
+          <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
+            <TreePine className="h-7 w-7 text-primary" aria-hidden />
           </div>
           <h1 className="text-2xl font-bold tracking-tight">독일 크리스마스 마켓 여행</h1>
           <p className="mt-2 text-sm text-muted-foreground">

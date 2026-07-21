@@ -68,7 +68,7 @@ export function CategoryFilter({ selected, onChange, counts, className }: Catego
                 : { borderColor: withAlpha(meta.color, 0.25) }
             }
           >
-            <span aria-hidden>{meta.emoji}</span>
+            <meta.icon className="h-3.5 w-3.5" aria-hidden />
             {meta.label}
             {count > 0 && (
               <span

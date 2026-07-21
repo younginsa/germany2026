@@ -38,16 +38,7 @@ import {
   type DocumentCategory,
   type TripDocument,
 } from "@/lib/types";
-
-const CATEGORY_ICON: Record<DocumentCategory, string> = {
-  flight: "✈️",
-  hotel: "🏨",
-  rental_car: "🚗",
-  insurance: "🛡️",
-  passport: "📕",
-  vaccination: "💉",
-  etc: "📎",
-};
+import { CATEGORY_ICON } from "@/components/documents/category-icon";
 
 const SORT_LABEL = {
   latest: "최신순",
@@ -224,6 +215,7 @@ export default function DocumentsPage() {
         </FilterChip>
         {categories.map(([key, label]) => {
           const count = documents.filter((d) => d.category === key).length;
+          const Icon = CATEGORY_ICON[key];
           return (
             <FilterChip
               key={key}
@@ -231,7 +223,7 @@ export default function DocumentsPage() {
               onClick={() => setCategoryFilter(key)}
               count={count}
             >
-              <span aria-hidden>{CATEGORY_ICON[key]}</span> {label}
+              <Icon className="mr-1 inline h-3.5 w-3.5 align-[-2px]" aria-hidden /> {label}
             </FilterChip>
           );
         })}

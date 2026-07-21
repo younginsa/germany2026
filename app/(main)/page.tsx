@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { CalendarDays, MapPin, Snowflake, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { useTrip } from "@/hooks/use-app-data";
 import { Countdown } from "@/components/home/countdown";
 import { StatCards } from "@/components/home/stat-cards";
@@ -56,8 +57,8 @@ export default function HomePage() {
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_60%_at_50%_0%,color-mix(in_oklch,var(--primary)_14%,transparent),transparent)]"
           />
           <div className="relative">
-            <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-3xl">
-              {trip.coverEmoji}
+            <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
+              <EmojiIcon emoji={trip.coverEmoji} className="h-7 w-7 text-primary" />
             </div>
             <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
               {trip.title}

@@ -9,7 +9,7 @@
 
 import { Suspense, useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import { MessageCircle, MessagesSquare } from "lucide-react";
+import { Lightbulb, MessageCircle, MessagesSquare } from "lucide-react";
 import { useComments, useItineraryDays } from "@/hooks/use-app-data";
 import {
   InlineCommentsProvider,
@@ -97,8 +97,9 @@ function ItineraryContent() {
                 미해결 {unresolvedCount}
               </Badge>
             )}
-            <span className="text-xs text-muted-foreground">
-              💡 일정 텍스트를 드래그하면 바로 댓글을 남길 수 있어요
+            <span className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Lightbulb className="h-3.5 w-3.5 shrink-0" aria-hidden />
+              일정 텍스트를 드래그하면 바로 댓글을 남길 수 있어요
             </span>
           </div>
         </div>

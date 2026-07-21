@@ -9,7 +9,17 @@ import {
   type MapMouseEvent,
 } from "@vis.gl/react-google-maps";
 import { motion } from "framer-motion";
-import { MousePointerClick } from "lucide-react";
+import {
+  Car,
+  Castle,
+  Hotel,
+  Map as MapIcon,
+  MousePointerClick,
+  Plane,
+  TreePine,
+  UtensilsCrossed,
+  type LucideIcon,
+} from "lucide-react";
 import type { Place } from "@/lib/types";
 import { GOOGLE_MAPS_MAP_ID } from "@/lib/supabase/config";
 import { cn } from "@/lib/utils";
@@ -40,9 +50,10 @@ function MapController({ selected }: { selected: Place | null }) {
   return null;
 }
 
-/** 카테고리 이모지 커스텀 핀 (mapId 있을 때만 사용 가능) */
+/** 카테고리 아이콘 커스텀 핀 (mapId 있을 때만 사용 가능) */
 function CategoryPin({ place, selected }: { place: Place; selected: boolean }) {
   const meta = CATEGORY_META[place.category];
+  const Icon = meta.icon;
   return (
     <motion.div
       initial={false}
@@ -58,9 +69,7 @@ function CategoryPin({ place, selected }: { place: Place; selected: boolean }) {
         )}
         style={{ backgroundColor: meta.color }}
       >
-        <span className="drop-shadow-sm" aria-hidden>
-          {meta.emoji}
-        </span>
+        <Icon className="h-4 w-4 text-white drop-shadow-sm" aria-hidden />
       </div>
       {/* 핀 꼬리 */}
       <div
@@ -135,14 +144,14 @@ export function MapView({ places, selectedId, onSelect, onMapClick }: MapViewPro
 
 /* ─── PREVIEW 모드 — API 키 미설정 시 플레이스홀더 ─── */
 
-/** 미리 배치된 장식 이모지 핀 (SSR 안정성을 위해 고정 좌표) */
-const DECO_PINS: { emoji: string; top: string; left: string; delay: number }[] = [
-  { emoji: "🏰", top: "22%", left: "18%", delay: 0 },
-  { emoji: "🎄", top: "38%", left: "68%", delay: 0.15 },
-  { emoji: "🍽", top: "62%", left: "30%", delay: 0.3 },
-  { emoji: "🏨", top: "70%", left: "74%", delay: 0.45 },
-  { emoji: "✈️", top: "18%", left: "78%", delay: 0.6 },
-  { emoji: "🚗", top: "55%", left: "52%", delay: 0.75 },
+/** 미리 배치된 장식 아이콘 핀 (SSR 안정성을 위해 고정 좌표) */
+const DECO_PINS: { icon: LucideIcon; top: string; left: string; delay: number }[] = [
+  { icon: Castle, top: "22%", left: "18%", delay: 0 },
+  { icon: TreePine, top: "38%", left: "68%", delay: 0.15 },
+  { icon: UtensilsCrossed, top: "62%", left: "30%", delay: 0.3 },
+  { icon: Hotel, top: "70%", left: "74%", delay: 0.45 },
+  { icon: Plane, top: "18%", left: "78%", delay: 0.6 },
+  { icon: Car, top: "55%", left: "52%", delay: 0.75 },
 ];
 
 /** 지도 플레이스홀더 (PREVIEW 모드) */
@@ -165,17 +174,17 @@ export function MapPreview({ placeCount }: { placeCount: number }) {
       />
 
       {/* 장식 핀 */}
-      {DECO_PINS.map((pin) => (
+      {DECO_PINS.map((pin, i) => (
         <motion.span
-          key={pin.emoji}
+          key={i}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 0.35, y: 0 }}
           transition={{ delay: pin.delay + 0.2, duration: 0.6 }}
-          className="absolute select-none text-2xl"
+          className="absolute select-none text-muted-foreground"
           style={{ top: pin.top, left: pin.left }}
           aria-hidden
         >
-          {pin.emoji}
+          <pin.icon className="h-6 w-6" />
         </motion.span>
       ))}
 
@@ -187,8 +196,8 @@ export function MapPreview({ placeCount }: { placeCount: number }) {
           transition={{ duration: 0.5, ease: [0.21, 1.02, 0.73, 1] }}
           className="glass max-w-sm rounded-2xl p-8 text-center shadow-[var(--shadow-lifted)]"
         >
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-accent text-4xl shadow-sm">
-            🗺️
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-accent shadow-sm">
+            <MapIcon className="h-8 w-8 text-accent-foreground" aria-hidden />
           </div>
           <h2 className="text-base font-semibold">지도 미리보기 모드</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">

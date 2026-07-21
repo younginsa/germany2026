@@ -8,7 +8,7 @@ import {
   ListChecks,
   MessageSquareQuote,
 } from "lucide-react";
-import type { PlaceCategory, PostType } from "@/lib/types";
+import type { PostType } from "@/lib/types";
 
 /** 사용자가 직접 만들 수 있는 카드 타입 */
 export const CREATABLE_TYPES = ["text", "image", "location", "link", "poll"] as const;
@@ -22,17 +22,6 @@ export const POST_TYPE_META: Record<PostType, { label: string; icon: LucideIcon 
   poll: { label: "투표", icon: BarChart3 },
   checklist_ref: { label: "체크리스트", icon: ListChecks },
   comment_ref: { label: "코멘트", icon: MessageSquareQuote },
-};
-
-export const CATEGORY_EMOJI: Record<PlaceCategory, string> = {
-  hotel: "🏨",
-  restaurant: "🍽️",
-  christmas_market: "🎄",
-  parking: "🅿️",
-  rental_car: "🚗",
-  airport: "✈️",
-  attraction: "🏰",
-  custom: "📍",
 };
 
 /** URL에서 도메인만 추출 (실패 시 원본 반환) */

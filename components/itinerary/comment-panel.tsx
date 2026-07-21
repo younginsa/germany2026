@@ -28,6 +28,7 @@ import {
   useProfiles,
 } from "@/hooks/use-app-data";
 import { useInlineComments } from "@/hooks/use-inline-comments";
+import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { parseMentions } from "@/components/itinerary/selection-toolbar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -343,7 +344,7 @@ export function CommentPanel() {
               {dayComments.length}
             </Badge>
             <Badge variant="accent" className="ml-1 px-2 py-0 text-[11px]">
-              D{day.dayNumber} · {day.cityEmoji} {day.city}
+              D{day.dayNumber} · <EmojiIcon emoji={day.cityEmoji} className="h-3 w-3" /> {day.city}
             </Badge>
             <div className="flex-1" />
             <Button variant="ghost" size="icon-sm" onClick={closePanel} aria-label="댓글 패널 닫기">

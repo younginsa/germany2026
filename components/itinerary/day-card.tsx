@@ -8,7 +8,22 @@
 
 import { useMemo, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, MessageCircle } from "lucide-react";
+import {
+  BedDouble,
+  CalendarDays,
+  Car,
+  CarFront,
+  ChevronDown,
+  Clock,
+  MessageCircle,
+  NotebookPen,
+  Snowflake,
+  SquareParking,
+  TreePine,
+  UtensilsCrossed,
+  type LucideIcon,
+} from "lucide-react";
+import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { useComments } from "@/hooks/use-app-data";
 import { useInlineComments } from "@/hooks/use-inline-comments";
 import { CommentableText } from "@/components/itinerary/commentable-text";
@@ -22,12 +37,12 @@ function hasValue(v: string): boolean {
 }
 
 function Section({
-  icon,
+  icon: Icon,
   label,
   className,
   children,
 }: {
-  icon: string;
+  icon: LucideIcon;
   label: string;
   className?: string;
   children: ReactNode;
@@ -35,7 +50,7 @@ function Section({
   return (
     <section className={className}>
       <h4 className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold tracking-tight text-muted-foreground">
-        <span aria-hidden>{icon}</span>
+        <Icon className="h-3.5 w-3.5" aria-hidden />
         {label}
       </h4>
       <div className="text-sm leading-relaxed">{children}</div>
@@ -60,10 +75,10 @@ export function DayCard({ day }: { day: ItineraryDay }) {
   );
 
   const preview = hasValue(day.accommodation)
-    ? `🏨 ${day.accommodation}`
+    ? { icon: BedDouble, text: day.accommodation }
     : hasValue(day.transportation)
-      ? `🚗 ${day.transportation}`
-      : "";
+      ? { icon: Car, text: day.transportation }
+      : null;
 
   return (
     <Card
@@ -91,15 +106,14 @@ export function DayCard({ day }: { day: ItineraryDay }) {
             <span className="block text-xs text-muted-foreground">
               {formatDateKo(day.date, { weekday: true })}
             </span>
-            <span className="mt-0.5 block truncate text-base font-semibold">
-              <span aria-hidden className="mr-1">
-                {day.cityEmoji}
-              </span>
-              {day.city}
+            <span className="mt-0.5 flex items-center gap-1.5 truncate text-base font-semibold">
+              <EmojiIcon emoji={day.cityEmoji} className="h-4 w-4 shrink-0 text-primary" />
+              <span className="truncate">{day.city}</span>
             </span>
             {!expanded && preview && (
-              <span className="mt-0.5 block truncate text-xs text-muted-foreground">
-                {preview}
+              <span className="mt-0.5 flex items-center gap-1 truncate text-xs text-muted-foreground">
+                <preview.icon className="h-3 w-3 shrink-0" aria-hidden />
+                <span className="truncate">{preview.text}</span>
               </span>
             )}
           </span>
@@ -139,18 +153,19 @@ export function DayCard({ day }: { day: ItineraryDay }) {
             className="overflow-hidden"
           >
             <div className="grid gap-x-6 gap-y-4 border-t px-4 pb-5 pt-4 sm:grid-cols-2 sm:px-5">
-              <Section icon="📅" label="날짜 / 도시">
+              <Section icon={CalendarDays} label="날짜 / 도시">
                 <span className="text-muted-foreground">
                   {formatDateKo(day.date, { weekday: true })} ·{" "}
                 </span>
-                <span aria-hidden className="mr-1">
-                  {day.cityEmoji}
-                </span>
+                <EmojiIcon
+                  emoji={day.cityEmoji}
+                  className="mr-1 inline h-3.5 w-3.5 align-[-2px] text-primary"
+                />
                 <CommentableText dayId={day.id} fieldKey="city" text={day.city} />
               </Section>
 
               {hasValue(day.accommodation) && (
-                <Section icon="🏨" label="숙소">
+                <Section icon={BedDouble} label="숙소">
                   <CommentableText
                     dayId={day.id}
                     fieldKey="accommodation"
@@ -160,7 +175,7 @@ export function DayCard({ day }: { day: ItineraryDay }) {
               )}
 
               {hasValue(day.transportation) && (
-                <Section icon="🚗" label="이동" className="sm:col-span-2">
+                <Section icon={Car} label="이동" className="sm:col-span-2">
                   <CommentableText
                     dayId={day.id}
                     fieldKey="transportation"
@@ -170,7 +185,7 @@ export function DayCard({ day }: { day: ItineraryDay }) {
               )}
 
               {day.schedule.length > 0 && (
-                <Section icon="🕐" label="일정" className="sm:col-span-2">
+                <Section icon={Clock} label="일정" className="sm:col-span-2">
                   <ol className="space-y-2.5">
                     {day.schedule.map((item, i) => (
                       <li key={i} className="flex items-start gap-3">
@@ -190,7 +205,7 @@ export function DayCard({ day }: { day: ItineraryDay }) {
               )}
 
               {day.restaurants.some(hasValue) && (
-                <Section icon="🍽" label="맛집" className="sm:col-span-2">
+                <Section icon={UtensilsCrossed} label="맛집" className="sm:col-span-2">
                   <ul className="space-y-1.5">
                     {day.restaurants.map((restaurant, i) =>
                       hasValue(restaurant) ? (
@@ -210,7 +225,7 @@ export function DayCard({ day }: { day: ItineraryDay }) {
               )}
 
               {hasValue(day.christmasMarket) && (
-                <Section icon="🎄" label="크리스마스 마켓" className="sm:col-span-2">
+                <Section icon={TreePine} label="크리스마스 마켓" className="sm:col-span-2">
                   <CommentableText
                     dayId={day.id}
                     fieldKey="christmasMarket"
@@ -220,19 +235,19 @@ export function DayCard({ day }: { day: ItineraryDay }) {
               )}
 
               {hasValue(day.parking) && (
-                <Section icon="🅿️" label="주차">
+                <Section icon={SquareParking} label="주차">
                   <CommentableText dayId={day.id} fieldKey="parking" text={day.parking} />
                 </Section>
               )}
 
               {hasValue(day.notes) && (
-                <Section icon="📝" label="메모">
+                <Section icon={NotebookPen} label="메모">
                   <CommentableText dayId={day.id} fieldKey="notes" text={day.notes} />
                 </Section>
               )}
 
               {hasValue(day.rentalCarNotes) && (
-                <Section icon="🚙" label="렌터카 메모">
+                <Section icon={CarFront} label="렌터카 메모">
                   <CommentableText
                     dayId={day.id}
                     fieldKey="rentalCarNotes"
@@ -242,7 +257,7 @@ export function DayCard({ day }: { day: ItineraryDay }) {
               )}
 
               {hasValue(day.winterDrivingNotes) && (
-                <Section icon="❄️" label="겨울 운전 참고">
+                <Section icon={Snowflake} label="겨울 운전 참고">
                   <CommentableText
                     dayId={day.id}
                     fieldKey="winterDrivingNotes"

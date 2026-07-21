@@ -9,6 +9,7 @@ import {
   FileText,
   Home,
   LayoutGrid,
+  TreePine,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NotificationCenter } from "@/components/layout/notification-center";
@@ -36,8 +37,8 @@ export function TopNav() {
       <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-2 px-4 sm:px-6">
         {/* 로고 */}
         <Link href="/" className="mr-1 flex shrink-0 items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-lg">
-            🎄
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+            <TreePine className="h-4 w-4 text-primary" aria-hidden />
           </span>
           <span className="text-sm font-bold tracking-tight">독일 2026</span>
         </Link>

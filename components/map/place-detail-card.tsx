@@ -76,11 +76,11 @@ export function PlaceDetailCard({ place, days, onClose }: PlaceDetailCardProps) 
     >
       <div className="flex items-start gap-3">
         <span
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-xl shadow-sm"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl shadow-sm"
           style={{ backgroundColor: withAlpha(meta.color, 0.16) }}
           aria-hidden
         >
-          {meta.emoji}
+          <meta.icon className="h-5 w-5" style={{ color: meta.color }} />
         </span>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">

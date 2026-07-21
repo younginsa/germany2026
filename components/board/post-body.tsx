@@ -10,7 +10,8 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { PollOptions } from "@/components/board/poll-card";
-import { CATEGORY_EMOJI, domainOf } from "@/components/board/post-meta";
+import { domainOf } from "@/components/board/post-meta";
+import { CATEGORY_META, withAlpha } from "@/components/map/category-meta";
 import {
   useChecklistGroups,
   useChecklistItems,
@@ -59,7 +60,16 @@ export function PostBody({ post, detail = false }: { post: Post; detail?: boolea
           {place ? (
             <div className="rounded-xl border bg-muted/50 p-3">
               <div className="flex items-start gap-2.5">
-                <span className="text-xl leading-none">{CATEGORY_EMOJI[place.category]}</span>
+                <span
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
+                  style={{ backgroundColor: withAlpha(CATEGORY_META[place.category].color, 0.14) }}
+                  aria-hidden
+                >
+                  {(() => {
+                    const Icon = CATEGORY_META[place.category].icon;
+                    return <Icon className="h-4 w-4" style={{ color: CATEGORY_META[place.category].color }} />;
+                  })()}
+                </span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold">{place.name}</p>
                   {place.memo && (

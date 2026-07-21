@@ -23,11 +23,11 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  CATEGORY_EMOJI,
   CREATABLE_TYPES,
   POST_TYPE_META,
   type CreatableType,
 } from "@/components/board/post-meta";
+import { CATEGORY_META } from "@/components/map/category-meta";
 import {
   newId,
   pushNotification,
@@ -350,11 +350,19 @@ export function CreatePostDialog({ open, onOpenChange, editing }: CreatePostDial
                 <SelectContent>
                   {[...places]
                     .sort((a, b) => a.name.localeCompare(b.name, "ko"))
-                    .map((place) => (
-                      <SelectItem key={place.id} value={place.id}>
-                        {CATEGORY_EMOJI[place.category]} {place.name}
-                      </SelectItem>
-                    ))}
+                    .map((place) => {
+                      const Icon = CATEGORY_META[place.category].icon;
+                      return (
+                        <SelectItem key={place.id} value={place.id}>
+                          <Icon
+                            className="mr-1.5 inline h-3.5 w-3.5 align-[-2px]"
+                            style={{ color: CATEGORY_META[place.category].color }}
+                            aria-hidden
+                          />
+                          {place.name}
+                        </SelectItem>
+                      );
+                    })}
                 </SelectContent>
               </Select>
             </div>

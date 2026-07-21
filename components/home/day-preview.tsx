@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRight, BedDouble, Plane } from "lucide-react";
+import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -23,7 +24,7 @@ export function DayPreview() {
           <div className="flex items-center gap-2">
             <Badge>DAY {day.dayNumber}</Badge>
             <CardTitle className="flex items-center gap-1.5">
-              <span aria-hidden>{day.cityEmoji}</span>
+              <EmojiIcon emoji={day.cityEmoji} className="h-4 w-4 text-primary" />
               {day.city}
             </CardTitle>
           </div>

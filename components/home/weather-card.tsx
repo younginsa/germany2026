@@ -1,9 +1,9 @@
-import { Info } from "lucide-react";
+import { Cloud, CloudSnow, Info, Snowflake, type LucideIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 interface CityForecast {
   city: string;
-  emoji: string;
+  icon: LucideIcon;
   low: number;
   high: number;
   desc: string;
@@ -11,11 +11,11 @@ interface CityForecast {
 
 /** 출발 전 플레이스홀더 — 12월 독일 남부의 평년 겨울 날씨 */
 const FORECAST: CityForecast[] = [
-  { city: "프랑크푸르트", emoji: "🌨️", low: -1, high: 4, desc: "눈 조금" },
-  { city: "하이델베르크", emoji: "☁️", low: -2, high: 3, desc: "흐림" },
-  { city: "로텐부르크", emoji: "❄️", low: -4, high: 1, desc: "눈" },
-  { city: "뉘른베르크", emoji: "🌨️", low: -3, high: 2, desc: "눈·흐림" },
-  { city: "뮌헨", emoji: "❄️", low: -5, high: 1, desc: "눈" },
+  { city: "프랑크푸르트", icon: CloudSnow, low: -1, high: 4, desc: "눈 조금" },
+  { city: "하이델베르크", icon: Cloud, low: -2, high: 3, desc: "흐림" },
+  { city: "로텐부르크", icon: Snowflake, low: -4, high: 1, desc: "눈" },
+  { city: "뉘른베르크", icon: CloudSnow, low: -3, high: 2, desc: "눈·흐림" },
+  { city: "뮌헨", icon: Snowflake, low: -5, high: 1, desc: "눈" },
 ];
 
 export function WeatherStrip() {
@@ -27,9 +27,7 @@ export function WeatherStrip() {
             key={f.city}
             className="flex min-w-[8.5rem] shrink-0 flex-col items-center gap-1 px-4 py-4"
           >
-            <span className="text-2xl" aria-hidden>
-              {f.emoji}
-            </span>
+            <f.icon className="h-7 w-7 text-primary" aria-hidden />
             <p className="text-sm font-semibold tracking-tight">{f.city}</p>
             <p className="text-xs text-muted-foreground">{f.desc}</p>
             <p className="mt-1 text-sm font-medium tabular-nums">

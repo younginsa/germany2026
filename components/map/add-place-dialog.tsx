@@ -287,14 +287,19 @@ export function AddPlaceDialog({ open, onOpenChange, prefill, days, onSaved }: A
                 <SelectValue placeholder="카테고리 선택" />
               </SelectTrigger>
               <SelectContent>
-                {ALL_CATEGORIES.map((cat) => (
-                  <SelectItem key={cat} value={cat}>
-                    <span className="mr-1.5" aria-hidden>
-                      {CATEGORY_META[cat].emoji}
-                    </span>
-                    {PLACE_CATEGORY_LABEL[cat]}
-                  </SelectItem>
-                ))}
+                {ALL_CATEGORIES.map((cat) => {
+                  const Icon = CATEGORY_META[cat].icon;
+                  return (
+                    <SelectItem key={cat} value={cat}>
+                      <Icon
+                        className="mr-1.5 inline h-3.5 w-3.5 align-[-2px]"
+                        style={{ color: CATEGORY_META[cat].color }}
+                        aria-hidden
+                      />
+                      {PLACE_CATEGORY_LABEL[cat]}
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
           </div>

@@ -1,7 +1,8 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, PlaneTakeoff } from "lucide-react";
 import { motion } from "framer-motion";
+import { EmojiIcon } from "@/components/ui/emoji-icon";
 import type { ItineraryDay } from "@/lib/types";
 
 /**
@@ -95,7 +96,7 @@ export function CityStays({
                 onClick={() => onSelectDay(stay.firstDayId)}
                 className="group flex items-center gap-2 rounded-xl border bg-card px-3 py-2 text-left shadow-[var(--shadow-soft)] transition-all hover:border-primary/40 hover:shadow-[var(--shadow-lifted)] active:scale-[0.98]"
               >
-                <span className="text-base leading-none">{stay.emoji}</span>
+                <EmojiIcon emoji={stay.emoji} className="h-4 w-4 shrink-0 text-primary" />
                 <span>
                   <span className="flex items-center gap-1.5">
                     <span className="text-sm font-semibold leading-tight">{stay.city}</span>
@@ -119,7 +120,7 @@ export function CityStays({
               onClick={() => onSelectDay(departure.id)}
               className="flex items-center gap-2 rounded-xl border border-dashed bg-muted/40 px-3 py-2 transition-all hover:border-primary/40 active:scale-[0.98]"
             >
-              <span className="text-base leading-none">🛫</span>
+              <PlaneTakeoff className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
               <span>
                 <span className="block text-sm font-semibold leading-tight">출국</span>
                 <span className="mt-0.5 block text-[11px] leading-tight text-muted-foreground">
