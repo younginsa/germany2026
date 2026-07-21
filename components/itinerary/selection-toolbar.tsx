@@ -27,9 +27,10 @@ export function parseMentions(body: string, profiles: Profile[]): string[] {
 }
 
 const COMPOSER_EST_HEIGHT = 230;
+const TOOLBAR_WIDTH = 108;
 
 export function SelectionToolbar() {
-  const { draft, clearDraft, openPanel } = useInlineComments();
+  const { draft, startDraft, clearDraft, openPanel } = useInlineComments();
   const me = useCurrentUser();
   const profiles = useProfiles();
   const days = useItineraryDays();
@@ -44,6 +45,82 @@ export function SelectionToolbar() {
     setMode("button");
     setBody("");
   }, [draft]);
+
+  /**
+   * 드래그 선택 감지 (문서 레벨).
+   * 선택 영역이 어느 CommentableText와든 겹치면, 그 필드 안쪽으로
+   * 범위를 클램프해서 드래프트를 시작합니다 — 라벨이나 여백에서
+   * 드래그를 시작/종료해도 동작합니다.
+   */
+  useEffect(() => {
+    const handleSelection = (e: Event) => {
+      // 툴바/작성 팝오버 내부에서 뗀 경우는 무시
+      if (rootRef.current?.contains(e.target as Node)) return;
+      // 브라우저가 selection을 확정할 시간을 준 뒤 읽음 (터치 대응)
+      window.setTimeout(() => {
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0 || selection.isCollapsed) return;
+        const range = selection.getRangeAt(0);
+
+        // 선택 영역과 겹치는 첫 번째 필드(문서 순서 = 선택 시작 지점)
+        const fields = document.querySelectorAll<HTMLElement>("[data-commentable-field]");
+        let container: HTMLElement | null = null;
+        for (const el of fields) {
+          if (range.intersectsNode(el)) {
+            container = el;
+            break;
+          }
+        }
+        if (!container) return;
+        const dayId = container.dataset.commentableDay;
+        const fieldKey = container.dataset.commentableField;
+        if (!dayId || !fieldKey) return;
+
+        // 선택 범위를 필드 안쪽으로 클램프
+        const containerRange = document.createRange();
+        containerRange.selectNodeContents(container);
+        const clamped = range.cloneRange();
+        if (clamped.compareBoundaryPoints(Range.START_TO_START, containerRange) < 0) {
+          clamped.setStart(containerRange.startContainer, containerRange.startOffset);
+        }
+        if (clamped.compareBoundaryPoints(Range.END_TO_END, containerRange) > 0) {
+          clamped.setEnd(containerRange.endContainer, containerRange.endOffset);
+        }
+
+        // 필드 시작 ~ 선택 시작까지의 텍스트 길이 = startOffset
+        const prefix = document.createRange();
+        prefix.selectNodeContents(container);
+        prefix.setEnd(clamped.startContainer, clamped.startOffset);
+        const start = prefix.toString().length;
+        const selectedText = clamped.toString();
+        const end = start + selectedText.length;
+        if (!selectedText.trim() || end <= start) return;
+
+        const rect = clamped.getBoundingClientRect();
+        const left = Math.min(
+          Math.max(rect.left + rect.width / 2 - TOOLBAR_WIDTH / 2, 8),
+          window.innerWidth - TOOLBAR_WIDTH - 8
+        );
+        const top = rect.top - 44 >= 8 ? rect.top - 44 : rect.bottom + 8;
+
+        startDraft({
+          dayId,
+          fieldKey,
+          selectedText,
+          startOffset: start,
+          endOffset: end,
+          toolbar: { top, left },
+          anchorRect: { top: rect.top, bottom: rect.bottom, left: rect.left, width: rect.width },
+        });
+      }, 0);
+    };
+    document.addEventListener("mouseup", handleSelection);
+    document.addEventListener("touchend", handleSelection);
+    return () => {
+      document.removeEventListener("mouseup", handleSelection);
+      document.removeEventListener("touchend", handleSelection);
+    };
+  }, [startDraft]);
 
   // 바깥 클릭 / Escape → 드래프트 취소
   useEffect(() => {
