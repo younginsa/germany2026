@@ -32,6 +32,8 @@ export interface DraftSelection {
   toolbar: { top: number; left: number };
   /** 선택 영역 rect — 작성 팝오버 위치 계산용 */
   anchorRect: { top: number; bottom: number; left: number; width: number };
+  /** true면 "댓글 추가" 버튼 단계를 건너뛰고 바로 작성 팝오버 열기 (행별 댓글 버튼용) */
+  autoCompose?: boolean;
 }
 
 interface FocusOptions {

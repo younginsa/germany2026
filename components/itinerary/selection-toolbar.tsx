@@ -40,10 +40,21 @@ export function SelectionToolbar() {
   const [body, setBody] = useState("");
   const rootRef = useRef<HTMLDivElement>(null);
 
-  // 새 드래프트마다 상태 초기화
+  // 새 드래프트마다 상태 초기화 (autoCompose면 바로 작성 팝오버로)
   useEffect(() => {
-    setMode("button");
     setBody("");
+    if (draft?.autoCompose) {
+      const width = Math.min(340, window.innerWidth - 24);
+      const left = Math.min(Math.max(draft.anchorRect.left, 12), window.innerWidth - width - 12);
+      let top = draft.anchorRect.bottom + 10;
+      if (top + COMPOSER_EST_HEIGHT > window.innerHeight - 12) {
+        top = Math.max(12, draft.anchorRect.top - COMPOSER_EST_HEIGHT - 10);
+      }
+      setComposerPos({ top, left, width });
+      setMode("composer");
+    } else {
+      setMode("button");
+    }
   }, [draft]);
 
   /**

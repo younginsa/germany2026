@@ -16,6 +16,7 @@ import {
   ChevronDown,
   Clock,
   MessageCircle,
+  MessageSquarePlus,
   NotebookPen,
   Snowflake,
   SquareParking,
@@ -41,11 +42,13 @@ function Section({
   icon: Icon,
   label,
   className,
+  action,
   children,
 }: {
   icon: LucideIcon;
   label: string;
   className?: string;
+  action?: ReactNode;
   children: ReactNode;
 }) {
   return (
@@ -53,9 +56,49 @@ function Section({
       <h4 className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold tracking-tight text-muted-foreground">
         <Icon className="h-3.5 w-3.5" aria-hidden />
         {label}
+        {action && <span className="ml-auto">{action}</span>}
       </h4>
       <div className="text-sm leading-relaxed">{children}</div>
     </section>
+  );
+}
+
+/**
+ * 행별 댓글 버튼 — 필드 전체를 인용해 바로 작성 팝오버를 엽니다.
+ * (모바일에서는 드래그 선택이 네이티브 메뉴와 충돌하므로 명시적 버튼 제공)
+ */
+function FieldCommentButton({
+  dayId,
+  fieldKey,
+  text,
+}: {
+  dayId: string;
+  fieldKey: string;
+  text: string;
+}) {
+  const { startDraft } = useInlineComments();
+  if (!text.trim()) return null;
+  return (
+    <button
+      type="button"
+      aria-label="이 항목에 댓글 달기"
+      className="rounded-md p-1 text-muted-foreground/50 transition-colors hover:bg-accent hover:text-accent-foreground"
+      onClick={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        startDraft({
+          dayId,
+          fieldKey,
+          selectedText: text,
+          startOffset: 0,
+          endOffset: text.length,
+          toolbar: { top: rect.top - 44, left: rect.left },
+          anchorRect: { top: rect.top, bottom: rect.bottom, left: rect.left, width: rect.width },
+          autoCompose: true,
+        });
+      }}
+    >
+      <MessageSquarePlus className="size-3.5" aria-hidden />
+    </button>
   );
 }
 
@@ -161,7 +204,9 @@ export function DayCard({
             className="overflow-hidden"
           >
             <div className="grid gap-x-6 gap-y-4 border-t px-4 pb-5 pt-4 sm:grid-cols-2 sm:px-5">
-              <Section icon={CalendarDays} label="날짜 / 도시">
+              <Section icon={CalendarDays} label="날짜 / 도시"
+                action={<FieldCommentButton dayId={day.id} fieldKey="city" text={day.city} />}
+              >
                 <span className="text-muted-foreground">
                   {formatDateKo(day.date, { weekday: true })} ·{" "}
                 </span>
@@ -173,7 +218,9 @@ export function DayCard({
               </Section>
 
               {hasValue(day.accommodation) && (
-                <Section icon={BedDouble} label="숙소">
+                <Section icon={BedDouble} label="숙소"
+                action={<FieldCommentButton dayId={day.id} fieldKey="accommodation" text={day.accommodation} />}
+              >
                   <CommentableText
                     dayId={day.id}
                     fieldKey="accommodation"
@@ -183,7 +230,9 @@ export function DayCard({
               )}
 
               {hasValue(day.transportation) && (
-                <Section icon={Car} label="이동" className="sm:col-span-2">
+                <Section icon={Car} label="이동" className="sm:col-span-2"
+                action={<FieldCommentButton dayId={day.id} fieldKey="transportation" text={day.transportation} />}
+              >
                   <CommentableText
                     dayId={day.id}
                     fieldKey="transportation"
@@ -216,6 +265,11 @@ export function DayCard({
                             text={`${item.title}${item.description ? ` — ${item.description}` : ""}`}
                             className="min-w-0 flex-1"
                           />
+                          <FieldCommentButton
+                            dayId={day.id}
+                            fieldKey={`schedule.${i}`}
+                            text={`${item.title}${item.description ? ` — ${item.description}` : ""}`}
+                          />
                           <ParticipantPicker day={day} itemIndex={i} />
                         </li>
                       );
@@ -237,6 +291,11 @@ export function DayCard({
                             text={restaurant}
                             className="min-w-0 flex-1"
                           />
+                          <FieldCommentButton
+                            dayId={day.id}
+                            fieldKey={`restaurants.${i}`}
+                            text={restaurant}
+                          />
                         </li>
                       ) : null
                     )}
@@ -245,7 +304,9 @@ export function DayCard({
               )}
 
               {hasValue(day.christmasMarket) && (
-                <Section icon={TreePine} label="크리스마스 마켓" className="sm:col-span-2">
+                <Section icon={TreePine} label="크리스마스 마켓" className="sm:col-span-2"
+                action={<FieldCommentButton dayId={day.id} fieldKey="christmasMarket" text={day.christmasMarket} />}
+              >
                   <CommentableText
                     dayId={day.id}
                     fieldKey="christmasMarket"
@@ -255,19 +316,25 @@ export function DayCard({
               )}
 
               {hasValue(day.parking) && (
-                <Section icon={SquareParking} label="주차">
+                <Section icon={SquareParking} label="주차"
+                action={<FieldCommentButton dayId={day.id} fieldKey="parking" text={day.parking} />}
+              >
                   <CommentableText dayId={day.id} fieldKey="parking" text={day.parking} />
                 </Section>
               )}
 
               {hasValue(day.notes) && (
-                <Section icon={NotebookPen} label="메모">
+                <Section icon={NotebookPen} label="메모"
+                action={<FieldCommentButton dayId={day.id} fieldKey="notes" text={day.notes} />}
+              >
                   <CommentableText dayId={day.id} fieldKey="notes" text={day.notes} />
                 </Section>
               )}
 
               {hasValue(day.rentalCarNotes) && (
-                <Section icon={CarFront} label="렌터카 메모">
+                <Section icon={CarFront} label="렌터카 메모"
+                action={<FieldCommentButton dayId={day.id} fieldKey="rentalCarNotes" text={day.rentalCarNotes} />}
+              >
                   <CommentableText
                     dayId={day.id}
                     fieldKey="rentalCarNotes"
@@ -277,7 +344,9 @@ export function DayCard({
               )}
 
               {hasValue(day.winterDrivingNotes) && (
-                <Section icon={Snowflake} label="겨울 운전 참고">
+                <Section icon={Snowflake} label="겨울 운전 참고"
+                action={<FieldCommentButton dayId={day.id} fieldKey="winterDrivingNotes" text={day.winterDrivingNotes} />}
+              >
                   <CommentableText
                     dayId={day.id}
                     fieldKey="winterDrivingNotes"
