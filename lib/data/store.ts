@@ -26,6 +26,7 @@ const TABLE_OF: Record<EntityKey, string> = {
   checklistGroups: "checklist_groups",
   checklistItems: "checklist_items",
   places: "places",
+  boardGroups: "board_groups",
   posts: "posts",
   documents: "documents",
   notifications: "notifications",

@@ -278,6 +278,7 @@ export const seedData: AppData = {
     { id: "pl-15", tripId: TRIP_ID, name: "호프브로이하우스", category: "restaurant", lat: 48.1376, lng: 11.5798, memo: "12/23 19:00 예약 (6인)", authorId: "", createdAt: "2026-07-07T21:00:00+09:00", dayIds: ["day-6"] },
   ],
 
+  boardGroups: [],
   posts: [],
 
   documents: [],

@@ -70,7 +70,7 @@ export function PostDetailDialog({ postId, onClose, onEdit }: PostDetailDialogPr
       type: "board",
       actorId: me.id,
       message: `${me.name}님이 보드 카드에 댓글을 남겼습니다: ${post.title}`,
-      href: `/board?post=${post.id}`,
+      href: `/materials?post=${post.id}`,
     });
     setDraft("");
   };

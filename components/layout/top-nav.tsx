@@ -6,9 +6,8 @@ import { motion } from "framer-motion";
 import {
   CalendarDays,
   CheckSquare,
-  FileText,
+  FolderOpen,
   Home,
-  LayoutGrid,
   TreePine,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -20,8 +19,7 @@ const NAV_ITEMS = [
   { href: "/", label: "홈", icon: Home },
   { href: "/itinerary", label: "일정", icon: CalendarDays },
   { href: "/checklist", label: "체크리스트", icon: CheckSquare },
-  { href: "/board", label: "보드", icon: LayoutGrid },
-  { href: "/documents", label: "문서", icon: FileText },
+  { href: "/materials", label: "자료", icon: FolderOpen },
 ] as const;
 
 export function TopNav() {

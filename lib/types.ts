@@ -157,6 +157,8 @@ export interface PostComment {
 export interface Post {
   id: ID;
   tripId: ID;
+  /** 자료 그룹 (없으면 "일반") */
+  groupId?: ID;
   type: PostType;
   title: string;
   body?: string;
@@ -203,6 +205,8 @@ export interface DocumentVersion {
 export interface TripDocument {
   id: ID;
   tripId: ID;
+  /** 자료 그룹 (없으면 "일반") */
+  groupId?: ID;
   title: string;
   category: DocumentCategory;
   fileName: string;
@@ -242,6 +246,14 @@ export interface ActivityLog {
 }
 
 /** 데모 모드에서 localStorage에 저장되는 전체 앱 상태 */
+/** 자료(보드+문서) 그룹 — 주제별로 카드와 파일을 모읍니다 */
+export interface BoardGroup {
+  id: ID;
+  tripId: ID;
+  title: string;
+  order: number;
+}
+
 export interface AppData {
   trip: Trip;
   profiles: Profile[];
@@ -250,6 +262,7 @@ export interface AppData {
   checklistGroups: ChecklistGroup[];
   checklistItems: ChecklistItem[];
   places: Place[];
+  boardGroups: BoardGroup[];
   posts: Post[];
   documents: TripDocument[];
   notifications: AppNotification[];
@@ -265,6 +278,7 @@ export type EntityOf = {
   checklistGroups: ChecklistGroup;
   checklistItems: ChecklistItem;
   places: Place;
+  boardGroups: BoardGroup;
   posts: Post;
   documents: TripDocument;
   notifications: AppNotification;

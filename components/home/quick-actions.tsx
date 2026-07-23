@@ -1,9 +1,8 @@
 import Link from "next/link";
 import {
+  FolderOpen,
   CalendarDays,
   CheckSquare,
-  FileText,
-  LayoutGrid,
   Map,
 } from "lucide-react";
 
@@ -11,8 +10,7 @@ const ACTIONS = [
   { href: "/itinerary", label: "일정 보기", desc: "10일 일정표", icon: CalendarDays },
   { href: "/map", label: "지도 열기", desc: "저장한 장소", icon: Map },
   { href: "/checklist", label: "체크리스트", desc: "준비물 점검", icon: CheckSquare },
-  { href: "/board", label: "아이디어 보드", desc: "투표 · 아이디어", icon: LayoutGrid },
-  { href: "/documents", label: "문서함", desc: "예약 서류", icon: FileText },
+  { href: "/materials", label: "자료", desc: "아이디어 · 파일 · 투표", icon: FolderOpen },
 ] as const;
 
 export function QuickActions() {

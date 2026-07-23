@@ -3,15 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { CalendarDays, CheckSquare, FileText, Home, LayoutGrid } from "lucide-react";
+import { CalendarDays, CheckSquare, FolderOpen, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TABS = [
   { href: "/", label: "홈", icon: Home },
   { href: "/itinerary", label: "일정", icon: CalendarDays },
   { href: "/checklist", label: "체크리스트", icon: CheckSquare },
-  { href: "/board", label: "보드", icon: LayoutGrid },
-  { href: "/documents", label: "문서", icon: FileText },
+  { href: "/materials", label: "자료", icon: FolderOpen },
 ] as const;
 
 /** 모바일 전용 하단 고정 탭 바 — lg 이상에서는 상단 내비게이션 사용 */

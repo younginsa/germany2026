@@ -82,6 +82,8 @@ interface UploadDialogProps {
   mode: "new" | "version";
   /** mode === "version" 일 때 대상 문서 */
   targetDocument?: TripDocument | null;
+  /** 새 문서가 소속될 자료 그룹 (null이면 일반) */
+  groupId?: string | null;
 }
 
 export function UploadDialog({
@@ -89,6 +91,7 @@ export function UploadDialog({
   onOpenChange,
   mode,
   targetDocument,
+  groupId,
 }: UploadDialogProps) {
   const me = useCurrentUser();
   const trip = useTrip();
@@ -158,7 +161,7 @@ export function UploadDialog({
           type: "document",
           actorId: me.id,
           message: `${me.name}님이 새 버전을 업로드했습니다: ${targetDocument.title}`,
-          href: "/documents",
+          href: "/materials",
         });
         toast.success(`새 버전(v${updated.versions.length})이 업로드되었습니다`);
       } else {
@@ -168,6 +171,7 @@ export function UploadDialog({
         const doc: TripDocument = {
           id,
           tripId: trip.id,
+          groupId: groupId ?? undefined,
           title: finalTitle,
           category,
           fileName: file.name,
@@ -192,7 +196,7 @@ export function UploadDialog({
           type: "document",
           actorId: me.id,
           message: `${me.name}님이 새 문서를 업로드했습니다: ${finalTitle}`,
-          href: "/documents",
+          href: "/materials",
         });
         toast.success("문서가 업로드되었습니다");
       }

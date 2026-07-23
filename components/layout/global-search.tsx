@@ -117,7 +117,7 @@ export function GlobalSearch() {
           icon: LayoutGrid,
           title: post.title,
           subtitle: post.tags.map((t) => `#${t}`).join(" "),
-          href: `/board?post=${post.id}`,
+          href: `/materials?post=${post.id}`,
         });
       }
     }
@@ -129,7 +129,7 @@ export function GlobalSearch() {
           icon: FileText,
           title: doc.title,
           subtitle: doc.fileName,
-          href: "/documents",
+          href: "/materials",
         });
       }
     }

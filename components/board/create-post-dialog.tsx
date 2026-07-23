@@ -47,13 +47,15 @@ interface CreatePostDialogProps {
   onOpenChange: (open: boolean) => void;
   /** null이면 새 카드, 값이 있으면 수정 모드 */
   editing: Post | null;
+  /** 새 카드가 소속될 자료 그룹 (null이면 일반) */
+  defaultGroupId?: string | null;
 }
 
 function emptyOption(): PollOption {
   return { id: newId("po"), label: "", voterIds: [] };
 }
 
-export function CreatePostDialog({ open, onOpenChange, editing }: CreatePostDialogProps) {
+export function CreatePostDialog({ open, onOpenChange, editing, defaultGroupId }: CreatePostDialogProps) {
   const me = useCurrentUser();
   const trip = useTrip();
   const places = usePlaces();
@@ -181,6 +183,7 @@ export function CreatePostDialog({ open, onOpenChange, editing }: CreatePostDial
       : {
           id: newId("post"),
           tripId: trip.id,
+          groupId: defaultGroupId ?? undefined,
           type: effectiveType,
           title: "",
           tags: [],
@@ -217,7 +220,7 @@ export function CreatePostDialog({ open, onOpenChange, editing }: CreatePostDial
         type: "board",
         actorId: me.id,
         message: `${me.name}님이 새 카드를 올렸습니다: ${post.title}`,
-        href: `/board?post=${post.id}`,
+        href: `/materials?post=${post.id}`,
       });
       toast.success("새 카드를 올렸어요");
     }
