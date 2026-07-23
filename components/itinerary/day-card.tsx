@@ -27,6 +27,7 @@ import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { useComments } from "@/hooks/use-app-data";
 import { useInlineComments } from "@/hooks/use-inline-comments";
 import { CommentableText } from "@/components/itinerary/commentable-text";
+import { ParticipantPicker } from "@/components/itinerary/participant-picker";
 import { Card } from "@/components/ui/card";
 import { cn, formatDateKo } from "@/lib/utils";
 import type { ItineraryDay } from "@/lib/types";
@@ -58,7 +59,14 @@ function Section({
   );
 }
 
-export function DayCard({ day }: { day: ItineraryDay }) {
+export function DayCard({
+  day,
+  viewFilter = null,
+}: {
+  day: ItineraryDay;
+  /** 선택된 멤버 id — 참여하지 않는 시간별 항목을 흐리게 표시 */
+  viewFilter?: string | null;
+}) {
   const { isDayExpanded, toggleDay, openPanel, showResolved } = useInlineComments();
   const allComments = useComments();
   const expanded = isDayExpanded(day.id);
@@ -187,19 +195,31 @@ export function DayCard({ day }: { day: ItineraryDay }) {
               {day.schedule.length > 0 && (
                 <Section icon={Clock} label="일정" className="sm:col-span-2">
                   <ol className="space-y-2.5">
-                    {day.schedule.map((item, i) => (
-                      <li key={i} className="flex items-start gap-3">
-                        <span className="mt-0.5 w-12 shrink-0 rounded-md bg-secondary py-0.5 text-center text-[11px] font-medium tabular-nums text-secondary-foreground">
-                          {item.time}
-                        </span>
-                        <CommentableText
-                          dayId={day.id}
-                          fieldKey={`schedule.${i}`}
-                          text={`${item.title}${item.description ? ` — ${item.description}` : ""}`}
-                          className="min-w-0 flex-1"
-                        />
-                      </li>
-                    ))}
+                    {day.schedule.map((item, i) => {
+                      const tagged = item.participantIds ?? [];
+                      const dimmed =
+                        viewFilter !== null && tagged.length > 0 && !tagged.includes(viewFilter);
+                      return (
+                        <li
+                          key={i}
+                          className={cn(
+                            "flex items-start gap-3 transition-opacity",
+                            dimmed && "opacity-35"
+                          )}
+                        >
+                          <span className="mt-0.5 w-12 shrink-0 rounded-md bg-secondary py-0.5 text-center text-[11px] font-medium tabular-nums text-secondary-foreground">
+                            {item.time}
+                          </span>
+                          <CommentableText
+                            dayId={day.id}
+                            fieldKey={`schedule.${i}`}
+                            text={`${item.title}${item.description ? ` — ${item.description}` : ""}`}
+                            className="min-w-0 flex-1"
+                          />
+                          <ParticipantPicker day={day} itemIndex={i} />
+                        </li>
+                      );
+                    })}
                   </ol>
                 </Section>
               )}

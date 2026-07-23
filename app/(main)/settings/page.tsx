@@ -58,7 +58,7 @@ export default function SettingsPage() {
   const data = useAppData();
 
   const [companionName, setCompanionName] = useState("");
-  const [companionRole, setCompanionRole] = useState("");
+  const [companionEmail, setCompanionEmail] = useState("");
   const [title, setTitle] = useState(trip.title);
   const [destination, setDestination] = useState(trip.destination);
   const [startDate, setStartDate] = useState(trip.startDate);
@@ -125,11 +125,11 @@ export default function SettingsPage() {
     tripStore.upsertRow("profiles", {
       id: newId("p"),
       name,
-      role: companionRole.trim() || undefined,
+      email: companionEmail.trim() || undefined,
       hue,
     });
     setCompanionName("");
-    setCompanionRole("");
+    setCompanionEmail("");
     toast.success(`${name}님을 동행인에 추가했습니다`);
   }
 
@@ -215,8 +215,8 @@ export default function SettingsPage() {
               동행인
             </CardTitle>
             <CardDescription>
-              로그인한 사람은 자동으로 추가됩니다. 계정 없이 함께 가는 사람도 직접 추가할
-              수 있어요 — 혼자 여행이라면 비워 두어도 됩니다.
+              로그인한 사람은 자동으로 추가됩니다. 이메일을 함께 적어두면 그 사람이 나중에
+              로그인할 때 같은 프로필로 연결됩니다.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -227,10 +227,7 @@ export default function SettingsPage() {
                     <AvatarFallback hue={p.hue}>{initialsOf(p.name)}</AvatarFallback>
                   </Avatar>
                   <span className="text-sm font-medium">{p.name}</span>
-                  <span className="text-xs text-muted-foreground">
-                    {p.role ?? ""}
-                    {p.email ? ` ${p.email}` : ""}
-                  </span>
+                  <span className="truncate text-xs text-muted-foreground">{p.email ?? ""}</span>
                   <span className="ml-auto flex items-center gap-1.5">
                     {p.isOwner && (
                       <Badge variant="warning">
@@ -267,9 +264,10 @@ export default function SettingsPage() {
                 className="w-40 flex-1"
               />
               <Input
-                value={companionRole}
-                onChange={(e) => setCompanionRole(e.target.value)}
-                placeholder="관계 (선택 — 친구, 배우자…)"
+                type="email"
+                value={companionEmail}
+                onChange={(e) => setCompanionEmail(e.target.value)}
+                placeholder="이메일 (선택)"
                 className="w-44 flex-1"
               />
               <Button type="submit" variant="outline" disabled={!companionName.trim()}>

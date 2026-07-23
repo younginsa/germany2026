@@ -2,7 +2,7 @@
 
 /**
  * CommentPanel — 포커스된 일차의 모든 인라인 댓글을 보여주는
- * 하단 시트. 댓글 클릭 시 본문 하이라이트로 스크롤 + 플래시.
+ * 중앙 모달. 페이지 스크롤 위치를 유지한 채 열립니다.
  */
 
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
@@ -10,11 +10,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   Check,
   CornerDownRight,
-  MessageCircle,
   MoreHorizontal,
   RotateCcw,
   Trash2,
-  X,
 } from "lucide-react";
 import {
   newId,
@@ -32,7 +30,7 @@ import { parseMentions } from "@/components/itinerary/selection-toolbar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import {
   DropdownMenu,
@@ -92,7 +90,7 @@ function CommentItem({ comment, dayNumber }: { comment: Comment; dayNumber: numb
   const me = useCurrentUser();
   const profiles = useProfiles();
   const profileById = useProfileById();
-  const { activeCommentId, focusComment } = useInlineComments();
+  const { activeCommentId } = useInlineComments();
 
   const [replyOpen, setReplyOpen] = useState(false);
   const [replyBody, setReplyBody] = useState("");
@@ -185,17 +183,13 @@ function CommentItem({ comment, dayNumber }: { comment: Comment; dayNumber: numb
         )}
       </div>
 
-      {/* 인용 + 본문 — 클릭 시 하이라이트로 이동 */}
-      <button
-        type="button"
-        onClick={() => focusComment(comment, { scroll: true })}
-        className="mt-2 block w-full rounded-lg text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
+      {/* 인용 + 본문 */}
+      <div className="mt-2">
         <blockquote className="mb-1.5 line-clamp-2 border-l-2 border-[var(--highlight-active)] pl-2 text-xs text-muted-foreground">
           “{comment.anchor.selectedText}”
         </blockquote>
         <BodyWithMentions body={comment.body} profiles={profiles} />
-      </button>
+      </div>
 
       {/* 답글 목록 */}
       {comment.replies.length > 0 && (
@@ -323,48 +317,40 @@ export function CommentPanel() {
   }, [panelDayId, activeCommentId]);
 
   return (
-    <AnimatePresence>
-      {day && (
-        <motion.section
-          key={day.id}
-          initial={{ y: "110%" }}
-          animate={{ y: 0 }}
-          exit={{ y: "110%" }}
-          transition={{ type: "spring", stiffness: 380, damping: 38 }}
-          className="glass fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[60vh] w-full max-w-2xl flex-col rounded-t-2xl shadow-[var(--shadow-lifted)]"
-          aria-label={`${day.dayNumber}일차 댓글 패널`}
-        >
-          {/* 패널 헤더 */}
-          <header className="flex items-center gap-2 px-4 pb-2 pt-3 sm:px-5">
-            <MessageCircle className="size-4 text-primary" />
-            <h3 className="text-sm font-semibold">댓글</h3>
-            <Badge variant="secondary" className="px-2 py-0 text-[11px]">
-              {dayComments.length}
-            </Badge>
-            <Badge variant="accent" className="ml-1 px-2 py-0 text-[11px]">
-              D{day.dayNumber} · <EmojiIcon emoji={day.cityEmoji} className="h-3 w-3" /> {day.city}
-            </Badge>
-            <div className="flex-1" />
-            <Button variant="ghost" size="icon-sm" onClick={closePanel} aria-label="댓글 패널 닫기">
-              <X />
-            </Button>
-          </header>
-          <Separator />
+    <Dialog open={Boolean(day)} onOpenChange={(open) => !open && closePanel()}>
+      <DialogContent
+        className="max-w-lg gap-0 p-0"
+        aria-label={day ? `${day.dayNumber}일차 댓글` : "댓글"}
+      >
+        {day && (
+          <>
+            {/* 헤더 */}
+            <div className="flex items-center gap-2 border-b px-5 py-3.5 pr-12">
+              <DialogTitle className="text-sm font-semibold">댓글</DialogTitle>
+              <Badge variant="secondary" className="px-2 py-0 text-[11px]">
+                {dayComments.length}
+              </Badge>
+              <Badge variant="accent" className="ml-1 px-2 py-0 text-[11px]">
+                D{day.dayNumber} · <EmojiIcon emoji={day.cityEmoji} className="h-3 w-3" />{" "}
+                {day.city}
+              </Badge>
+            </div>
 
-          {/* 댓글 목록 */}
-          <div className="flex-1 space-y-2.5 overflow-y-auto px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-5">
-            {dayComments.length === 0 ? (
-              <p className="py-8 text-center text-sm text-muted-foreground">
-                아직 댓글이 없어요. 일정 텍스트를 드래그해 첫 댓글을 남겨보세요!
-              </p>
-            ) : (
-              dayComments.map((comment) => (
-                <CommentItem key={comment.id} comment={comment} dayNumber={day.dayNumber} />
-              ))
-            )}
-          </div>
-        </motion.section>
-      )}
-    </AnimatePresence>
+            {/* 댓글 목록 */}
+            <div className="max-h-[60vh] space-y-2.5 overflow-y-auto px-5 py-4">
+              {dayComments.length === 0 ? (
+                <p className="py-8 text-center text-sm text-muted-foreground">
+                  아직 댓글이 없어요. 일정 텍스트를 드래그해 첫 댓글을 남겨보세요!
+                </p>
+              ) : (
+                dayComments.map((comment) => (
+                  <CommentItem key={comment.id} comment={comment} dayNumber={day.dayNumber} />
+                ))
+              )}
+            </div>
+          </>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }

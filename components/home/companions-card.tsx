@@ -32,8 +32,8 @@ export function CompanionsCard() {
             </Avatar>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">{member.name}</p>
-              {member.role && (
-                <p className="text-xs text-muted-foreground">{member.role}</p>
+              {member.email && (
+                <p className="truncate text-xs text-muted-foreground">{member.email}</p>
               )}
             </div>
             <span className="flex items-center gap-1.5">

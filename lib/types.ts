@@ -30,6 +30,8 @@ export interface ScheduleItem {
   title: string;
   description?: string;
   placeId?: ID;
+  /** 참여 멤버 (비어 있으면 전원 참여로 간주) */
+  participantIds?: ID[];
 }
 
 export interface ItineraryDay {

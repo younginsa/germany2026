@@ -7,10 +7,11 @@
  * ?comment=<commentId>    해당 댓글 하이라이트로 스크롤 + 플래시 + 패널 오픈
  */
 
-import { Suspense, useEffect, useMemo, useRef } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Lightbulb, MessageCircle, MessagesSquare } from "lucide-react";
-import { useComments, useItineraryDays } from "@/hooks/use-app-data";
+import { useComments, useItineraryDays, useProfiles } from "@/hooks/use-app-data";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { cn, initialsOf } from "@/lib/utils";
 import {
   InlineCommentsProvider,
   useInlineComments,
@@ -19,8 +20,6 @@ import { DayCard } from "@/components/itinerary/day-card";
 import { CityStays } from "@/components/itinerary/city-stays";
 import { CommentPanel } from "@/components/itinerary/comment-panel";
 import { SelectionToolbar } from "@/components/itinerary/selection-toolbar";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
 
 export default function ItineraryPage() {
   return (
@@ -36,16 +35,9 @@ function ItineraryContent() {
   const searchParams = useSearchParams();
   const days = useItineraryDays();
   const comments = useComments();
-  const { showResolved, setShowResolved, expandDay, focusComment } = useInlineComments();
-
-  const itineraryComments = useMemo(
-    () => comments.filter((c) => c.anchor.targetType === "itinerary"),
-    [comments]
-  );
-  const unresolvedCount = useMemo(
-    () => itineraryComments.filter((c) => !c.resolved).length,
-    [itineraryComments]
-  );
+  const profiles = useProfiles();
+  const { expandDay, focusComment } = useInlineComments();
+  const [viewFilter, setViewFilter] = useState<string | null>(null);
 
   /* URL 파라미터 처리 — 최초 1회 (comment는 스토어 로드 후에 찾힐 수 있어 재시도 허용) */
   const handledRef = useRef(false);
@@ -80,37 +72,54 @@ function ItineraryContent() {
   return (
     <div className="animate-fade-up">
       {/* 헤더 */}
-      <header className="mb-6 flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">일정</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            10일간의 여정 · 프랑크푸르트에서 뮌헨까지
-          </p>
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            <Badge variant="accent">
-              <MessagesSquare />
-              댓글 {itineraryComments.length}개
-            </Badge>
-            {unresolvedCount > 0 && (
-              <Badge variant="warning">
-                <MessageCircle />
-                미해결 {unresolvedCount}
-              </Badge>
-            )}
-            <span className="flex items-center gap-1 text-xs text-muted-foreground">
-              <Lightbulb className="h-3.5 w-3.5 shrink-0" aria-hidden />
-              일정 텍스트를 드래그하면 바로 댓글을 남길 수 있어요
-            </span>
+      <header className="mb-6">
+        <h1 className="text-2xl font-bold tracking-tight">일정</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          10일간의 여정 · 프랑크푸르트에서 뮌헨까지
+        </p>
+
+        {/* 멤버별 보기 필터 */}
+        {profiles.length > 1 && (
+          <div className="-mx-4 mt-3 flex gap-1.5 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0">
+            <button
+              type="button"
+              onClick={() => setViewFilter(null)}
+              aria-pressed={viewFilter === null}
+              className={cn(
+                "shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
+                viewFilter === null
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "bg-card text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+              )}
+            >
+              전체
+            </button>
+            {profiles.map((p) => {
+              const active = viewFilter === p.id;
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => setViewFilter(active ? null : p.id)}
+                  aria-pressed={active}
+                  className={cn(
+                    "flex shrink-0 items-center gap-1.5 rounded-full border py-1 pl-1 pr-3 text-xs font-medium transition-colors",
+                    active
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : "bg-card text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                  )}
+                >
+                  <Avatar className="size-5">
+                    <AvatarFallback hue={p.hue} className="text-[9px]">
+                      {initialsOf(p.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                  {p.name}
+                </button>
+              );
+            })}
           </div>
-        </div>
-        <label className="flex cursor-pointer select-none items-center gap-2 text-sm text-muted-foreground">
-          해결된 댓글 숨기기
-          <Switch
-            checked={!showResolved}
-            onCheckedChange={(checked) => setShowResolved(!checked)}
-            aria-label="해결된 댓글 숨기기"
-          />
-        </label>
+        )}
       </header>
 
       {/* 도시별 체류 요약 */}
@@ -134,7 +143,7 @@ function ItineraryContent() {
               aria-hidden
               className="absolute left-[-28px] top-7 hidden size-3 rounded-full border-2 border-primary bg-background sm:block"
             />
-            <DayCard day={day} />
+            <DayCard day={day} viewFilter={viewFilter} />
           </li>
         ))}
       </ol>
