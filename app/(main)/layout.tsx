@@ -1,6 +1,5 @@
 import { TopNav } from "@/components/layout/top-nav";
 import { MapSwitchCta } from "@/components/layout/map-switch-cta";
-import { MaterialsCta } from "@/components/layout/materials-cta";
 import { AuthGuard } from "@/components/layout/auth-guard";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
@@ -12,7 +11,6 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <MapSwitchCta />
-        <MaterialsCta />
       </div>
     </AuthGuard>
   );

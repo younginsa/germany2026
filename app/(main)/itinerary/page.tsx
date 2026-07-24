@@ -17,7 +17,6 @@ import {
   useInlineComments,
 } from "@/hooks/use-inline-comments";
 import { DayCard } from "@/components/itinerary/day-card";
-import { CityStays } from "@/components/itinerary/city-stays";
 import { CommentPanel } from "@/components/itinerary/comment-panel";
 import { SelectionToolbar } from "@/components/itinerary/selection-toolbar";
 
@@ -121,19 +120,6 @@ function ItineraryContent() {
           </div>
         )}
       </header>
-
-      {/* 도시별 체류 요약 */}
-      <CityStays
-        days={days}
-        onSelectDay={(dayId) => {
-          expandDay(dayId);
-          window.setTimeout(() => {
-            document
-              .getElementById(`day-card-${dayId}`)
-              ?.scrollIntoView({ behavior: "smooth", block: "start" });
-          }, 250);
-        }}
-      />
 
       {/* 타임라인 */}
       <ol className="relative space-y-4 before:absolute before:bottom-4 before:left-[21px] before:top-4 before:hidden before:w-px before:bg-border sm:pl-11 sm:before:block">
