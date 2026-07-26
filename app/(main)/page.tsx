@@ -89,22 +89,22 @@ export default function HomePage() {
         <StatCards />
       </Section>
 
-      {/* ─── 도시별 날씨 ──────────────────────────── */}
-      <Section delay={0.12}>
-        <h2 className="mb-3 flex items-center gap-1.5 text-sm font-semibold text-muted-foreground">
-          <Snowflake className="h-4 w-4" />
-          12월 독일 날씨
-        </h2>
-        <WeatherStrip />
-      </Section>
-
       {/* ─── 빠른 이동 ────────────────────────────── */}
-      <Section delay={0.18}>
+      <Section delay={0.12}>
         <h2 className="mb-3 flex items-center gap-1.5 text-sm font-semibold text-muted-foreground">
           <Zap className="h-4 w-4" />
           바로가기
         </h2>
         <QuickActions />
+      </Section>
+
+      {/* ─── 도시별 날씨 ──────────────────────────── */}
+      <Section delay={0.18}>
+        <h2 className="mb-3 flex items-center gap-1.5 text-sm font-semibold text-muted-foreground">
+          <Snowflake className="h-4 w-4" />
+          12월 독일 날씨
+        </h2>
+        <WeatherStrip />
       </Section>
 
       {/* ─── 일정 미리보기 · 댓글 · 체크리스트 · 동행인 ── */}
