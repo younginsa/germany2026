@@ -10,7 +10,6 @@ import type { Place, PlaceCategory } from "@/lib/types";
 import { GOOGLE_MAPS_API_KEY, isGoogleMapsConfigured } from "@/lib/supabase/config";
 import { useItineraryDays, usePlaces } from "@/hooks/use-app-data";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { AddPlaceDialog } from "@/components/map/add-place-dialog";
 import { CategoryFilter } from "@/components/map/category-filter";
 import { MapPreview, MapView } from "@/components/map/map-view";
@@ -24,23 +23,6 @@ function matchesQuery(place: Place, q: string): boolean {
   const needle = q.toLowerCase();
   return [place.name, place.memo ?? "", place.address ?? ""].some((v) =>
     v.toLowerCase().includes(needle)
-  );
-}
-
-/** 일정으로 돌아가는 버튼 (검색창 왼쪽) */
-function BackToItinerary({ className }: { className?: string }) {
-  return (
-    <Link
-      href="/itinerary"
-      aria-label="일정으로 돌아가기"
-      className={
-        "flex h-11 shrink-0 items-center gap-1 rounded-full border bg-card px-3.5 text-sm font-semibold shadow-[var(--shadow-soft)] transition-colors hover:bg-accent " +
-        (className ?? "")
-      }
-    >
-      <ArrowLeft className="h-4 w-4" aria-hidden />
-      일정
-    </Link>
   );
 }
 
@@ -120,19 +102,24 @@ function MapPageInner() {
     </>
   );
 
-  const searchInput = (
-    <div className="relative flex-1">
-      <Search
-        className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-        aria-hidden
-      />
-      <Input
+  // 단일 검색 바 — 왼쪽 뒤로 화살표(일정으로) + 검색 입력 + 오른쪽 검색 아이콘
+  const searchBar = (
+    <div className="flex h-11 flex-1 items-center gap-1 rounded-full border bg-card pl-1 pr-2 shadow-[var(--shadow-soft)]">
+      <Link
+        href="/itinerary"
+        aria-label="일정으로 돌아가기"
+        className="flex size-9 shrink-0 items-center justify-center rounded-full text-foreground transition-colors hover:bg-accent"
+      >
+        <ArrowLeft className="h-4 w-4" aria-hidden />
+      </Link>
+      <input
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="장소 검색…"
-        className="h-11 rounded-full border-none bg-card pl-10 shadow-[var(--shadow-soft)]"
         aria-label="장소 검색"
+        className="h-full min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
       />
+      <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden />
     </div>
   );
 
@@ -155,10 +142,7 @@ function MapPageInner() {
 
       {/* ─── 데스크톱 사이드 패널 ─── */}
       <aside className="absolute inset-y-0 left-0 z-20 hidden w-[380px] flex-col gap-3 border-r bg-card/95 p-4 backdrop-blur lg:flex">
-        <div className="flex items-center gap-2">
-          <BackToItinerary />
-          {searchInput}
-        </div>
+        {searchBar}
         <div className="flex items-center justify-between">
           <p className="text-xs text-muted-foreground">{countLabel}</p>
           <Button size="sm" onClick={() => openAddDialog(null)}>
@@ -173,10 +157,7 @@ function MapPageInner() {
       <div
         className="pointer-events-none absolute inset-x-0 top-0 z-20 space-y-2 px-3 pt-[calc(env(safe-area-inset-top)+0.75rem)] lg:hidden"
       >
-        <div className="pointer-events-auto flex items-center gap-2">
-          <BackToItinerary />
-          {searchInput}
-        </div>
+        <div className="pointer-events-auto flex">{searchBar}</div>
         <div className="pointer-events-auto">
           <CategoryFilter selected={categories} onChange={setCategories} counts={counts} />
         </div>
