@@ -4,13 +4,13 @@ import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { APIProvider } from "@vis.gl/react-google-maps";
-import { AnimatePresence } from "framer-motion";
-import { ArrowLeft, Plus, Search } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowLeft, Search, Star, X } from "lucide-react";
 import type { Place, PlaceCategory } from "@/lib/types";
 import { GOOGLE_MAPS_API_KEY, isGoogleMapsConfigured } from "@/lib/supabase/config";
 import { useItineraryDays, usePlaces } from "@/hooks/use-app-data";
 import { Button } from "@/components/ui/button";
-import { AddPlaceDialog } from "@/components/map/add-place-dialog";
+import { AddPlaceDialog, type PlaceCandidate } from "@/components/map/add-place-dialog";
 import { CategoryFilter } from "@/components/map/category-filter";
 import { MapPreview, MapView } from "@/components/map/map-view";
 import { MapBottomSheet, type SheetSnap } from "@/components/map/map-bottom-sheet";
@@ -36,7 +36,7 @@ function MapPageInner() {
   const [categories, setCategories] = useState<PlaceCategory[]>([]);
   const [query, setQuery] = useState("");
   const [addOpen, setAddOpen] = useState(false);
-  const [prefill, setPrefill] = useState<{ lat: number; lng: number } | null>(null);
+  const [candidate, setCandidate] = useState<PlaceCandidate | null>(null);
   const [sheetSnap, setSheetSnap] = useState<SheetSnap>("half");
 
   // ?place=<id> 딥링크 → 마운트/파라미터 변경 시 해당 장소 선택
@@ -44,6 +44,7 @@ function MapPageInner() {
   useEffect(() => {
     if (placeParam) {
       setSelectedId(placeParam);
+      setCandidate(null);
       setSheetSnap("peek");
     }
   }, [placeParam]);
@@ -51,6 +52,7 @@ function MapPageInner() {
   const select = useCallback(
     (id: string) => {
       setSelectedId(id);
+      setCandidate(null);
       setSheetSnap("peek");
       router.replace(`/map?place=${id}`, { scroll: false });
     },
@@ -88,10 +90,22 @@ function MapPageInner() {
     [places, selectedId]
   );
 
-  const openAddDialog = useCallback((coords: { lat: number; lng: number } | null) => {
-    setPrefill(coords);
-    setAddOpen(true);
-  }, []);
+  // 지도에서 장소/지점 선택 → 이미 저장된 곳이면 선택, 아니면 저장 후보로
+  const handlePick = useCallback(
+    (c: PlaceCandidate) => {
+      if (c.googlePlaceId) {
+        const existing = places.find((p) => p.googlePlaceId === c.googlePlaceId);
+        if (existing) {
+          select(existing.id);
+          return;
+        }
+      }
+      setSelectedId(null);
+      setCandidate(c);
+      setSheetSnap("peek");
+    },
+    [places, select]
+  );
 
   const countLabel = (
     <>
@@ -135,7 +149,7 @@ function MapPageInner() {
             places={filtered}
             selectedId={selectedId}
             onSelect={select}
-            onMapClick={(lat, lng) => openAddDialog({ lat, lng })}
+            onPickCandidate={handlePick}
           />
         ) : (
           <MapPreview fullscreen placeCount={places.length} />
@@ -145,12 +159,7 @@ function MapPageInner() {
       {/* ─── 데스크톱 사이드 패널 ─── */}
       <aside className="absolute inset-y-0 left-0 z-20 hidden w-[380px] flex-col gap-3 border-r bg-card/95 p-4 backdrop-blur lg:flex">
         {searchBar}
-        <div className="flex items-center justify-between">
-          <p className="text-xs text-muted-foreground">{countLabel}</p>
-          <Button size="sm" onClick={() => openAddDialog(null)}>
-            <Plus />새 장소
-          </Button>
-        </div>
+        <p className="px-1 text-xs text-muted-foreground">{countLabel}</p>
         <CategoryFilter selected={categories} onChange={setCategories} counts={counts} />
         <PlaceList places={filtered} days={days} selectedId={selectedId} onSelect={select} />
       </aside>
@@ -165,19 +174,47 @@ function MapPageInner() {
         </div>
       </div>
 
-      {/* ─── 선택된 장소 상세 ─── */}
+      {/* ─── 선택된 장소 상세 / 저장 후보 ─── */}
       <div className="pointer-events-none absolute inset-x-3 bottom-[136px] z-40 lg:inset-x-auto lg:bottom-4 lg:left-[396px] lg:w-[360px]">
         <AnimatePresence mode="wait">
-          {selectedPlace && (
-            <div className="pointer-events-auto">
-              <PlaceDetailCard
-                key={selectedPlace.id}
-                place={selectedPlace}
-                days={days}
-                onClose={clearSelection}
-              />
+          {selectedPlace ? (
+            <div key={`sel-${selectedPlace.id}`} className="pointer-events-auto">
+              <PlaceDetailCard place={selectedPlace} days={days} onClose={clearSelection} />
             </div>
-          )}
+          ) : candidate ? (
+            <motion.div
+              key="candidate"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 12 }}
+              transition={{ type: "spring", stiffness: 400, damping: 32 }}
+              className="pointer-events-auto rounded-2xl border bg-card p-4 shadow-[var(--shadow-lifted)]"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="truncate font-semibold">{candidate.name || "선택한 위치"}</p>
+                  {candidate.address ? (
+                    <p className="truncate text-xs text-muted-foreground">{candidate.address}</p>
+                  ) : (
+                    <p className="text-xs tabular-nums text-muted-foreground">
+                      {candidate.lat.toFixed(4)}, {candidate.lng.toFixed(4)}
+                    </p>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setCandidate(null)}
+                  aria-label="닫기"
+                  className="shrink-0 rounded-full p-1 text-muted-foreground transition-colors hover:bg-accent"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              <Button className="mt-3 w-full" onClick={() => setAddOpen(true)}>
+                <Star />이 장소 저장
+              </Button>
+            </motion.div>
+          ) : null}
         </AnimatePresence>
       </div>
 
@@ -185,14 +222,7 @@ function MapPageInner() {
       <MapBottomSheet
         snap={sheetSnap}
         onSnapChange={setSheetSnap}
-        header={
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-sm text-muted-foreground">{countLabel}</p>
-            <Button size="sm" onClick={() => openAddDialog(null)}>
-              <Plus />새 장소
-            </Button>
-          </div>
-        }
+        header={<p className="text-sm text-muted-foreground">{countLabel}</p>}
       >
         <PlaceList places={filtered} days={days} selectedId={selectedId} onSelect={select} />
       </MapBottomSheet>
@@ -200,7 +230,7 @@ function MapPageInner() {
       <AddPlaceDialog
         open={addOpen}
         onOpenChange={setAddOpen}
-        prefill={prefill}
+        candidate={candidate}
         days={days}
         onSaved={select}
       />

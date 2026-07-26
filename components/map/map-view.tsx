@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
   AdvancedMarker,
   Map as GoogleMap,
   Marker,
   useMap,
+  useMapsLibrary,
   type MapMouseEvent,
 } from "@vis.gl/react-google-maps";
 import { motion } from "framer-motion";
@@ -20,20 +21,42 @@ import {
   UtensilsCrossed,
   type LucideIcon,
 } from "lucide-react";
-import type { Place } from "@/lib/types";
+import type { Place, PlaceCategory } from "@/lib/types";
 import { GOOGLE_MAPS_MAP_ID } from "@/lib/supabase/config";
 import { cn } from "@/lib/utils";
 import { CATEGORY_META } from "./category-meta";
+import type { PlaceCandidate } from "./add-place-dialog";
 
 const DEFAULT_CENTER = { lat: 49.2, lng: 10.2 };
 const DEFAULT_ZOOM = 7;
+
+/** 구글 place types → 앱 카테고리 추정 */
+function guessCategory(types: string[]): PlaceCategory {
+  const t = new Set(types);
+  if (t.has("lodging")) return "hotel";
+  if (t.has("restaurant") || t.has("cafe") || t.has("food") || t.has("bar") || t.has("bakery"))
+    return "restaurant";
+  if (t.has("parking")) return "parking";
+  if (t.has("airport")) return "airport";
+  if (t.has("car_rental")) return "rental_car";
+  if (
+    t.has("tourist_attraction") ||
+    t.has("museum") ||
+    t.has("park") ||
+    t.has("church") ||
+    t.has("place_of_worship") ||
+    t.has("point_of_interest")
+  )
+    return "attraction";
+  return "custom";
+}
 
 interface MapViewProps {
   places: Place[];
   selectedId: string | null;
   onSelect: (id: string) => void;
-  /** 지도 클릭 → 좌표와 함께 장소 추가 다이얼로그 열기 */
-  onMapClick: (lat: number, lng: number) => void;
+  /** 지도에서 장소(POI)나 지점을 선택 → 저장 후보 전달 */
+  onPickCandidate: (candidate: PlaceCandidate) => void;
   /** 전체 화면(몰입형) 모드 — 카드 테두리/힌트 제거 */
   fullscreen?: boolean;
 }
@@ -89,13 +112,51 @@ function CategoryPin({ place, selected }: { place: Place; selected: boolean }) {
 }
 
 /** 구글 지도 (CONFIGURED 모드) — 상위에서 APIProvider로 감싸야 함 */
-export function MapView({ places, selectedId, onSelect, onMapClick, fullscreen }: MapViewProps) {
+export function MapView({ places, selectedId, onSelect, onPickCandidate, fullscreen }: MapViewProps) {
   const selected = places.find((p) => p.id === selectedId) ?? null;
   const hasMapId = Boolean(GOOGLE_MAPS_MAP_ID);
 
+  const map = useMap();
+  const placesLib = useMapsLibrary("places");
+  const placesSvc = useRef<google.maps.places.PlacesService | null>(null);
+
+  useEffect(() => {
+    if (placesLib && map && !placesSvc.current) {
+      placesSvc.current = new placesLib.PlacesService(map);
+    }
+  }, [placesLib, map]);
+
   const handleClick = (e: MapMouseEvent) => {
     const ll = e.detail.latLng;
-    if (ll) onMapClick(Number(ll.lat.toFixed(6)), Number(ll.lng.toFixed(6)));
+    if (!ll) return;
+    const lat = Number(ll.lat.toFixed(6));
+    const lng = Number(ll.lng.toFixed(6));
+    const placeId = (e.detail as { placeId?: string | null }).placeId ?? undefined;
+
+    // POI(장소 아이콘)를 탭하면 상세 정보를 조회해 이름·주소·카테고리를 채움
+    if (placeId && placesSvc.current) {
+      (e as unknown as { stop?: () => void }).stop?.(); // 기본 정보창 억제
+      placesSvc.current.getDetails(
+        { placeId, fields: ["name", "formatted_address", "geometry", "types"] },
+        (res, status) => {
+          if ((status as string) === "OK" && res) {
+            onPickCandidate({
+              lat: res.geometry?.location?.lat() ?? lat,
+              lng: res.geometry?.location?.lng() ?? lng,
+              name: res.name ?? undefined,
+              address: res.formatted_address ?? undefined,
+              category: guessCategory(res.types ?? []),
+              googlePlaceId: placeId,
+            });
+          } else {
+            onPickCandidate({ lat, lng });
+          }
+        }
+      );
+    } else {
+      // 빈 지점 탭 → 좌표만 (이름은 사용자가 입력)
+      onPickCandidate({ lat, lng });
+    }
   };
 
   return (
