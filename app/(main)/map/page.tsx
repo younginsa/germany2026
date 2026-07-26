@@ -104,7 +104,7 @@ function MapPageInner() {
 
   // 단일 검색 바 — 왼쪽 뒤로 화살표(일정으로) + 검색 입력 + 오른쪽 검색 아이콘
   const searchBar = (
-    <div className="flex h-11 flex-1 items-center gap-1 rounded-full border bg-card pl-1 pr-2 shadow-[var(--shadow-soft)]">
+    <div className="flex h-11 flex-1 items-center gap-1 rounded-full border bg-card px-1 shadow-[var(--shadow-soft)]">
       <Link
         href="/itinerary"
         aria-label="일정으로 돌아가기"
@@ -119,7 +119,9 @@ function MapPageInner() {
         aria-label="장소 검색"
         className="h-full min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
       />
-      <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+      <span className="flex size-9 shrink-0 items-center justify-center text-muted-foreground" aria-hidden>
+        <Search className="h-4 w-4" />
+      </span>
     </div>
   );
 
