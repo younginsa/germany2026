@@ -1,21 +1,20 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { AnimatePresence } from "framer-motion";
-import { Plus, Search } from "lucide-react";
+import { ArrowLeft, Plus, Search } from "lucide-react";
 import type { Place, PlaceCategory } from "@/lib/types";
-import {
-  GOOGLE_MAPS_API_KEY,
-  isGoogleMapsConfigured,
-} from "@/lib/supabase/config";
+import { GOOGLE_MAPS_API_KEY, isGoogleMapsConfigured } from "@/lib/supabase/config";
 import { useItineraryDays, usePlaces } from "@/hooks/use-app-data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AddPlaceDialog } from "@/components/map/add-place-dialog";
 import { CategoryFilter } from "@/components/map/category-filter";
 import { MapPreview, MapView } from "@/components/map/map-view";
+import { MapBottomSheet, type SheetSnap } from "@/components/map/map-bottom-sheet";
 import { PlaceDetailCard } from "@/components/map/place-detail-card";
 import { PlaceList } from "@/components/map/place-list";
 
@@ -25,6 +24,23 @@ function matchesQuery(place: Place, q: string): boolean {
   const needle = q.toLowerCase();
   return [place.name, place.memo ?? "", place.address ?? ""].some((v) =>
     v.toLowerCase().includes(needle)
+  );
+}
+
+/** 일정으로 돌아가는 버튼 (검색창 왼쪽) */
+function BackToItinerary({ className }: { className?: string }) {
+  return (
+    <Link
+      href="/itinerary"
+      aria-label="일정으로 돌아가기"
+      className={
+        "flex h-11 shrink-0 items-center gap-1 rounded-full border bg-card px-3.5 text-sm font-semibold shadow-[var(--shadow-soft)] transition-colors hover:bg-accent " +
+        (className ?? "")
+      }
+    >
+      <ArrowLeft className="h-4 w-4" aria-hidden />
+      일정
+    </Link>
   );
 }
 
@@ -39,16 +55,21 @@ function MapPageInner() {
   const [query, setQuery] = useState("");
   const [addOpen, setAddOpen] = useState(false);
   const [prefill, setPrefill] = useState<{ lat: number; lng: number } | null>(null);
+  const [sheetSnap, setSheetSnap] = useState<SheetSnap>("half");
 
   // ?place=<id> 딥링크 → 마운트/파라미터 변경 시 해당 장소 선택
   const placeParam = searchParams.get("place");
   useEffect(() => {
-    if (placeParam) setSelectedId(placeParam);
+    if (placeParam) {
+      setSelectedId(placeParam);
+      setSheetSnap("peek");
+    }
   }, [placeParam]);
 
   const select = useCallback(
     (id: string) => {
       setSelectedId(id);
+      setSheetSnap("peek");
       router.replace(`/map?place=${id}`, { scroll: false });
     },
     [router]
@@ -60,7 +81,10 @@ function MapPageInner() {
   }, [router]);
 
   // 검색어만 반영한 목록 (칩 카운트용)
-  const searched = useMemo(() => places.filter((p) => matchesQuery(p, query.trim())), [places, query]);
+  const searched = useMemo(
+    () => places.filter((p) => matchesQuery(p, query.trim())),
+    [places, query]
+  );
 
   // 검색어 + 카테고리 반영한 최종 목록 (리스트 & 마커 공용)
   const filtered = useMemo(() => {
@@ -87,69 +111,108 @@ function MapPageInner() {
     setAddOpen(true);
   }, []);
 
+  const countLabel = (
+    <>
+      저장된 장소 <span className="font-semibold text-foreground tabular-nums">{places.length}</span>곳
+      {filtered.length !== places.length && (
+        <span className="text-muted-foreground"> · {filtered.length}곳 표시</span>
+      )}
+    </>
+  );
+
+  const searchInput = (
+    <div className="relative flex-1">
+      <Search
+        className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+        aria-hidden
+      />
+      <Input
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="장소 검색…"
+        className="h-11 rounded-full border-none bg-card pl-10 shadow-[var(--shadow-soft)]"
+        aria-label="장소 검색"
+      />
+    </div>
+  );
+
   const content = (
-    <div className="-mb-16 flex h-[calc(100dvh-7rem)] flex-col gap-4 lg:flex-row">
-      {/* ─── 사이드바: 검색 + 필터 + 목록 ─── */}
-      <aside className="order-2 flex min-h-0 flex-1 flex-col gap-3 lg:order-1 lg:w-[380px] lg:flex-none">
-        <div className="flex items-center justify-between gap-2">
-          <div>
-            <h1 className="text-lg font-bold tracking-tight">지도</h1>
-            <p className="text-xs text-muted-foreground">
-              저장된 장소 <span className="font-semibold text-foreground">{places.length}</span>곳
-              {filtered.length !== places.length && ` · ${filtered.length}곳 표시 중`}
-            </p>
-          </div>
-          <Button size="sm" onClick={() => openAddDialog(null)}>
-            <Plus />새 장소
-          </Button>
-        </div>
-
-        <div className="relative">
-          <Search
-            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-            aria-hidden
-          />
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="장소 검색…"
-            className="pl-9"
-            aria-label="장소 검색"
-          />
-        </div>
-
-        <CategoryFilter selected={categories} onChange={setCategories} counts={counts} />
-
-        <PlaceList places={filtered} days={days} selectedId={selectedId} onSelect={select} />
-      </aside>
-
-      {/* ─── 지도 / 미리보기 ─── */}
-      <div className="relative order-1 h-[40dvh] shrink-0 lg:order-2 lg:h-auto lg:flex-1">
+    <div className="fixed inset-0 overflow-hidden bg-background">
+      {/* ─── 지도 레이어 (전체 화면) ─── */}
+      <div className="absolute inset-0">
         {isGoogleMapsConfigured ? (
           <MapView
+            fullscreen
             places={filtered}
             selectedId={selectedId}
             onSelect={select}
             onMapClick={(lat, lng) => openAddDialog({ lat, lng })}
           />
         ) : (
-          <MapPreview placeCount={places.length} />
+          <MapPreview fullscreen placeCount={places.length} />
         )}
+      </div>
 
-        {/* 선택된 장소 상세 오버레이 */}
-        <div className="pointer-events-none absolute inset-x-3 bottom-3 z-10 flex justify-start sm:inset-x-auto sm:left-3 sm:w-[380px] lg:bottom-4 lg:left-4">
-          <AnimatePresence mode="wait">
-            {selectedPlace && (
+      {/* ─── 데스크톱 사이드 패널 ─── */}
+      <aside className="absolute inset-y-0 left-0 z-20 hidden w-[380px] flex-col gap-3 border-r bg-card/95 p-4 backdrop-blur lg:flex">
+        <div className="flex items-center gap-2">
+          <BackToItinerary />
+          {searchInput}
+        </div>
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-muted-foreground">{countLabel}</p>
+          <Button size="sm" onClick={() => openAddDialog(null)}>
+            <Plus />새 장소
+          </Button>
+        </div>
+        <CategoryFilter selected={categories} onChange={setCategories} counts={counts} />
+        <PlaceList places={filtered} days={days} selectedId={selectedId} onSelect={select} />
+      </aside>
+
+      {/* ─── 모바일 상단 오버레이 (뒤로 + 검색 + 카테고리) ─── */}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 z-20 space-y-2 px-3 pt-[calc(env(safe-area-inset-top)+0.75rem)] lg:hidden"
+      >
+        <div className="pointer-events-auto flex items-center gap-2">
+          <BackToItinerary />
+          {searchInput}
+        </div>
+        <div className="pointer-events-auto">
+          <CategoryFilter selected={categories} onChange={setCategories} counts={counts} />
+        </div>
+      </div>
+
+      {/* ─── 선택된 장소 상세 ─── */}
+      <div className="pointer-events-none absolute inset-x-3 bottom-[136px] z-40 lg:inset-x-auto lg:bottom-4 lg:left-[396px] lg:w-[360px]">
+        <AnimatePresence mode="wait">
+          {selectedPlace && (
+            <div className="pointer-events-auto">
               <PlaceDetailCard
                 key={selectedPlace.id}
                 place={selectedPlace}
                 days={days}
                 onClose={clearSelection}
               />
-            )}
-          </AnimatePresence>
-        </div>
+            </div>
+          )}
+        </AnimatePresence>
       </div>
+
+      {/* ─── 모바일 바텀시트 ─── */}
+      <MapBottomSheet
+        snap={sheetSnap}
+        onSnapChange={setSheetSnap}
+        header={
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-sm text-muted-foreground">{countLabel}</p>
+            <Button size="sm" onClick={() => openAddDialog(null)}>
+              <Plus />새 장소
+            </Button>
+          </div>
+        }
+      >
+        <PlaceList places={filtered} days={days} selectedId={selectedId} onSelect={select} />
+      </MapBottomSheet>
 
       <AddPlaceDialog
         open={addOpen}
@@ -167,18 +230,9 @@ function MapPageInner() {
   return content;
 }
 
-function MapPageFallback() {
-  return (
-    <div className="flex h-[calc(100dvh-7rem)] flex-col gap-4 lg:flex-row">
-      <div className="order-2 flex-1 animate-pulse rounded-2xl bg-muted lg:order-1 lg:w-[380px] lg:flex-none" />
-      <div className="order-1 h-[40dvh] animate-pulse rounded-2xl bg-muted lg:order-2 lg:h-auto lg:flex-1" />
-    </div>
-  );
-}
-
 export default function MapPage() {
   return (
-    <Suspense fallback={<MapPageFallback />}>
+    <Suspense fallback={null}>
       <MapPageInner />
     </Suspense>
   );

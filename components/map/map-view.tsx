@@ -34,6 +34,8 @@ interface MapViewProps {
   onSelect: (id: string) => void;
   /** 지도 클릭 → 좌표와 함께 장소 추가 다이얼로그 열기 */
   onMapClick: (lat: number, lng: number) => void;
+  /** 전체 화면(몰입형) 모드 — 카드 테두리/힌트 제거 */
+  fullscreen?: boolean;
 }
 
 /** 선택된 장소로 지도 이동 (Map 자식으로 렌더) */
@@ -87,7 +89,7 @@ function CategoryPin({ place, selected }: { place: Place; selected: boolean }) {
 }
 
 /** 구글 지도 (CONFIGURED 모드) — 상위에서 APIProvider로 감싸야 함 */
-export function MapView({ places, selectedId, onSelect, onMapClick }: MapViewProps) {
+export function MapView({ places, selectedId, onSelect, onMapClick, fullscreen }: MapViewProps) {
   const selected = places.find((p) => p.id === selectedId) ?? null;
   const hasMapId = Boolean(GOOGLE_MAPS_MAP_ID);
 
@@ -97,13 +99,18 @@ export function MapView({ places, selectedId, onSelect, onMapClick }: MapViewPro
   };
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-2xl border shadow-[var(--shadow-soft)]">
+    <div
+      className={cn(
+        "relative h-full w-full overflow-hidden",
+        !fullscreen && "rounded-2xl border shadow-[var(--shadow-soft)]"
+      )}
+    >
       <GoogleMap
         mapId={GOOGLE_MAPS_MAP_ID || undefined}
         defaultCenter={DEFAULT_CENTER}
         defaultZoom={DEFAULT_ZOOM}
         gestureHandling="greedy"
-        disableDefaultUI={false}
+        disableDefaultUI={fullscreen ? true : false}
         onClick={handleClick}
         className="h-full w-full"
       >
@@ -131,13 +138,15 @@ export function MapView({ places, selectedId, onSelect, onMapClick }: MapViewPro
             ))}
       </GoogleMap>
 
-      {/* 지도 클릭 → 장소 추가 힌트 */}
-      <div className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2">
-        <div className="glass flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium text-muted-foreground shadow-sm">
-          <MousePointerClick className="h-3.5 w-3.5" aria-hidden />
-          지도를 길게 눌러(클릭해) 장소를 추가할 수 있어요
+      {/* 지도 클릭 → 장소 추가 힌트 (비몰입 모드에서만) */}
+      {!fullscreen && (
+        <div className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2">
+          <div className="glass flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium text-muted-foreground shadow-sm">
+            <MousePointerClick className="h-3.5 w-3.5" aria-hidden />
+            지도를 길게 눌러(클릭해) 장소를 추가할 수 있어요
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -155,9 +164,20 @@ const DECO_PINS: { icon: LucideIcon; top: string; left: string; delay: number }[
 ];
 
 /** 지도 플레이스홀더 (PREVIEW 모드) */
-export function MapPreview({ placeCount }: { placeCount: number }) {
+export function MapPreview({
+  placeCount,
+  fullscreen,
+}: {
+  placeCount: number;
+  fullscreen?: boolean;
+}) {
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-2xl border bg-card shadow-[var(--shadow-soft)]">
+    <div
+      className={cn(
+        "relative h-full w-full overflow-hidden bg-card",
+        !fullscreen && "rounded-2xl border shadow-[var(--shadow-soft)]"
+      )}
+    >
       {/* 그리드 + 그라디언트 배경 */}
       <div
         className="absolute inset-0"
