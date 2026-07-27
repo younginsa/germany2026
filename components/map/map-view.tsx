@@ -15,6 +15,7 @@ import {
   Castle,
   Hotel,
   Map as MapIcon,
+  MapPin,
   MousePointerClick,
   Plane,
   TreePine,
@@ -57,22 +58,51 @@ interface MapViewProps {
   onSelect: (id: string) => void;
   /** 지도에서 장소(POI)나 지점을 선택 → 저장 후보 전달 */
   onPickCandidate: (candidate: PlaceCandidate) => void;
+  /** 아직 저장되지 않은 선택 후보 — 지도에 임시 핀으로 표시 */
+  candidate?: PlaceCandidate | null;
   /** 전체 화면(몰입형) 모드 — 카드 테두리/힌트 제거 */
   fullscreen?: boolean;
 }
 
-/** 선택된 장소로 지도 이동 (Map 자식으로 렌더) */
-function MapController({ selected }: { selected: Place | null }) {
+/** 선택된 장소/후보로 지도 이동 (Map 자식으로 렌더) */
+function MapController({
+  target,
+}: {
+  target: { lat: number; lng: number } | null;
+}) {
   const map = useMap();
 
   useEffect(() => {
-    if (!map || !selected) return;
-    map.panTo({ lat: selected.lat, lng: selected.lng });
+    if (!map || !target) return;
+    map.panTo({ lat: target.lat, lng: target.lng });
     const zoom = map.getZoom();
     if (zoom !== undefined && zoom < 12) map.setZoom(13);
-  }, [map, selected]);
+  }, [map, target]);
 
   return null;
+}
+
+/** 저장 전 후보 위치를 나타내는 임시 선택 핀 */
+function CandidatePin() {
+  return (
+    <motion.div
+      initial={{ scale: 0.6, opacity: 0, y: -4 }}
+      animate={{ scale: 1, opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 420, damping: 20 }}
+      className="relative flex flex-col items-center"
+      style={{ transformOrigin: "bottom center" }}
+    >
+      <span className="absolute -inset-1.5 animate-ping rounded-full bg-primary/30" aria-hidden />
+      <div className="relative flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-primary shadow-lg">
+        <MapPin className="h-5 w-5 text-primary-foreground" aria-hidden />
+      </div>
+      <div
+        className="-mt-px h-0 w-0 border-x-[5px] border-t-[7px] border-x-transparent"
+        style={{ borderTopColor: "var(--primary)" }}
+        aria-hidden
+      />
+    </motion.div>
+  );
 }
 
 /** 카테고리 아이콘 커스텀 핀 (mapId 있을 때만 사용 가능) */
@@ -112,9 +142,21 @@ function CategoryPin({ place, selected }: { place: Place; selected: boolean }) {
 }
 
 /** 구글 지도 (CONFIGURED 모드) — 상위에서 APIProvider로 감싸야 함 */
-export function MapView({ places, selectedId, onSelect, onPickCandidate, fullscreen }: MapViewProps) {
+export function MapView({
+  places,
+  selectedId,
+  onSelect,
+  onPickCandidate,
+  candidate,
+  fullscreen,
+}: MapViewProps) {
   const selected = places.find((p) => p.id === selectedId) ?? null;
   const hasMapId = Boolean(GOOGLE_MAPS_MAP_ID);
+  const panTarget = candidate
+    ? { lat: candidate.lat, lng: candidate.lng }
+    : selected
+      ? { lat: selected.lat, lng: selected.lng }
+      : null;
 
   const map = useMap();
   const placesLib = useMapsLibrary("places");
@@ -175,7 +217,7 @@ export function MapView({ places, selectedId, onSelect, onPickCandidate, fullscr
         onClick={handleClick}
         className="h-full w-full"
       >
-        <MapController selected={selected} />
+        <MapController target={panTarget} />
 
         {hasMapId
           ? places.map((place) => (
@@ -197,6 +239,19 @@ export function MapView({ places, selectedId, onSelect, onPickCandidate, fullscr
                 onClick={() => onSelect(place.id)}
               />
             ))}
+
+        {/* 저장 전 후보 핀 */}
+        {candidate &&
+          (hasMapId ? (
+            <AdvancedMarker
+              position={{ lat: candidate.lat, lng: candidate.lng }}
+              zIndex={2000}
+            >
+              <CandidatePin />
+            </AdvancedMarker>
+          ) : (
+            <Marker position={{ lat: candidate.lat, lng: candidate.lng }} />
+          ))}
       </GoogleMap>
 
       {/* 지도 클릭 → 장소 추가 힌트 (비몰입 모드에서만) */}

@@ -118,7 +118,7 @@ function MapPageInner() {
 
   // 단일 검색 바 — 왼쪽 뒤로 화살표(일정으로) + 검색 입력 + 오른쪽 검색 아이콘
   const searchBar = (
-    <div className="flex h-11 flex-1 items-center gap-1 rounded-full border bg-card px-1 shadow-[var(--shadow-soft)]">
+    <div className="flex h-11 w-full items-center gap-1 rounded-full border bg-card px-1 shadow-[var(--shadow-soft)]">
       <Link
         href="/itinerary"
         aria-label="일정으로 돌아가기"
@@ -150,6 +150,7 @@ function MapPageInner() {
             selectedId={selectedId}
             onSelect={select}
             onPickCandidate={handlePick}
+            candidate={candidate}
           />
         ) : (
           <MapPreview fullscreen placeCount={places.length} />
@@ -160,9 +161,15 @@ function MapPageInner() {
       <aside className="absolute inset-y-0 left-0 z-20 hidden w-[380px] flex-col gap-3 border-r bg-card/95 p-4 backdrop-blur lg:flex">
         {searchBar}
         <p className="px-1 text-xs text-muted-foreground">{countLabel}</p>
-        <CategoryFilter selected={categories} onChange={setCategories} counts={counts} />
         <PlaceList places={filtered} days={days} selectedId={selectedId} onSelect={select} />
       </aside>
+
+      {/* ─── 데스크톱: 필터 칩을 지도 위(패널 오른쪽 상단)에 플로팅 ─── */}
+      <div className="pointer-events-none absolute left-[396px] right-4 top-4 z-30 hidden lg:block">
+        <div className="pointer-events-auto inline-flex max-w-full rounded-full bg-card/95 p-1 shadow-[var(--shadow-lifted)] backdrop-blur">
+          <CategoryFilter selected={categories} onChange={setCategories} counts={counts} className="pb-0" />
+        </div>
+      </div>
 
       {/* ─── 모바일 상단 오버레이 (뒤로 + 검색 + 카테고리) ─── */}
       <div

@@ -21,7 +21,7 @@ export function TopNav() {
     pathname.startsWith(href) || (href === "/itinerary" && pathname.startsWith("/map"));
 
   return (
-    <header className="glass sticky top-0 z-40 border-b border-t-0 border-x-0">
+    <header className="sticky top-0 z-40 border-b bg-card/95 backdrop-blur-md supports-[backdrop-filter]:bg-card/90">
       <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-1 px-4 sm:gap-2 sm:px-6">
         {/* 로고 — 클릭 시 홈으로 */}
         <Link href="/" className="mr-0.5 flex shrink-0 items-center gap-2 sm:mr-1" aria-label="홈">
