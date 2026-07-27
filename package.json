@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:corp": "NODE_EXTRA_CA_CERTS=$HOME/.config/germany2026/corp-ca.crt next dev",
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit"
