@@ -74,23 +74,25 @@ export function StatCards() {
         </Card>
       ))}
 
-      {/* 독일 날씨 — 두 도시 한 카드에 */}
-      <Card className="p-4 sm:p-5">
-        <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-          <Snowflake className="h-3.5 w-3.5" />
-          독일 날씨
-        </p>
-        <div className="mt-2 space-y-1.5">
-          {WEATHER.map((w) => (
-            <div key={w.city} className="flex items-center gap-1.5">
-              <w.icon className="h-4 w-4 shrink-0 text-primary" aria-hidden />
-              <span className="min-w-0 flex-1 truncate text-xs font-medium">{w.city}</span>
-              <span className="shrink-0 text-xs tabular-nums">
-                <span className="font-semibold">{w.high}°</span>
-                <span className="text-muted-foreground"> / {w.low}°</span>
-              </span>
-            </div>
-          ))}
+      {/* 독일 날씨 — 두 도시 한 카드에 (다른 요약 카드와 같은 레이아웃) */}
+      <Card className="flex items-start gap-3 p-4 sm:p-5">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+          <Snowflake className="h-4 w-4" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-medium text-muted-foreground">독일 날씨</p>
+          <div className="mt-1 space-y-1">
+            {WEATHER.map((w) => (
+              <div key={w.city} className="flex items-center gap-1.5">
+                <w.icon className="h-3.5 w-3.5 shrink-0 text-primary" aria-hidden />
+                <span className="min-w-0 flex-1 truncate text-xs font-medium">{w.city}</span>
+                <span className="shrink-0 text-xs tabular-nums">
+                  <span className="font-semibold">{w.high}°</span>
+                  <span className="text-muted-foreground"> / {w.low}°</span>
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </Card>
     </div>

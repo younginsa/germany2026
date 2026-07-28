@@ -1,14 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CalendarDays, MapPin, Zap } from "lucide-react";
+import { CalendarDays, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { useTrip } from "@/hooks/use-app-data";
 import { DdayBadge } from "@/components/home/countdown";
 import { StatCards } from "@/components/home/stat-cards";
 import { CompanionsCard } from "@/components/home/companions-card";
-import { QuickActions } from "@/components/home/quick-actions";
 import { RecentComments } from "@/components/home/recent-comments";
 import { ChecklistProgress } from "@/components/home/checklist-progress";
 import { DayPreview } from "@/components/home/day-preview";
@@ -88,17 +87,8 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* ─── 빠른 이동 ────────────────────────────── */}
-      <Section delay={0.12}>
-        <h2 className="mb-3 flex items-center gap-1.5 text-sm font-semibold text-muted-foreground">
-          <Zap className="h-4 w-4" />
-          바로가기
-        </h2>
-        <QuickActions />
-      </Section>
-
       {/* ─── 일정 미리보기 · 댓글 · 체크리스트 · 동행인 ── */}
-      <Section delay={0.24}>
+      <Section delay={0.12}>
         <div className="grid gap-4 lg:grid-cols-3">
           <div className="space-y-4 lg:col-span-2">
             <DayPreview />
