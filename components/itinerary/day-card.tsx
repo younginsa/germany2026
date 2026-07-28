@@ -55,7 +55,7 @@ function Section({
   children: ReactNode;
 }) {
   return (
-    <section className={cn("rounded-xl border border-border/60 bg-card p-3", className)}>
+    <section className={cn("rounded-xl bg-card p-3", className)}>
       <h4
         className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold tracking-tight"
         style={{ color: tone }}
