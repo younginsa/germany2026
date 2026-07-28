@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * DayEditDialog — 일차의 모든 내용을 편집합니다.
- * 날짜·도시·숙소·이동·시간별 일정·맛집·마켓·주차·메모 등을 수정하고,
- * 저장 시 tripStore에 반영합니다. 날(Day) 삭제도 여기서 처리합니다.
+ * DayEditDialog — 일차의 "내용"을 편집합니다 (도시·숙소·시간별 일정·메모 등).
+ * 날짜와 순서(DAY 번호)는 일정 구성 다이얼로그에서 일괄 관리하므로
+ * 여기서는 수정할 수 없습니다.
  * 시간별 일정의 placeId·participantIds 등 부가 정보는 편집 중 보존됩니다.
  */
 
@@ -22,19 +22,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { tripStore } from "@/hooks/use-app-data";
+import { formatDateKo } from "@/lib/utils";
 import type { ItineraryDay, ScheduleItem } from "@/lib/types";
 
 interface DayEditDialogProps {
   /** 편집할 일차 (null이면 닫힘) */
   day: ItineraryDay | null;
   onClose: () => void;
-  /** 날 삭제 요청 — 페이지에서 삭제 + 번호 재정렬 처리 */
-  onDelete: (day: ItineraryDay) => void;
 }
 
 /** 폼 상태 — 문자열 기반 (schedule은 원본 항목을 보존하며 편집) */
 interface FormState {
-  date: string;
   city: string;
   cityEmoji: string;
   accommodation: string;
@@ -50,7 +48,6 @@ interface FormState {
 
 function toForm(day: ItineraryDay): FormState {
   return {
-    date: day.date,
     city: day.city,
     cityEmoji: day.cityEmoji,
     accommodation: day.accommodation === "-" ? "" : day.accommodation,
@@ -65,13 +62,11 @@ function toForm(day: ItineraryDay): FormState {
   };
 }
 
-export function DayEditDialog({ day, onClose, onDelete }: DayEditDialogProps) {
+export function DayEditDialog({ day, onClose }: DayEditDialogProps) {
   const [form, setForm] = useState<FormState | null>(null);
-  const [confirmDelete, setConfirmDelete] = useState(false);
 
   useEffect(() => {
     setForm(day ? toForm(day) : null);
-    setConfirmDelete(false);
   }, [day]);
 
   if (!day || !form) return null;
@@ -107,7 +102,6 @@ export function DayEditDialog({ day, onClose, onDelete }: DayEditDialogProps) {
 
     const updated: ItineraryDay = {
       ...day,
-      date: form.date,
       city: form.city.trim() || day.city,
       cityEmoji: form.cityEmoji.trim() || day.cityEmoji,
       accommodation: form.accommodation.trim() || "-",
@@ -129,19 +123,22 @@ export function DayEditDialog({ day, onClose, onDelete }: DayEditDialogProps) {
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>DAY {day.dayNumber} 편집</DialogTitle>
-          <DialogDescription>이 날의 일정 내용을 수정합니다.</DialogDescription>
+          <DialogDescription>
+            {formatDateKo(day.date, { weekday: true })} — 날짜·순서는 ‘일정 구성’에서
+            관리합니다.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
-          {/* 날짜 · 도시 */}
-          <div className="grid grid-cols-2 gap-3">
+          {/* 도시 · 아이콘 */}
+          <div className="grid grid-cols-[1fr_110px] gap-3">
             <div className="space-y-1.5">
-              <Label htmlFor="edit-date">날짜</Label>
+              <Label htmlFor="edit-city">도시</Label>
               <Input
-                id="edit-date"
-                type="date"
-                value={form.date}
-                onChange={(e) => set("date", e.target.value)}
+                id="edit-city"
+                value={form.city}
+                onChange={(e) => set("city", e.target.value)}
+                placeholder="도시 이름"
               />
             </div>
             <div className="space-y-1.5">
@@ -153,15 +150,6 @@ export function DayEditDialog({ day, onClose, onDelete }: DayEditDialogProps) {
                 placeholder="🏰"
               />
             </div>
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="edit-city">도시</Label>
-            <Input
-              id="edit-city"
-              value={form.city}
-              onChange={(e) => set("city", e.target.value)}
-              placeholder="도시 이름"
-            />
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="edit-accom">숙소</Label>
@@ -300,31 +288,6 @@ export function DayEditDialog({ day, onClose, onDelete }: DayEditDialogProps) {
             />
           </div>
 
-          {/* 날 삭제 */}
-          <div className="rounded-xl border border-destructive/30 p-3">
-            {confirmDelete ? (
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-sm text-muted-foreground">이 날을 삭제할까요?</span>
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm" onClick={() => setConfirmDelete(false)}>
-                    취소
-                  </Button>
-                  <Button variant="destructive" size="sm" onClick={() => onDelete(day)}>
-                    삭제
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-destructive hover:text-destructive"
-                onClick={() => setConfirmDelete(true)}
-              >
-                <Trash2 className="size-4" />이 날 삭제
-              </Button>
-            )}
-          </div>
         </div>
 
         <DialogFooter>

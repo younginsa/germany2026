@@ -9,11 +9,8 @@
 
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Plus } from "lucide-react";
-import { toast } from "sonner";
+import { CalendarCog } from "lucide-react";
 import {
-  newId,
-  tripStore,
   useComments,
   useItineraryDays,
   useProfiles,
@@ -28,15 +25,14 @@ import {
 } from "@/hooks/use-inline-comments";
 import { DayCard } from "@/components/itinerary/day-card";
 import { DayEditDialog } from "@/components/itinerary/day-edit-dialog";
+import { StructureDialog } from "@/components/itinerary/structure-dialog";
 import { CommentPanel } from "@/components/itinerary/comment-panel";
 import { SelectionToolbar } from "@/components/itinerary/selection-toolbar";
 import type { ItineraryDay } from "@/lib/types";
 
-/** ISO 날짜(YYYY-MM-DD)에 하루 더하기 */
-function nextDate(iso: string): string {
-  const d = new Date(iso + "T00:00:00");
-  d.setDate(d.getDate() + 1);
-  return d.toISOString().slice(0, 10);
+/** "뮌헨 (크리스마스 이브)" · "뮌헨 → 인천" 등을 기본 도시명으로 정규화 */
+function baseCity(city: string): string {
+  return city.split("→")[0].split("(")[0].trim();
 }
 
 export default function ItineraryPage() {
@@ -58,51 +54,15 @@ function ItineraryContent() {
   const { expandDay, focusComment } = useInlineComments();
   const [viewFilter, setViewFilter] = useState<string | null>(null);
   const [editingDay, setEditingDay] = useState<ItineraryDay | null>(null);
-
-  /* 새 날 추가 — 마지막 날 다음 날짜로 빈 일차 생성 후 편집 열기 */
-  const addDay = () => {
-    const last = days[days.length - 1];
-    const newDay: ItineraryDay = {
-      id: newId("day"),
-      tripId: trip.id,
-      dayNumber: (last?.dayNumber ?? 0) + 1,
-      date: last ? nextDate(last.date) : new Date().toISOString().slice(0, 10),
-      city: "",
-      cityEmoji: "📍",
-      accommodation: "-",
-      transportation: "",
-      schedule: [],
-      restaurants: [],
-      christmasMarket: "",
-      parking: "",
-      notes: "",
-      rentalCarNotes: "",
-      winterDrivingNotes: "",
-    };
-    tripStore.upsertRow("itineraryDays", newDay);
-    expandDay(newDay.id);
-    setEditingDay(newDay);
-  };
-
-  /* 날 삭제 + 남은 날 번호 재정렬 */
-  const deleteDay = (target: ItineraryDay) => {
-    tripStore.deleteRow("itineraryDays", target.id);
-    days
-      .filter((d) => d.id !== target.id)
-      .sort((a, b) => a.dayNumber - b.dayNumber)
-      .forEach((d, i) => {
-        if (d.dayNumber !== i + 1) {
-          tripStore.upsertRow("itineraryDays", { ...d, dayNumber: i + 1 });
-        }
-      });
-    setEditingDay(null);
-    toast.success("일정에서 하루를 삭제했어요");
-  };
+  const [structureOpen, setStructureOpen] = useState(false);
 
   // editingDay가 스토어 변경으로 갱신되면 최신 내용 반영
   const editingCurrent = editingDay
     ? (days.find((d) => d.id === editingDay.id) ?? editingDay)
     : null;
+
+  const firstCity = days.length > 0 ? baseCity(days[0].city) : "";
+  const lastCity = days.length > 0 ? baseCity(days[days.length - 1].city) : "";
 
   /* URL 파라미터 처리 — 최초 1회 (comment는 스토어 로드 후에 찾힐 수 있어 재시도 허용) */
   const handledRef = useRef(false);
@@ -142,11 +102,18 @@ function ItineraryContent() {
           <div>
             <h1 className="text-2xl font-bold tracking-tight">일정</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              10일간의 여정 · 프랑크푸르트에서 뮌헨까지
+              {days.length}일간의 여정
+              {firstCity && lastCity && ` · ${firstCity}에서 ${lastCity}까지`}
             </p>
           </div>
-          <Button variant="outline" size="sm" className="shrink-0" onClick={addDay}>
-            <Plus className="size-4" />새 날 추가
+          <Button
+            variant="outline"
+            size="sm"
+            className="shrink-0"
+            onClick={() => setStructureOpen(true)}
+          >
+            <CalendarCog className="size-4" />
+            일정 구성
           </Button>
         </div>
 
@@ -208,10 +175,12 @@ function ItineraryContent() {
       </ol>
 
       {/* 일정 편집 */}
-      <DayEditDialog
-        day={editingCurrent}
-        onClose={() => setEditingDay(null)}
-        onDelete={deleteDay}
+      <DayEditDialog day={editingCurrent} onClose={() => setEditingDay(null)} />
+      <StructureDialog
+        open={structureOpen}
+        onOpenChange={setStructureOpen}
+        days={days}
+        trip={trip}
       />
 
       {/* 인라인 댓글 오버레이 */}

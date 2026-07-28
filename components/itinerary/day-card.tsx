@@ -150,7 +150,7 @@ export function DayCard({
           type="button"
           onClick={() => toggleDay(day.id)}
           aria-expanded={expanded}
-          className="flex w-full items-center gap-3 p-4 pr-20 text-left transition-colors hover:bg-secondary/40 sm:gap-4 sm:p-5 sm:pr-24"
+          className="flex w-full items-center gap-3 rounded-2xl p-4 pr-20 text-left transition-colors hover:bg-secondary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:gap-4 sm:p-5 sm:pr-24"
         >
           <span className="flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-xl bg-accent text-accent-foreground">
             <span className="text-[9px] font-semibold leading-none tracking-widest">DAY</span>
