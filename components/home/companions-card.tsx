@@ -14,7 +14,7 @@ export function CompanionsCard() {
   const me = useCurrentUser();
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader className="flex-row items-center justify-between space-y-0 pb-3">
         <CardTitle className="flex items-center gap-2">
           <UsersRound className="h-4 w-4 text-primary" />

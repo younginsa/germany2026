@@ -18,7 +18,7 @@ export function DayPreview() {
   const preview = day.schedule.slice(0, 3);
 
   return (
-    <Card>
+    <Card className="flex h-full flex-col">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -37,7 +37,7 @@ export function DayPreview() {
           <span className="truncate">{day.transportation}</span>
         </p>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="flex flex-1 flex-col gap-4">
         <ol className="space-y-2.5">
           {preview.map((item) => (
             <li key={`${item.time}-${item.title}`} className="flex items-start gap-3">
@@ -61,7 +61,7 @@ export function DayPreview() {
           </p>
         )}
 
-        <Separator />
+        <Separator className="mt-auto" />
 
         <div className="flex items-center justify-between gap-3">
           <p className="flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground">

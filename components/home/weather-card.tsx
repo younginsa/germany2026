@@ -1,47 +1,41 @@
-import { Cloud, CloudSnow, Info, Snowflake, type LucideIcon } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { CloudSnow, Snowflake, type LucideIcon } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-interface CityForecast {
-  city: string;
-  icon: LucideIcon;
-  low: number;
-  high: number;
-  desc: string;
-}
-
-/** 출발 전 플레이스홀더 — 12월 독일 남부의 평년 겨울 날씨 */
-const FORECAST: CityForecast[] = [
+/** 12월 독일 평년 날씨 — 프랑크푸르트(도착) · 뮌헨(마지막) */
+const WEATHER: { city: string; icon: LucideIcon; low: number; high: number; desc: string }[] = [
   { city: "프랑크푸르트", icon: CloudSnow, low: -1, high: 4, desc: "눈 조금" },
-  { city: "하이델베르크", icon: Cloud, low: -2, high: 3, desc: "흐림" },
-  { city: "로텐부르크", icon: Snowflake, low: -4, high: 1, desc: "눈" },
-  { city: "뉘른베르크", icon: CloudSnow, low: -3, high: 2, desc: "눈·흐림" },
   { city: "뮌헨", icon: Snowflake, low: -5, high: 1, desc: "눈" },
 ];
 
-export function WeatherStrip() {
+/** 독일 날씨 카드 — 두 도시를 나란히 표시 */
+export function WeatherCard() {
   return (
-    <div>
-      <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0 [scrollbar-width:thin]">
-        {FORECAST.map((f) => (
-          <Card
-            key={f.city}
-            className="flex min-w-[8.5rem] shrink-0 flex-col items-center gap-1 px-4 py-4"
-          >
-            <f.icon className="h-7 w-7 text-primary" aria-hidden />
-            <p className="text-sm font-semibold tracking-tight">{f.city}</p>
-            <p className="text-xs text-muted-foreground">{f.desc}</p>
-            <p className="mt-1 text-sm font-medium tabular-nums">
-              <span className="text-primary">{f.low}°</span>
-              <span className="mx-1 text-muted-foreground">/</span>
-              <span>{f.high}°</span>
-            </p>
-          </Card>
-        ))}
-      </div>
-      <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-        <Info className="h-3 w-3 shrink-0" />
-        예보는 출발 2주 전부터 제공됩니다 — 현재는 12월 평년 기온 기준입니다.
-      </p>
-    </div>
+    <Card>
+      <CardHeader className="flex-row items-center justify-between space-y-0 pb-3">
+        <CardTitle className="flex items-center gap-2">
+          <Snowflake className="h-4 w-4 text-primary" />
+          독일 날씨
+        </CardTitle>
+        <span className="text-xs font-medium text-muted-foreground">12월 평년</span>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 gap-3">
+          {WEATHER.map((w) => (
+            <div
+              key={w.city}
+              className="flex flex-col items-center gap-1 rounded-xl bg-secondary/50 px-3 py-3"
+            >
+              <w.icon className="h-6 w-6 text-primary" aria-hidden />
+              <p className="text-sm font-semibold tracking-tight">{w.city}</p>
+              <p className="text-xs text-muted-foreground">{w.desc}</p>
+              <p className="text-sm font-medium tabular-nums">
+                <span className="font-semibold">{w.high}°</span>
+                <span className="text-muted-foreground"> / {w.low}°</span>
+              </p>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
