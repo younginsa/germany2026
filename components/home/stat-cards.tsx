@@ -12,6 +12,7 @@ import {
 /** 유로 → 원 환율 카드 (ECB 무료 API · 실패 시 "—") */
 function ExchangeCard() {
   const [rate, setRate] = useState<number | null>(null);
+  const [asOf, setAsOf] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -20,9 +21,11 @@ function ExchangeCard() {
       signal: ctrl.signal,
     })
       .then((r) => r.json())
-      .then((data: { rates?: { KRW?: number } }) => {
-        if (data.rates?.KRW) setRate(data.rates.KRW);
-        else setFailed(true);
+      .then((data: { rates?: { KRW?: number }; date?: string }) => {
+        if (data.rates?.KRW) {
+          setRate(data.rates.KRW);
+          if (data.date) setAsOf(data.date);
+        } else setFailed(true);
       })
       .catch(() => setFailed(true));
     return () => ctrl.abort();
@@ -40,7 +43,9 @@ function ExchangeCard() {
         </p>
         <p className="mt-0.5 truncate text-xs text-muted-foreground">
           {rate
-            ? `100€ ≈ ${Math.round(rate * 100).toLocaleString()}원`
+            ? asOf
+              ? `${asOf.replaceAll("-", ".")} 기준`
+              : "실시간 환율"
             : failed
               ? "환율을 불러오지 못했어요"
               : "불러오는 중"}
