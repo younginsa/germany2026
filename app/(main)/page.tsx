@@ -8,7 +8,6 @@ import { useTrip } from "@/hooks/use-app-data";
 import { DdayBadge } from "@/components/home/countdown";
 import { StatCards } from "@/components/home/stat-cards";
 import { CompanionsCard } from "@/components/home/companions-card";
-import { RecentComments } from "@/components/home/recent-comments";
 import { ChecklistProgress } from "@/components/home/checklist-progress";
 import { DayPreview } from "@/components/home/day-preview";
 
@@ -87,12 +86,11 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* ─── 일정 미리보기 · 댓글 · 체크리스트 · 동행인 ── */}
+      {/* ─── 일정 미리보기 · 체크리스트 · 동행인 ── */}
       <Section delay={0.12}>
         <div className="grid gap-4 lg:grid-cols-3">
           <div className="space-y-4 lg:col-span-2">
             <DayPreview />
-            <RecentComments />
           </div>
           <div className="space-y-4">
             <ChecklistProgress />
