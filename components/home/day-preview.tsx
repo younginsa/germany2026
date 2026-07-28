@@ -15,7 +15,7 @@ export function DayPreview() {
   const day = days[0];
   if (!day) return null;
 
-  const preview = day.schedule.slice(0, 3);
+  const preview = day.schedule;
 
   return (
     <Card className="flex h-full flex-col">
@@ -55,12 +55,6 @@ export function DayPreview() {
             </li>
           ))}
         </ol>
-        {day.schedule.length > preview.length && (
-          <p className="text-xs text-muted-foreground">
-            외 {day.schedule.length - preview.length}개 일정
-          </p>
-        )}
-
         <Separator className="mt-auto" />
 
         <div className="flex items-center justify-between gap-3">
