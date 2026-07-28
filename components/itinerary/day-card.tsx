@@ -55,10 +55,7 @@ function Section({
   children: ReactNode;
 }) {
   return (
-    <section
-      className={cn("rounded-xl p-3", className)}
-      style={{ backgroundColor: withAlpha(tone, 0.055) }}
-    >
+    <section className={cn("rounded-xl border border-border/60 bg-card p-3", className)}>
       <h4
         className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold tracking-tight"
         style={{ color: tone }}
@@ -180,7 +177,7 @@ export function DayCard({
             transition={{ duration: 0.3, ease: [0.25, 0.8, 0.35, 1] }}
             className="overflow-hidden"
           >
-            <div className="grid gap-3 border-t px-4 pb-5 pt-4 sm:grid-cols-2 sm:px-5">
+            <div className="grid gap-3 border-t bg-muted/40 px-4 pb-5 pt-4 sm:grid-cols-2 sm:px-5">
               <Section icon={CalendarDays} label="날짜 / 도시" tone="#64748b">
                 <span className="text-muted-foreground">
                   {formatDateKo(day.date, { weekday: true })} ·{" "}
