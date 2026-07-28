@@ -8,6 +8,24 @@ interface CountdownProps {
   targetDate: string;
 }
 
+/** 큰 D-day 배지 — 히어로 우상단용. 마운트 전에는 "D-—"로 hydration 방지 */
+export function DdayBadge({ targetDate }: { targetDate: string }) {
+  const [now, setNow] = useState<number | null>(null);
+  useEffect(() => {
+    setNow(Date.now());
+  }, []);
+  const target = new Date(`${targetDate}T00:00:00`).getTime();
+  const days = now === null ? null : Math.max(0, Math.floor((target - now) / 86_400_000));
+  return (
+    <div className="flex flex-col items-end leading-none">
+      <span className="text-3xl font-extrabold tabular-nums tracking-tight text-primary sm:text-4xl">
+        {days === null ? "D-—" : `D-${days}`}
+      </span>
+      <span className="mt-1.5 text-[11px] font-medium text-muted-foreground">출발까지</span>
+    </div>
+  );
+}
+
 interface TimeParts {
   days: number;
   hours: number;

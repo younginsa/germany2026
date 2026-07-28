@@ -1,12 +1,18 @@
 "use client";
 
-import { CalendarDays, Car, MapPin, Users } from "lucide-react";
+import { CalendarDays, CloudSnow, MapPin, Snowflake, Users, type LucideIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import {
   useItineraryDays,
   useProfiles,
   useTrip,
 } from "@/hooks/use-app-data";
+
+/** 12월 독일 평년 날씨 — 프랑크푸르트(도착) · 뮌헨(마지막) */
+const WEATHER: { city: string; icon: LucideIcon; low: number; high: number }[] = [
+  { city: "프랑크푸르트", icon: CloudSnow, low: -1, high: 4 },
+  { city: "뮌헨", icon: Snowflake, low: -5, high: 1 },
+];
 
 /** "뮌헨 (크리스마스 이브)" · "뮌헨 → 인천" 등을 기본 도시명으로 정규화 */
 function baseCity(city: string): string {
@@ -49,12 +55,6 @@ export function StatCards() {
       value: `${profiles.length}명`,
       sub: `어른 ${adults} · 아이 ${kids}`,
     },
-    {
-      icon: Car,
-      label: "이동 거리",
-      value: "약 800km",
-      sub: "9인승 렌터카",
-    },
   ] as const;
 
   return (
@@ -73,6 +73,26 @@ export function StatCards() {
           </div>
         </Card>
       ))}
+
+      {/* 독일 날씨 — 두 도시 한 카드에 */}
+      <Card className="p-4 sm:p-5">
+        <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+          <Snowflake className="h-3.5 w-3.5" />
+          독일 날씨
+        </p>
+        <div className="mt-2 space-y-1.5">
+          {WEATHER.map((w) => (
+            <div key={w.city} className="flex items-center gap-1.5">
+              <w.icon className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+              <span className="min-w-0 flex-1 truncate text-xs font-medium">{w.city}</span>
+              <span className="shrink-0 text-xs tabular-nums">
+                <span className="font-semibold">{w.high}°</span>
+                <span className="text-muted-foreground"> / {w.low}°</span>
+              </span>
+            </div>
+          ))}
+        </div>
+      </Card>
     </div>
   );
 }
