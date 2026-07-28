@@ -18,12 +18,14 @@ import {
   MessageCircle,
   MessageSquarePlus,
   NotebookPen,
+  Pencil,
   Snowflake,
   SquareParking,
   TreePine,
   UtensilsCrossed,
   type LucideIcon,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { EmojiIcon } from "@/components/ui/emoji-icon";
 import { useComments } from "@/hooks/use-app-data";
 import { useInlineComments } from "@/hooks/use-inline-comments";
@@ -105,10 +107,13 @@ function FieldCommentButton({
 export function DayCard({
   day,
   viewFilter = null,
+  onEdit,
 }: {
   day: ItineraryDay;
   /** 선택된 멤버 id — 참여하지 않는 시간별 항목을 흐리게 표시 */
   viewFilter?: string | null;
+  /** 편집 버튼 클릭 — 페이지에서 편집 다이얼로그 열기 */
+  onEdit?: (day: ItineraryDay) => void;
 }) {
   const { isDayExpanded, toggleDay, openPanel, showResolved } = useInlineComments();
   const allComments = useComments();
@@ -204,6 +209,14 @@ export function DayCard({
             className="overflow-hidden"
           >
             <div className="grid gap-x-6 gap-y-4 border-t px-4 pb-5 pt-4 sm:grid-cols-2 sm:px-5">
+              {onEdit && (
+                <div className="-mb-1 flex justify-end sm:col-span-2">
+                  <Button variant="outline" size="sm" onClick={() => onEdit(day)}>
+                    <Pencil className="size-3.5" />
+                    일정 수정
+                  </Button>
+                </div>
+              )}
               <Section icon={CalendarDays} label="날짜 / 도시"
                 action={<FieldCommentButton dayId={day.id} fieldKey="city" text={day.city} />}
               >
