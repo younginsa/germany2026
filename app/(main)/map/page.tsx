@@ -164,9 +164,9 @@ function MapPageInner() {
         <PlaceList places={filtered} days={days} selectedId={selectedId} onSelect={select} />
       </aside>
 
-      {/* ─── 데스크톱: 필터 칩을 지도 위(패널 오른쪽 상단)에 플로팅 ─── */}
+      {/* ─── 데스크톱: 필터 칩을 지도 위(패널 오른쪽 상단)에 플로팅 (배경 없이 칩만) ─── */}
       <div className="pointer-events-none absolute left-[396px] right-4 top-4 z-30 hidden lg:block">
-        <div className="pointer-events-auto inline-flex max-w-full rounded-full bg-card/95 p-1 shadow-[var(--shadow-lifted)] backdrop-blur">
+        <div className="pointer-events-auto inline-flex max-w-full">
           <CategoryFilter selected={categories} onChange={setCategories} counts={counts} className="pb-0" />
         </div>
       </div>
