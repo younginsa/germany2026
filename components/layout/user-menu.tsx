@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LogOut, Settings, UserRound } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,13 +13,32 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useCurrentUser } from "@/hooks/use-app-data";
+import { useCurrentUser, useIsDemo } from "@/hooks/use-app-data";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import { initialsOf } from "@/lib/utils";
+import { cn, initialsOf } from "@/lib/utils";
 
 export function UserMenu() {
   const router = useRouter();
   const me = useCurrentUser();
+  const isDemo = useIsDemo();
+
+  // 데모 모드: 계정 개념이 없으므로 아바타가 곧 설정 버튼입니다 (로그아웃 없음)
+  if (isDemo) {
+    return (
+      <Link
+        href="/settings"
+        aria-label="설정"
+        className={cn(
+          buttonVariants({ variant: "ghost", size: "icon" }),
+          "rounded-full"
+        )}
+      >
+        <Avatar className="h-7 w-7">
+          <AvatarFallback hue={me.hue}>{initialsOf(me.name)}</AvatarFallback>
+        </Avatar>
+      </Link>
+    );
+  }
 
   async function logout() {
     const sb = getSupabaseBrowserClient();

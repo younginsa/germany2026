@@ -16,8 +16,22 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
  * 도메인 타입과 1:1 로 직렬화됩니다. (supabase/migrations 참고)
  */
 
-const LS_KEY = "germany2026:data:v1";
+// v1은 familyIds 기반 구스키마 — 호환되지 않아 키를 올려 폐기합니다.
+const LS_KEY = "germany2026:data:v2";
 const LS_USER_KEY = "germany2026:user";
+
+/** 구버전/손상된 localStorage 데이터로 인한 크래시 방지 — 형태가 맞는 행만 유지 */
+function sanitize(data: AppData): AppData {
+  return {
+    ...data,
+    checklistGroups: (data.checklistGroups ?? []).filter((g) =>
+      Array.isArray(g.memberIds)
+    ),
+    checklistItems: (data.checklistItems ?? []).filter(
+      (i) => i.checks && typeof i.checks === "object"
+    ),
+  };
+}
 
 const TABLE_OF: Record<EntityKey, string> = {
   profiles: "profiles",
@@ -99,7 +113,7 @@ class TripStore {
       const raw = window.localStorage.getItem(LS_KEY);
       if (raw) {
         try {
-          this.data = { ...seedData, ...(JSON.parse(raw) as AppData) };
+          this.data = sanitize({ ...seedData, ...(JSON.parse(raw) as AppData) });
         } catch {
           this.data = deepClone(seedData);
         }

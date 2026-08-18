@@ -9,6 +9,7 @@ import {
   Globe,
   Map as MapIcon,
   Palette,
+  Pencil,
   RotateCcw,
   Upload,
   UserRoundPlus,
@@ -43,8 +44,9 @@ import {
 } from "@/hooks/use-app-data";
 import { MEMBER_HUE_PALETTE as HUE_PALETTE } from "@/components/checklist/checklist-utils";
 import { isGoogleMapsConfigured, isSupabaseConfigured } from "@/lib/supabase/config";
-import { initialsOf } from "@/lib/utils";
-import type { AppData } from "@/lib/types";
+import { cn, initialsOf } from "@/lib/utils";
+import { memberDotColor } from "@/components/checklist/checklist-utils";
+import type { AppData, Profile } from "@/lib/types";
 
 const fadeUp = {
   initial: { opacity: 0, y: 12 },
@@ -59,6 +61,10 @@ export default function SettingsPage() {
 
   const [companionName, setCompanionName] = useState("");
   const [companionEmail, setCompanionEmail] = useState("");
+  const [editTarget, setEditTarget] = useState<Profile | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editHue, setEditHue] = useState<number>(HUE_PALETTE[0]);
   const [title, setTitle] = useState(trip.title);
   const [destination, setDestination] = useState(trip.destination);
   const [startDate, setStartDate] = useState(trip.startDate);
@@ -138,6 +144,27 @@ export default function SettingsPage() {
     toast.success("동행인을 삭제했습니다");
   }
 
+  function openEdit(p: Profile) {
+    setEditTarget(p);
+    setEditName(p.name);
+    setEditEmail(p.email ?? "");
+    setEditHue(p.hue ?? HUE_PALETTE[0]);
+  }
+
+  function saveEdit() {
+    if (!editTarget) return;
+    const name = editName.trim();
+    if (!name) return;
+    tripStore.upsertRow("profiles", {
+      ...editTarget,
+      name,
+      email: editEmail.trim() || undefined,
+      hue: editHue,
+    });
+    setEditTarget(null);
+    toast.success("프로필을 수정했습니다");
+  }
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <motion.div {...fadeUp} transition={{ duration: 0.4 }}>
@@ -215,8 +242,8 @@ export default function SettingsPage() {
               동행인
             </CardTitle>
             <CardDescription>
-              로그인한 사람은 자동으로 추가됩니다. 이메일을 함께 적어두면 그 사람이 나중에
-              로그인할 때 같은 프로필로 연결됩니다.
+              함께 가는 사람을 추가하세요. 연필 아이콘으로 이름·이메일·색상을 수정할 수
+              있어요.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -236,6 +263,15 @@ export default function SettingsPage() {
                       </Badge>
                     )}
                     {p.id === me.id && <Badge variant="accent">나</Badge>}
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      aria-label={`${p.name} 수정`}
+                      className="text-muted-foreground"
+                      onClick={() => openEdit(p)}
+                    >
+                      <Pencil className="h-3.5 w-3.5" />
+                    </Button>
                     {p.id !== me.id && (
                       <Button
                         variant="ghost"
@@ -395,6 +431,76 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* 동행인 수정 다이얼로그 */}
+      <Dialog
+        open={editTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setEditTarget(null);
+        }}
+      >
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>프로필 수정</DialogTitle>
+            <DialogDescription>
+              이름과 이메일, 아바타 색상을 바꿀 수 있어요.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-name">이름</Label>
+              <Input
+                id="edit-name"
+                autoFocus
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.nativeEvent.isComposing) saveEdit();
+                }}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-email">이메일 (선택)</Label>
+              <Input
+                id="edit-email"
+                type="email"
+                value={editEmail}
+                onChange={(e) => setEditEmail(e.target.value)}
+                placeholder="예: jisu@example.com"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>색상</Label>
+              <div className="flex flex-wrap items-center gap-2">
+                {HUE_PALETTE.map((hue) => (
+                  <button
+                    key={hue}
+                    type="button"
+                    aria-label={`색상 ${hue}`}
+                    aria-pressed={editHue === hue}
+                    onClick={() => setEditHue(hue)}
+                    className={cn(
+                      "h-7 w-7 rounded-full transition-all",
+                      editHue === hue
+                        ? "ring-2 ring-ring ring-offset-2 ring-offset-background"
+                        : "hover:scale-110"
+                    )}
+                    style={{ backgroundColor: memberDotColor(hue) }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setEditTarget(null)}>
+              취소
+            </Button>
+            <Button onClick={saveEdit} disabled={!editName.trim()}>
+              저장
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={resetOpen} onOpenChange={setResetOpen}>
         <DialogContent className="max-w-sm">
