@@ -2,7 +2,10 @@ export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 export const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
 
 /** Supabase 환경변수가 없으면 앱은 데모 모드(로컬 저장)로 동작합니다. */
-export const isSupabaseConfigured = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
+// TEMP: Supabase 프로젝트가 일시중지되어 로그인 불가 → 데모 모드 강제.
+// 프로젝트 복구 후 아래 한 줄을 지우고 원래 줄로 되돌리세요.
+export const isSupabaseConfigured = false;
+// export const isSupabaseConfigured = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 
 export const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "";
 export const GOOGLE_MAPS_MAP_ID = process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID ?? "";
