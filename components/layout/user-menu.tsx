@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useCurrentUser, useIsDemo } from "@/hooks/use-app-data";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import { cn, initialsOf } from "@/lib/utils";
+import { initialsOf } from "@/lib/utils";
 
 export function UserMenu() {
   const router = useRouter();
@@ -28,12 +28,9 @@ export function UserMenu() {
       <Link
         href="/settings"
         aria-label="설정"
-        className={cn(
-          buttonVariants({ variant: "ghost", size: "icon" }),
-          "rounded-full text-muted-foreground"
-        )}
+        className={buttonVariants({ variant: "ghost", size: "icon" })}
       >
-        <Settings className="h-5 w-5" />
+        <Settings className="h-4 w-4" />
       </Link>
     );
   }
