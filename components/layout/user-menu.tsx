@@ -22,7 +22,7 @@ export function UserMenu() {
   const me = useCurrentUser();
   const isDemo = useIsDemo();
 
-  // 데모 모드: 계정 개념이 없으므로 아바타가 곧 설정 버튼입니다 (로그아웃 없음)
+  // 데모 모드: 계정 개념이 없으므로 프로필 대신 설정 아이콘만 노출합니다
   if (isDemo) {
     return (
       <Link
@@ -30,12 +30,10 @@ export function UserMenu() {
         aria-label="설정"
         className={cn(
           buttonVariants({ variant: "ghost", size: "icon" }),
-          "rounded-full"
+          "rounded-full text-muted-foreground"
         )}
       >
-        <Avatar className="h-7 w-7">
-          <AvatarFallback hue={me.hue}>{initialsOf(me.name)}</AvatarFallback>
-        </Avatar>
+        <Settings className="h-5 w-5" />
       </Link>
     );
   }
