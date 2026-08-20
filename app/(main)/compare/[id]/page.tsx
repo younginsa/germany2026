@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
+  AlertTriangle,
   ArrowLeft,
   Baby,
   CalendarRange,
@@ -122,6 +123,36 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
       >
         {detail.intro}
       </motion.p>
+
+      {/* 현지 휴무·주의 정보 */}
+      {detail.notice && (
+        <motion.section {...fadeUp} transition={{ duration: 0.4, delay: 0.12 }}>
+          <Card className="space-y-3 border-amber-300/60 bg-amber-50/60 p-5 dark:border-amber-500/30 dark:bg-amber-950/20">
+            <h2 className="flex items-center gap-2 text-sm font-semibold text-amber-900 dark:text-amber-200">
+              <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500" aria-hidden />
+              {detail.notice.title}
+            </h2>
+            <ul className="space-y-2">
+              {detail.notice.items.map((item) => (
+                <li
+                  key={item}
+                  className="flex gap-2 text-[13px] leading-relaxed text-amber-950/90 dark:text-amber-100/90"
+                >
+                  <span className="text-amber-500" aria-hidden>
+                    •
+                  </span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            {detail.notice.footnote && (
+              <p className="text-[11px] text-amber-900/60 dark:text-amber-200/60">
+                {detail.notice.footnote}
+              </p>
+            )}
+          </Card>
+        </motion.section>
+      )}
 
       {/* 일정 흐름 */}
       <motion.section {...fadeUp} transition={{ duration: 0.4, delay: 0.15 }} className="space-y-5">
