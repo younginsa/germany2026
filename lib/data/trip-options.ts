@@ -9,6 +9,29 @@ export interface TripOptionLink {
   url: string;
 }
 
+export interface TripFlowSection {
+  heading: string;
+  body: string;
+}
+
+export interface TripGalleryImage {
+  src: string;
+  alt: string;
+  caption: string;
+}
+
+/** 세부 페이지용 블로그 스타일 콘텐츠 */
+export interface TripDetail {
+  /** 도입부 — 이런 여행이에요 */
+  intro: string;
+  /** 일정 흐름 (3~4개 구간) */
+  flow: TripFlowSection[];
+  /** 3·5·7세 아이들 관점 */
+  kids: string;
+  tips: string[];
+  gallery: TripGalleryImage[];
+}
+
 export interface TripOption {
   id: string;
   title: string;
@@ -31,6 +54,7 @@ export interface TripOption {
   pros: string[];
   cons: string[];
   links: TripOptionLink[];
+  detail: TripDetail;
 }
 
 const naverBlogSearch = (query: string) =>
@@ -85,6 +109,44 @@ export const tripOptions: TripOption[] = [
         url: naverBlogSearch("독일 크리스마스마켓 아이랑 가족여행"),
       },
     ],
+    detail: {
+      intro:
+        "프랑크푸르트에서 뮌헨까지, 로맨틱 가도를 렌터카로 달리는 우리의 오리지널 플랜이에요. 어느 마을에 도착하든 광장엔 크리스마스 마켓 불빛이 켜져 있고, 공기에서 글뤼바인과 구운 소시지 냄새가 나요. 아이들 손엔 킨더푼치(따뜻한 어린이 펀치) 한 잔 — 크리스마스의 '본진'을 직접 밟는 여행입니다.",
+      flow: [
+        {
+          heading: "DAY 1–3 · 프랑크푸르트, 시차와 친해지기",
+          body: "도착 후 이틀은 느슨하게. 숙소 앞 뢰머베르크 광장 마켓에서 회전목마 타고, 진저브레드 하트 목에 걸고 사진 찍는 게 전부여도 충분해요. 해가 16시에 지니 점등 직후가 하이라이트.",
+        },
+        {
+          heading: "DAY 4–6 · 로맨틱 가도 — 로텐부르크 & 뉘른베르크",
+          body: "중세 성벽이 그대로 남은 로텐부르크에선 1년 내내 크리스마스인 '케테 볼파르트' 상점이 아이들 눈을 홀려요. 뉘른베르크 마켓엔 어린이 전용 구역(킨더바이나흐트)이 따로 있어서 미니 관람차와 증기 회전목마를 탈 수 있어요.",
+        },
+        {
+          heading: "DAY 7–10 · 퓌센의 성, 뮌헨의 마무리",
+          body: "노이슈반슈타인 성은 눈 덮인 겨울이 제일 예뻐요. 오르막은 마차를 타면 3세도 문제 없음. 마지막은 뮌헨 마리엔 광장 마켓과 장난감 박물관으로 — 여행 내내 모은 오너먼트를 트리에 걸 생각을 하며 귀국 짐을 싸요.",
+        },
+      ],
+      kids: "7세는 진짜 성과 기사 이야기에 빠지고, 5세는 회전목마와 진저브레드로 행복하고, 3세는… 솔직히 유모차와 방한이 관건이에요. 하루 야외 활동은 짧고 굵게, 오후엔 숙소에서 쉬는 리듬이 필요해요.",
+      tips: [
+        "방한 부츠·핫팩·장갑은 한국에서 챙겨가기 (현지 조달 비쌈)",
+        "유모차 레인커버 = 방풍커버로 대활약",
+        "마켓은 16시 점등 직후 1~2시간이 황금 시간대",
+        "렌터카 카시트 2개는 예약 시점에 확정 필수",
+        "일요일엔 상점 대부분 휴무 — 마켓과 박물관 위주로",
+      ],
+      gallery: [
+        {
+          src: "https://images.unsplash.com/photo-1543783111-ea3c70001cde?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Z2VybWFuJTIwY2hyaXN0bWFzJTIwbWFya2V0fGVufDB8fDB8fHww",
+          alt: "크리스마스 마켓의 조명과 노점",
+          caption: "점등 직후의 마켓 — 하루 중 가장 예쁜 시간",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1512663251984-863560ec3985?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Z2VybWFuJTIwY2hyaXN0bWFzJTIwbWFya2V0fGVufDB8fDB8fHww",
+          alt: "독일 크리스마스 마켓 거리 풍경",
+          caption: "마을마다 다른 마켓 — 렌터카 여행의 이유",
+        },
+      ],
+    },
   },
   {
     id: "disney-cruise",
@@ -138,6 +200,44 @@ export const tripOptions: TripOption[] = [
         url: naverBlogSearch("디즈니 어드벤처 크루즈 싱가포르 아이랑 후기"),
       },
     ],
+    detail: {
+      intro:
+        "마리나베이 크루즈 센터에서 디즈니 어드벤처에 오르는 순간, 여행 준비가 끝나요. 이동도, 식당 검색도, '오늘 뭐 하지'도 없어요. 아이들은 연령별 키즈클럽으로, 어른은 선베드로. 저녁엔 온 가족이 브로드웨이급 공연을 보고, 복도에서 미키를 만나면 그날은 성공한 날이에요.",
+      flow: [
+        {
+          heading: "DAY 1–2 · 싱가포르 워밍업",
+          body: "주얼 창이의 실내 폭포로 시작해서, 저녁엔 가든스 바이 더 베이 슈퍼트리 쇼. 12월 싱가포르는 덥지만 어디든 에어컨이 있어서 아이들 컨디션 관리가 쉬워요.",
+        },
+        {
+          heading: "DAY 3–5 · 디즈니 어드벤처 3박",
+          body: "승선하자마자 앱으로 캐릭터 그리팅과 공연을 예약하는 게 첫 미션. 낮엔 워터슬라이드와 수영장, 저녁엔 매일 다른 테마 레스토랑을 돌아요. 식사·공연·키즈클럽이 전부 요금에 포함 — 배 안에선 지갑 꺼낼 일이 거의 없어요.",
+        },
+        {
+          heading: "DAY 6–7 · 싱가포르 마무리",
+          body: "하선 후 컨디션 보고 싱가포르 동물원(주롱은 3세 최애) 또는 유니버설 스튜디오 중 택일. 마지막 밤은 마리나베이 야경으로 마무리.",
+        },
+      ],
+      kids: "이 배는 사실상 3·5·7세를 위해 설계됐어요. 연령별 클럽이 나뉘어 있어서 셋 다 각자 레벨에 맞게 놀고, 부모는 몇 시간이나마 '여행 중 휴가'를 얻어요. 캐릭터 그리팅은 가족 단위 촬영이라 대기도 짧은 편.",
+      tips: [
+        "12월은 최성수기 — 예약은 빠를수록 좋고 가격 차이가 큼",
+        "디즈니 크루즈 앱 필수 — 승선 즉시 공연·그리팅 예약",
+        "오션뷰 4인실 2개가 인사이드보다 만족도 높음",
+        "뱃멀미약 챙기기 (항로는 잔잔한 편이지만 보험용)",
+        "호텔+티켓 패키지·한인 에이전시 OBC 혜택 비교해보기",
+      ],
+      gallery: [
+        {
+          src: "https://images.unsplash.com/photo-1707342614540-023ae9b375c6?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGlzbmV5JTIwY3J1aXNlJTIwc2hpcHxlbnwwfHwwfHx8MA%3D%3D",
+          alt: "디즈니 크루즈 선상",
+          caption: "배 전체가 하나의 테마파크",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1509897539248-f507156634e8?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8ZGlzbmV5JTIwY3J1aXNlJTIwc2hpcHxlbnwwfHwwfHx8MA%3D%3D",
+          alt: "크루즈에서 바라본 바다",
+          caption: "발코니에서 보는 아침 바다",
+        },
+      ],
+    },
   },
   {
     id: "hongkong",
@@ -191,6 +291,44 @@ export const tripOptions: TripOption[] = [
         url: naverBlogSearch("홍콩 12월 아이랑 가족여행 후기"),
       },
     ],
+    detail: {
+      intro:
+        "12월의 홍콩은 1년 중 가장 쾌적해요 — 맑고 건조한 20도 안팎, 걷기 딱 좋은 날씨. 그리고 이 도시는 크리스마스에 진심이에요. 침사추이 건물들이 통째로 일루미네이션이 되고, 디즈니랜드는 겨울 이벤트로 반짝여요. 독일의 크리스마스 감성을 3시간 45분 비행으로 맛보는 압축판입니다.",
+      flow: [
+        {
+          heading: "DAY 1–2 · 디즈니랜드 (호텔 1박 추천)",
+          body: "홍콩 디즈니는 아담해서 오히려 유아 동반에 최적이에요. 겨울왕국 구역 '월드 오브 프로즌'과 라이온킹 공연이 하이라이트. 폐장 불꽃까지 보려면 파크 호텔에서 1박 하는 게 체력적으로 편해요.",
+        },
+        {
+          heading: "DAY 3 · 오션파크",
+          body: "판다 보고, 케이블카 타고 산을 넘어 아쿠아리움까지. 케이블카에서 내려다보는 남중국해 풍경은 어른들 몫이에요.",
+        },
+        {
+          heading: "DAY 4–5 · 시티 & 일루미네이션",
+          body: "피크트램으로 빅토리아 피크에 오르고, 저녁엔 스타페리를 타고 심포니 오브 라이트 야경을 봐요. 마지막 날은 딤섬 브런치와 침사추이 크리스마스 장식 산책으로 마무리.",
+        },
+      ],
+      kids: "디즈니랜드의 유아용 어트랙션 비중이 높아 3세도 탈 게 많고, 도시가 컴팩트해서 이동이 다 30분 안쪽이에요. 지하철·페리·트램 — 탈것 자체가 아이들에겐 어트랙션이 돼요.",
+      tips: [
+        "파크 내 생수가 비싸요 (병당 ~4천원) — 1인 1병 반입 가능",
+        "입장 즉시 앱에서 '숲 속의 플레이하우스' 등 공연 예약",
+        "디즈니 호텔 직판 '호텔+티켓' 패키지가 15~20% 저렴",
+        "옥토퍼스 카드 하나로 모든 교통 해결",
+        "12월 크리스마스 주간은 최성수기 — 평일 방문 추천",
+      ],
+      gallery: [
+        {
+          src: "https://images.unsplash.com/photo-1587812544970-01fc1c228641?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aG9uZyUyMGtvbmclMjBkaXNuZXlsYW5kfGVufDB8fDB8fHww",
+          alt: "홍콩 디즈니랜드 풍경",
+          caption: "아담해서 오히려 유아 동반에 좋은 파크",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1701410478990-c44c24d9f6a1?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8aG9uZyUyMGtvbmclMjBkaXNuZXlsYW5kfGVufDB8fDB8fHww",
+          alt: "홍콩 디즈니랜드의 저녁",
+          caption: "저녁 점등 후의 파크 — 폐장까지 버틸 가치",
+        },
+      ],
+    },
   },
   {
     id: "okinawa",
@@ -244,6 +382,43 @@ export const tripOptions: TripOption[] = [
         url: naverBlogSearch("오키나와 12월 아이랑 가족여행 후기"),
       },
     ],
+    detail: {
+      intro:
+        "비행 2시간 15분 — 3세가 낮잠 한 번 자고 일어나면 도착이에요. 12월 오키나와는 패딩 대신 바람막이면 충분한 봄 날씨. 오프시즌이라 어딜 가나 한산하고, 렌터카로 해안도로를 달리며 '우리 페이스'로 도는 여행이에요.",
+      flow: [
+        {
+          heading: "DAY 1–2 · 나하 & 아메리칸 빌리지",
+          body: "첫날은 국제거리에서 저녁 먹고 가볍게. 둘째 날은 아메리칸 빌리지 — 관람차와 해변 산책, 알록달록한 거리 자체가 포토존이에요.",
+        },
+        {
+          heading: "DAY 3–4 · 북부 드라이브와 츄라우미",
+          body: "이 여행의 하이라이트. 세계 최대급 수조에서 고래상어가 머리 위를 지나가는 츄라우미 수족관은 3·5·7세 모두를 조용하게 만들어요. 오가는 길에 만자모 절벽 전망도 잠깐.",
+        },
+        {
+          heading: "DAY 5 · 온수풀 오전, 오후 귀국",
+          body: "마지막 날은 숙소 실내 온수풀에서 물놀이 욕구를 채우고, 공항 가는 길에 오키나와 소바 한 그릇. 짧아서 오히려 아이 컨디션이 안 무너지는 일정이에요.",
+        },
+      ],
+      kids: "일본 특유의 아이 배려가 곳곳에 — 좌식 식당, 아기의자, 어딜 가나 깨끗한 수유실. 12월 하순부터는 고래 관찰 투어도 시작돼서 7세에겐 특별한 경험이 될 수 있어요.",
+      tips: [
+        "렌터카는 항공권 결제 직후 예약 — 카시트 무료 대여 수량이 한정",
+        "온수풀 운영하는 숙소인지 반드시 확인 (겨울엔 야외풀 폐장 많음)",
+        "좌측통행 + 내비는 맵코드 입력 방식",
+        "12월 하순 고래투어는 사전 예약제",
+      ],
+      gallery: [
+        {
+          src: "https://images.unsplash.com/photo-1647336963732-7446b9da7a6f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8b2tpbmF3YXxlbnwwfHwwfHx8MA%3D%3D",
+          alt: "오키나와 해안 풍경",
+          caption: "겨울 바다의 투명도는 여름보다 높아요",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1610971250019-f677bc1300be?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8b2tpbmF3YXxlbnwwfHwwfHx8MA%3D%3D",
+          alt: "오키나와의 거리",
+          caption: "오프시즌의 한산함 — 유모차가 편한 이유",
+        },
+      ],
+    },
   },
   {
     id: "cebu",
@@ -297,6 +472,44 @@ export const tripOptions: TripOption[] = [
         url: naverBlogSearch("세부 막탄 12월 아이랑 리조트 후기"),
       },
     ],
+    detail: {
+      intro:
+        "12월의 세부는 건기가 막 시작된 28도의 여름 — 여섯 옵션 중 '수영장에서 크리스마스'가 확실하게 보장되는 곳이에요. 이 여행의 컨셉은 단순해요: 좋은 리조트 하나 잡고, 아무 데도 안 가기. 아침 먹고 워터슬라이드, 낮잠 자고 키즈풀, 해질녘엔 바다 앞 저녁.",
+      flow: [
+        {
+          heading: "DAY 1 · 밤 도착, 조용한 체크인",
+          body: "직항이 대부분 밤에 도착해요. 첫날은 아무 계획 없이 재우는 게 계획. 다음날 아침 커튼을 열면 그때부터 여행 시작이에요.",
+        },
+        {
+          heading: "DAY 2–4 · 리조트 올인",
+          body: "제이파크라면 뽀로로 룸과 워터파크, 샹그릴라라면 프라이빗 비치와 키즈클럽. 하루 일과가 '수영장 → 밥 → 수영장'의 무한 반복인데, 아이들에겐 이게 최고의 일정이에요. 어른들은 교대로 마사지.",
+        },
+        {
+          heading: "DAY 5–6 · 하루쯤은 바다로, 그리고 귀국",
+          body: "7세가 있으니 하루는 아일랜드 호핑(스노클링)이나 세부 오션파크로. 3세 컨디션이 애매하면 그냥 리조트 하루 더 — 그래도 아무도 아쉬워하지 않는 곳이에요.",
+        },
+      ],
+      kids: "5세 이하 무료 숙박·무료 식사 정책인 리조트가 많아 비용 효율도 좋아요. 워터슬라이드 높이 제한만 미리 확인하면 3·5·7세 모두 각자 놀 거리가 확실합니다.",
+      tips: [
+        "밤 도착 — 다음날 오전 일정은 비워두기",
+        "리조트 밖 이동은 그랩(Grab)이 표준",
+        "래시가드·아쿠아슈즈·SPF50+ 필수",
+        "액티비티는 리조트 데스크보다 클룩/KKday가 저렴",
+        "5세 이하 무료 정책은 리조트마다 다름 — 예약 전 확인",
+      ],
+      gallery: [
+        {
+          src: "https://images.unsplash.com/photo-1608904872226-19d69391c761?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2VidSUyMHJlc29ydHxlbnwwfHwwfHx8MA%3D%3D",
+          alt: "세부 리조트의 수영장",
+          caption: "하루 일과: 수영장 → 밥 → 수영장",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1637851522639-2d54fec9125e?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y2VidSUyMHJlc29ydHxlbnwwfHwwfHx8MA%3D%3D",
+          alt: "세부의 바다와 해변",
+          caption: "건기의 세부 바다 — 12월이 시작점",
+        },
+      ],
+    },
   },
   {
     id: "australia",
@@ -350,6 +563,44 @@ export const tripOptions: TripOption[] = [
         url: naverBlogSearch("호주 골드코스트 시드니 아이랑 12월 후기"),
       },
     ],
+    detail: {
+      intro:
+        "크리스마스에 반팔을 입는 남반구의 한여름이에요. 본다이 비치엔 서핑하는 산타가 나타나고, 쇼핑몰 캐럴은 에어컨 바람과 함께 흘러요. 비행은 10시간이지만 시차가 1~2시간뿐이라, 밤 비행기에서 재우고 나면 도착 첫날부터 아이들이 쌩쌩한 게 이 옵션의 숨은 무기입니다.",
+      flow: [
+        {
+          heading: "DAY 1–4 · 골드코스트, 테마파크의 나날",
+          body: "무비월드(5·7세 최애), 씨월드, 그리고 하루는 브로드비치에서 모래놀이. 주방 딸린 아파트 숙소에서 아침 해먹고 나가는 리듬이 아이 셋 가족에겐 호텔보다 훨씬 편해요.",
+        },
+        {
+          heading: "DAY 5–7 · 시드니, 페리와 동물원",
+          body: "국내선 1.5시간으로 시드니 이동. 서큘러 키에서 페리 타고 타롱가 동물원 — 케이블카로 올라가 캥거루·코알라를 보며 걸어 내려오면 시드니 하버 전망이 덤이에요. 저녁은 달링하버, 오페라하우스 야경.",
+        },
+        {
+          heading: "DAY 8 · 주간 비행으로 귀국",
+          body: "낮 비행이라 아이들은 기내 엔터테인먼트로 버티고, 도착하면 한국 저녁 — 시차 후유증 없이 일상 복귀가 되는 거의 유일한 장거리 노선이에요.",
+        },
+      ],
+      kids: "캥거루와 코알라를 실물로 보는 것만으로 본전을 뽑는 여행이에요. 테마파크 + 동물원 + 비치 조합이라 3·5·7세 취향이 전부 커버되고, 여름 옷만 챙기면 되니 짐도 가벼워요.",
+      tips: [
+        "12월은 호주 성수기 — 항공·테마파크·숙소 모두 조기 예약",
+        "자외선이 한국 여름의 2배 수준 — SPF50+ · 래시가드 · 모자 필수",
+        "오팔카드: 일요일 교통비 상한제, 어린이 반값",
+        "ETA 전자비자 온 가족 미리 신청",
+        "테마파크는 멀티파크 패스가 단품보다 훨씬 저렴",
+      ],
+      gallery: [
+        {
+          src: "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3lkbmV5JTIwb3BlcmElMjBob3VzZXxlbnwwfHwwfHx8MA%3D%3D",
+          alt: "시드니 하버와 오페라하우스",
+          caption: "페리에서 보는 시드니 — 교통수단이 곧 관광",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1523059623039-a9ed027e7fad?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c3lkbmV5JTIwb3BlcmElMjBob3VzZXxlbnwwfHwwfHx8MA%3D%3D",
+          alt: "여름의 시드니 풍경",
+          caption: "12월의 시드니는 한여름",
+        },
+      ],
+    },
   },
 ];
 

@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { Baby, CalendarRange, ExternalLink, Plane, Star, ThermometerSun } from "lucide-react";
+import { ArrowRight, Baby, CalendarRange, ExternalLink, Plane, ThermometerSun } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { KidScore } from "@/components/compare/kid-score";
 import { tripOptions, COMPARE_ASSUMPTIONS, type TripOption } from "@/lib/data/trip-options";
 import { cn } from "@/lib/utils";
 
@@ -13,24 +15,7 @@ const fadeUp = {
   animate: { opacity: 1, y: 0 },
 };
 
-function KidScore({ score }: { score: number }) {
-  return (
-    <span className="inline-flex items-center gap-0.5" aria-label={`아이 친화도 5점 만점에 ${score}점`}>
-      {Array.from({ length: 5 }, (_, i) => (
-        <Star
-          key={i}
-          className={cn(
-            "h-3.5 w-3.5",
-            i < score ? "fill-amber-400 text-amber-400" : "text-border"
-          )}
-          aria-hidden
-        />
-      ))}
-    </span>
-  );
-}
-
-/** 옵션 소개 카드 — 사진으로 여행의 그림을 그려주는 영역 */
+/** 옵션 소개 카드 — 사진으로 여행의 그림을 그려주는 영역, 클릭 시 세부 페이지로 */
 function OptionCard({ option, index }: { option: TripOption; index: number }) {
   return (
     <motion.div
@@ -38,42 +23,50 @@ function OptionCard({ option, index }: { option: TripOption; index: number }) {
       transition={{ duration: 0.4, delay: 0.05 * index }}
       className="flex"
     >
-      <Card className="flex w-full flex-col overflow-hidden">
-        <div className="relative h-40 w-full">
-          <Image
-            src={option.image}
-            alt={option.imageAlt}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
-            className="object-cover"
-          />
-          <span className="absolute left-3 top-3">
-            <Badge variant="accent" className="bg-card/90 backdrop-blur">
-              {option.badge}
-            </Badge>
-          </span>
-        </div>
-        <div className="flex flex-1 flex-col gap-2 p-4">
-          <h3 className="text-base font-semibold tracking-tight">
-            {option.emoji} {option.title}
-          </h3>
-          <p className="text-xs leading-relaxed text-muted-foreground">{option.subtitle}</p>
-          <div className="mt-auto space-y-1.5 pt-2 text-xs text-muted-foreground">
-            <p className="flex items-center gap-1.5">
-              <CalendarRange className="h-3.5 w-3.5 shrink-0" aria-hidden />
-              {option.period}
-            </p>
-            <p className="flex items-center gap-1.5">
-              <ThermometerSun className="h-3.5 w-3.5 shrink-0" aria-hidden />
-              {option.weather}
-            </p>
+      <Link href={`/compare/${option.id}`} className="group flex w-full">
+        <Card className="flex w-full flex-col overflow-hidden transition-shadow group-hover:shadow-[var(--shadow-lifted)]">
+          <div className="relative h-40 w-full overflow-hidden">
+            <Image
+              src={option.image}
+              alt={option.imageAlt}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+            />
+            <span className="absolute left-3 top-3">
+              <Badge variant="accent" className="bg-card/90 backdrop-blur">
+                {option.badge}
+              </Badge>
+            </span>
           </div>
-          <p className="pt-1 text-lg font-bold tabular-nums tracking-tight text-foreground">
-            {option.costPerFamily}
-            <span className="ml-1 text-xs font-normal text-muted-foreground">/ 가족</span>
-          </p>
-        </div>
-      </Card>
+          <div className="flex flex-1 flex-col gap-2 p-4">
+            <h3 className="text-base font-semibold tracking-tight">
+              {option.emoji} {option.title}
+            </h3>
+            <p className="text-xs leading-relaxed text-muted-foreground">{option.subtitle}</p>
+            <div className="mt-auto space-y-1.5 pt-2 text-xs text-muted-foreground">
+              <p className="flex items-center gap-1.5">
+                <CalendarRange className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                {option.period}
+              </p>
+              <p className="flex items-center gap-1.5">
+                <ThermometerSun className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                {option.weather}
+              </p>
+            </div>
+            <div className="flex items-end justify-between pt-1">
+              <p className="text-lg font-bold tabular-nums tracking-tight text-foreground">
+                {option.costPerFamily}
+                <span className="ml-1 text-xs font-normal text-muted-foreground">/ 가족</span>
+              </p>
+              <span className="inline-flex items-center gap-0.5 text-xs font-medium text-primary">
+                자세히
+                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden />
+              </span>
+            </div>
+          </div>
+        </Card>
+      </Link>
     </motion.div>
   );
 }
@@ -202,9 +195,11 @@ export default function ComparePage() {
                   </th>
                   {tripOptions.map((o) => (
                     <th key={o.id} className="min-w-44 p-3 text-left align-bottom">
-                      <p className="text-sm font-semibold tracking-tight">
-                        {o.emoji} {o.title}
-                      </p>
+                      <Link href={`/compare/${o.id}`} className="group inline-block">
+                        <p className="text-sm font-semibold tracking-tight underline-offset-2 group-hover:underline">
+                          {o.emoji} {o.title}
+                        </p>
+                      </Link>
                       <Badge variant="secondary" className="mt-1 font-normal">
                         {o.badge}
                       </Badge>
