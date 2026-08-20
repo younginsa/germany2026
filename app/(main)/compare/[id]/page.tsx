@@ -8,6 +8,8 @@ import {
   AlertTriangle,
   ArrowLeft,
   Baby,
+  ChevronLeft,
+  ChevronRight,
   ExternalLink,
   Lightbulb,
   PartyPopper,
@@ -15,7 +17,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { KidScore } from "@/components/compare/kid-score";
-import { tripOptions, type TripGalleryImage } from "@/lib/data/trip-options";
+import { tripOptions } from "@/lib/data/trip-options";
 
 const fadeUp = {
   initial: { opacity: 0, y: 12 },
@@ -44,7 +46,14 @@ function Section({
 export default function TripDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const option = tripOptions.find((o) => o.id === id);
-  const [lightbox, setLightbox] = useState<TripGalleryImage | null>(null);
+  // 이벤트 사진 라이트박스 — 인덱스 기반이라 모달 안에서 좌우 이동 가능
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const photos = option?.detail.eventPhotos ?? [];
+  const lightbox = lightboxIndex !== null ? photos[lightboxIndex] : null;
+  const stepLightbox = (dir: 1 | -1) => {
+    if (lightboxIndex === null || photos.length === 0) return;
+    setLightboxIndex((lightboxIndex + dir + photos.length) % photos.length);
+  };
 
   if (!option) {
     return (
@@ -185,12 +194,12 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
               role="list"
               aria-label="시즌 이벤트 사진"
             >
-              {detail.eventPhotos.map((img) => (
+              {detail.eventPhotos.map((img, i) => (
                 <button
                   key={img.src}
                   type="button"
                   role="listitem"
-                  onClick={() => setLightbox(img)}
+                  onClick={() => setLightboxIndex(i)}
                   aria-label={`${img.caption} 크게 보기`}
                   className="group relative h-28 w-44 shrink-0 snap-start overflow-hidden rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
@@ -331,28 +340,60 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
         </Link>
       </Section>
 
-      {/* 사진 확대 모달 */}
+      {/* 사진 확대 모달 — 좌우 버튼·방향키로 넘기기 */}
       <Dialog
         open={lightbox !== null}
         onOpenChange={(open) => {
-          if (!open) setLightbox(null);
+          if (!open) setLightboxIndex(null);
         }}
       >
-        <DialogContent className="max-w-3xl p-3">
+        <DialogContent
+          className="max-w-3xl p-3"
+          onKeyDown={(e) => {
+            if (e.key === "ArrowRight") stepLightbox(1);
+            if (e.key === "ArrowLeft") stepLightbox(-1);
+          }}
+        >
           {lightbox && (
             <figure className="space-y-2">
               <DialogTitle className="sr-only">{lightbox.caption}</DialogTitle>
               <div className="relative h-[55vh] w-full overflow-hidden rounded-lg bg-secondary/40">
                 <Image
+                  key={lightbox.src}
                   src={lightbox.src}
                   alt={lightbox.alt}
                   fill
                   sizes="768px"
                   className="object-contain"
                 />
+                {photos.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => stepLightbox(-1)}
+                      aria-label="이전 사진"
+                      className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-card/85 p-2 shadow-md backdrop-blur transition-colors hover:bg-card"
+                    >
+                      <ChevronLeft className="h-5 w-5" aria-hidden />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => stepLightbox(1)}
+                      aria-label="다음 사진"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-card/85 p-2 shadow-md backdrop-blur transition-colors hover:bg-card"
+                    >
+                      <ChevronRight className="h-5 w-5" aria-hidden />
+                    </button>
+                  </>
+                )}
               </div>
               <figcaption className="text-center text-xs text-muted-foreground">
                 {lightbox.caption}
+                {photos.length > 1 && (
+                  <span className="ml-2 tabular-nums opacity-70">
+                    {(lightboxIndex ?? 0) + 1} / {photos.length}
+                  </span>
+                )}
               </figcaption>
             </figure>
           )}
