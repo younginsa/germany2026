@@ -43,6 +43,8 @@ export interface TripDetail {
   notice?: TripNotice;
   /** 12월 시즌 이벤트 (선택) */
   events?: TripEvent[];
+  /** 시즌 이벤트 사진 캐러셀 — 클릭 시 확대 (선택) */
+  eventPhotos?: TripGalleryImage[];
   /** 일정 흐름 (3~4개 구간) */
   flow: TripFlowSection[];
   /** 3·5·7세 아이들 관점 */
@@ -177,6 +179,28 @@ export const tripOptions: TripOption[] = [
           body: "상점이 닫는 연휴 기간의 대안 — 대성당마다 무료·저가 콘서트가 열려요. 25일 '느린 하루'에 잘 어울립니다.",
         },
       ],
+      eventPhotos: [
+        {
+          src: "https://images.unsplash.com/photo-1669552698934-8c12ed9fe36b?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bnVyZW1iZXJnJTIwY2hyaXN0bWFzJTIwbWFya2V0fGVufDB8fDB8fHww",
+          alt: "뉘른베르크 크리스마스 마켓",
+          caption: "뉘른베르크 마켓의 노점들",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1716202382461-4dc6b5389287?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bnVyZW1iZXJnJTIwY2hyaXN0bWFzJTIwbWFya2V0fGVufDB8fDB8fHww",
+          alt: "크리스마스 마켓 풍경",
+          caption: "점등된 마켓 광장",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1716202382015-a194a6643511?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bnVyZW1iZXJnJTIwY2hyaXN0bWFzJTIwbWFya2V0fGVufDB8fDB8fHww",
+          alt: "마켓의 조명과 장식",
+          caption: "마켓의 조명과 장식",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1716202382425-12d7059fab54?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bnVyZW1iZXJnJTIwY2hyaXN0bWFzJTIwbWFya2V0fGVufDB8fDB8fHww",
+          alt: "겨울밤의 마켓 거리",
+          caption: "겨울밤의 마켓 거리",
+        },
+      ],
       flow: [
         {
           heading: "DAY 1–3 · 프랑크푸르트, 시차와 친해지기",
@@ -297,6 +321,28 @@ export const tripOptions: TripOption[] = [
           body: "12월 항차는 선내 트리 점등·산타 그리팅 등 홀리데이 테마가 더해져요 — 같은 3박이라도 12월이 가장 '크리스마스'다워요.",
         },
       ],
+      eventPhotos: [
+        {
+          src: "https://images.unsplash.com/photo-1546258609-dca5762d2285?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Z2FyZGVucyUyMGJ5JTIwdGhlJTIwYmF5JTIwY2hyaXN0bWFzfGVufDB8fDB8fHww",
+          alt: "가든스 바이 더 베이의 슈퍼트리",
+          caption: "가든스 바이 더 베이 슈퍼트리",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1589848014442-5f540ff95bea?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Z2FyZGVucyUyMGJ5JTIwdGhlJTIwYmF5JTIwY2hyaXN0bWFzfGVufDB8fDB8fHww",
+          alt: "크리스마스 시즌의 싱가포르",
+          caption: "크리스마스 시즌의 싱가포르",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1640225076272-e6e21da515ff?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Z2FyZGVucyUyMGJ5JTIwdGhlJTIwYmF5JTIwY2hyaXN0bWFzfGVufDB8fDB8fHww",
+          alt: "크리스마스 원더랜드의 조명",
+          caption: "크리스마스 원더랜드 조명",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1640225076332-ad159067f30d?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z2FyZGVucyUyMGJ5JTIwdGhlJTIwYmF5JTIwY2hyaXN0bWFzfGVufDB8fDB8fHww",
+          alt: "원더랜드의 밤 풍경",
+          caption: "원더랜드의 밤",
+        },
+      ],
       flow: [
         {
           heading: "DAY 1–2 · 싱가포르 워밍업",
@@ -414,6 +460,28 @@ export const tripOptions: TripOption[] = [
           name: "박싱데이 세일",
           period: "12/26~27",
           body: "독일에선 상점이 닫는 날, 홍콩에선 최대 세일이 열려요 — 아이 옷·장난감 쇼핑 타이밍.",
+        },
+      ],
+      eventPhotos: [
+        {
+          src: "https://images.unsplash.com/photo-1577698266701-248a54a93298?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9uZyUyMGtvbmclMjBjaHJpc3RtYXN8ZW58MHx8MHx8fDA%3D",
+          alt: "크리스마스 시즌의 홍콩 거리",
+          caption: "크리스마스 시즌의 홍콩 거리",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1543891732-2684d52f1e03?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8aG9uZyUyMGtvbmclMjBjaHJpc3RtYXN8ZW58MHx8MHx8fDA%3D",
+          alt: "홍콩 야경과 일루미네이션",
+          caption: "홍콩 야경과 일루미네이션",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1671152493959-9b164c02eaa8?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8aG9uZyUyMGtvbmclMjBjaHJpc3RtYXN8ZW58MHx8MHx8fDA%3D",
+          alt: "센트럴의 크리스마스 장식",
+          caption: "센트럴의 크리스마스 장식",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1644353765405-90b1dfec0582?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8aG9uZyUyMGtvbmclMjBjaHJpc3RtYXN8ZW58MHx8MHx8fDA%3D",
+          alt: "침사추이의 연말 분위기",
+          caption: "침사추이의 연말 분위기",
         },
       ],
       flow: [
@@ -536,6 +604,28 @@ export const tripOptions: TripOption[] = [
           url: "https://en.activityjapan.com/feature/whale_watching_okinawa/",
         },
       ],
+      eventPhotos: [
+        {
+          src: "https://images.unsplash.com/photo-1595000603257-1530753bd7eb?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8amFwYW5lc2UlMjBsYW50ZXJuJTIwZmVzdGl2YWx8ZW58MHx8MHx8fDA%3D",
+          alt: "랜턴 축제의 등불",
+          caption: "랜턴 축제의 등불",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1757944075647-2498be56bb62?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8amFwYW5lc2UlMjBsYW50ZXJuJTIwZmVzdGl2YWx8ZW58MHx8MHx8fDA%3D",
+          alt: "일본식 랜턴 일루미네이션",
+          caption: "일본식 랜턴 일루미네이션",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1700323912393-f0b51a623997?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8amFwYW5lc2UlMjBsYW50ZXJuJTIwZmVzdGl2YWx8ZW58MHx8MHx8fDA%3D",
+          alt: "밤을 밝히는 랜턴들",
+          caption: "밤을 밝히는 랜턴들",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1760778706695-cc845c07ca89?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8amFwYW5lc2UlMjBsYW50ZXJuJTIwZmVzdGl2YWx8ZW58MHx8MHx8fDA%3D",
+          alt: "축제의 등불 거리",
+          caption: "축제의 등불 거리",
+        },
+      ],
       flow: [
         {
           heading: "DAY 1–2 · 나하 & 아메리칸 빌리지",
@@ -652,6 +742,28 @@ export const tripOptions: TripOption[] = [
           name: "파롤 (별 모양 등불) 만들기",
           period: "12월 내내",
           body: "필리핀 크리스마스의 상징인 별 등불 — 리조트·몰 워크숍에서 아이들과 만들 수 있어요.",
+        },
+      ],
+      eventPhotos: [
+        {
+          src: "https://images.unsplash.com/photo-1581242693425-36ca662d99f4?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGhpbGlwcGluZXMlMjBjaHJpc3RtYXN8ZW58MHx8MHx8fDA%3D",
+          alt: "필리핀의 크리스마스 파롤",
+          caption: "필리핀 크리스마스의 상징, 파롤",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1669991504530-f0ad847fe34c?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGhpbGlwcGluZXMlMjBjaHJpc3RtYXN8ZW58MHx8MHx8fDA%3D",
+          alt: "크리스마스 시즌의 필리핀 거리",
+          caption: "크리스마스 시즌의 거리",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1671837993877-d28f329eac2d?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGhpbGlwcGluZXMlMjBjaHJpc3RtYXN8ZW58MHx8MHx8fDA%3D",
+          alt: "파롤 등불 장식",
+          caption: "파롤 등불 장식",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1669991504272-19c28fd98c15?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cGhpbGlwcGluZXMlMjBjaHJpc3RtYXN8ZW58MHx8MHx8fDA%3D",
+          alt: "필리핀 크리스마스 조명",
+          caption: "필리핀 크리스마스 조명",
         },
       ],
       flow: [
@@ -771,6 +883,28 @@ export const tripOptions: TripOption[] = [
           name: "마틴 플레이스 트리 & 여름 크리스마스 조명",
           period: "12월 내내 · 무료",
           body: "시드니 도심 대형 트리와 조명 — 한여름 밤 반팔 차림으로 보는 크리스마스 트리가 이 여행의 상징적 장면이에요.",
+        },
+      ],
+      eventPhotos: [
+        {
+          src: "https://images.unsplash.com/photo-1607309843659-f4ad95cf3277?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Z29sZCUyMGNvYXN0JTIwYXVzdHJhbGlhfGVufDB8fDB8fHww",
+          alt: "골드코스트 스카이라인과 비치",
+          caption: "골드코스트 스카이라인과 비치",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1591701729564-3b5325d5a4bd?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Z29sZCUyMGNvYXN0JTIwYXVzdHJhbGlhfGVufDB8fDB8fHww",
+          alt: "골드코스트의 여름",
+          caption: "12월의 골드코스트는 한여름",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1661674753163-0f8bca582509?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z29sZCUyMGNvYXN0JTIwYXVzdHJhbGlhfGVufDB8fDB8fHww",
+          alt: "서퍼스 파라다이스 해변",
+          caption: "서퍼스 파라다이스",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1582761371078-6509f13666b1?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Z29sZCUyMGNvYXN0JTIwYXVzdHJhbGlhfGVufDB8fDB8fHww",
+          alt: "한여름의 해변",
+          caption: "한여름의 크리스마스 해변",
         },
       ],
       flow: [

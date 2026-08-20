@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react";
+import { use, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -13,8 +13,9 @@ import {
   PartyPopper,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { KidScore } from "@/components/compare/kid-score";
-import { tripOptions } from "@/lib/data/trip-options";
+import { tripOptions, type TripGalleryImage } from "@/lib/data/trip-options";
 
 const fadeUp = {
   initial: { opacity: 0, y: 12 },
@@ -43,6 +44,7 @@ function Section({
 export default function TripDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const option = tripOptions.find((o) => o.id === id);
+  const [lightbox, setLightbox] = useState<TripGalleryImage | null>(null);
 
   if (!option) {
     return (
@@ -175,6 +177,34 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
               </div>
             ))}
           </div>
+
+          {/* 이벤트 사진 캐러셀 — 클릭하면 크게 보기 */}
+          {detail.eventPhotos && detail.eventPhotos.length > 0 && (
+            <div
+              className="mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2"
+              role="list"
+              aria-label="시즌 이벤트 사진"
+            >
+              {detail.eventPhotos.map((img) => (
+                <button
+                  key={img.src}
+                  type="button"
+                  role="listitem"
+                  onClick={() => setLightbox(img)}
+                  aria-label={`${img.caption} 크게 보기`}
+                  className="group relative h-28 w-44 shrink-0 snap-start overflow-hidden rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    fill
+                    sizes="176px"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </Section>
       )}
 
@@ -300,6 +330,34 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
           다른 옵션과 비교하기
         </Link>
       </Section>
+
+      {/* 사진 확대 모달 */}
+      <Dialog
+        open={lightbox !== null}
+        onOpenChange={(open) => {
+          if (!open) setLightbox(null);
+        }}
+      >
+        <DialogContent className="max-w-3xl p-3">
+          {lightbox && (
+            <figure className="space-y-2">
+              <DialogTitle className="sr-only">{lightbox.caption}</DialogTitle>
+              <div className="relative h-[55vh] w-full overflow-hidden rounded-lg bg-secondary/40">
+                <Image
+                  src={lightbox.src}
+                  alt={lightbox.alt}
+                  fill
+                  sizes="768px"
+                  className="object-contain"
+                />
+              </div>
+              <figcaption className="text-center text-xs text-muted-foreground">
+                {lightbox.caption}
+              </figcaption>
+            </figure>
+          )}
+        </DialogContent>
+      </Dialog>
     </article>
   );
 }
