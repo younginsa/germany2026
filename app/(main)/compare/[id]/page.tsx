@@ -97,7 +97,7 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
 
       {/* 퀵 팩트 — 2/4컬럼, 박스 없이 구분선만 */}
       <Section delay={0.05}>
-        <dl className="grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4">
+        <dl className="grid grid-cols-2 gap-x-12 gap-y-5 sm:grid-cols-4">
           <div>
             <dt className="text-xs text-muted-foreground">기간</dt>
             <dd className="mt-1 text-sm font-medium leading-snug">{option.period}</dd>
@@ -155,7 +155,7 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
             <PartyPopper className="h-4 w-4 shrink-0 text-primary" aria-hidden />
             12월 시즌 이벤트
           </h2>
-          <div className="mt-4 grid gap-x-8 gap-y-5 sm:grid-cols-2">
+          <div className="mt-4 grid gap-x-16 gap-y-5 sm:grid-cols-2">
             {detail.events.map((event) => (
               <div key={event.name} className="space-y-1">
                 <h3 className="text-sm font-semibold leading-snug">{event.name}</h3>
@@ -226,7 +226,7 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
           <Lightbulb className="h-4 w-4 shrink-0 text-amber-500" aria-hidden />
           알아두면 좋은 팁
         </h2>
-        <ul className="mt-4 grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
+        <ul className="mt-4 grid gap-x-16 gap-y-2.5 sm:grid-cols-2">
           {detail.tips.map((tip) => (
             <li key={tip} className="flex gap-2 text-sm leading-relaxed">
               <span className="text-primary" aria-hidden>
@@ -240,7 +240,7 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
 
       {/* 장점 / 단점 — 2컬럼, 박스 없이 */}
       <Section delay={0.25}>
-        <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+        <div className="grid gap-x-16 gap-y-6 sm:grid-cols-2">
           <div>
             <h2 className="text-sm font-semibold text-success">좋은 점</h2>
             <ul className="mt-3 space-y-2">
@@ -273,7 +273,7 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
       {/* 참고 링크 — 2컬럼 */}
       <Section delay={0.28}>
         <h2 className="text-base font-semibold tracking-tight">더 읽어보기</h2>
-        <ul className="mt-4 grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
+        <ul className="mt-4 grid gap-x-16 gap-y-2.5 sm:grid-cols-2">
           {option.links.map((l) => (
             <li key={l.url}>
               <a
