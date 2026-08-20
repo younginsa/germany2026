@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { CalendarDays, CheckSquare, FolderOpen, TreePine } from "lucide-react";
+import { CalendarDays, CheckSquare, FolderOpen, Scale, TreePine } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NotificationCenter } from "@/components/layout/notification-center";
 import { UserMenu } from "@/components/layout/user-menu";
 
 const NAV_ITEMS = [
   { href: "/itinerary", label: "일정", icon: CalendarDays },
+  { href: "/compare", label: "여행비교", icon: Scale },
   { href: "/checklist", label: "체크리스트", icon: CheckSquare },
   { href: "/materials", label: "자료", icon: FolderOpen },
 ] as const;
