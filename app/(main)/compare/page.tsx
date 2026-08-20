@@ -178,13 +178,13 @@ export default function ComparePage() {
       <motion.header {...fadeUp} transition={{ duration: 0.4 }}>
         <h1 className="text-2xl font-bold tracking-tight">여행비교</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          2026년 12월, 두 가족(어른 4 · 아이 3·5·7세)의 겨울 여행 — 5가지 시나리오를 비교하고
+          2026년 12월, 두 가족(어른 4 · 아이 3·5·7세)의 겨울 여행 — 6가지 시나리오를 비교하고
           함께 결정해요
         </p>
       </motion.header>
 
       {/* 옵션 카드 — 이미지로 먼저 그림 그리기 */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {tripOptions.map((option, i) => (
           <OptionCard key={option.id} option={option} index={i} />
         ))}
@@ -194,7 +194,7 @@ export default function ComparePage() {
       <motion.div {...fadeUp} transition={{ duration: 0.4, delay: 0.2 }}>
         <Card className="overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[1100px] border-collapse text-xs sm:text-[13px]">
+            <table className="w-full min-w-[1300px] border-collapse text-xs sm:text-[13px]">
               <thead>
                 <tr className="border-b bg-secondary/50">
                   <th className="sticky left-0 z-10 w-36 min-w-36 bg-secondary/50 p-3 text-left align-bottom font-medium text-muted-foreground backdrop-blur">

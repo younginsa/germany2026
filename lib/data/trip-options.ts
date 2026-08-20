@@ -298,6 +298,59 @@ export const tripOptions: TripOption[] = [
       },
     ],
   },
+  {
+    id: "australia",
+    title: "호주 (시드니+골드코스트)",
+    emoji: "🦘",
+    badge: "남반구 한여름",
+    subtitle: "한여름 크리스마스 — 테마파크 + 동물원 + 비치",
+    image:
+      "https://images.unsplash.com/photo-1624138784614-87fd1b6528f8?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3lkbmV5JTIwb3BlcmElMjBob3VzZXxlbnwwfHwwfHx8MA%3D%3D",
+    imageAlt: "시드니 오페라하우스와 하버",
+    period: "7박 8일 (골드코스트 4박 + 시드니 3박)",
+    costPerFamily: "약 950만원",
+    costGroup: "두 가족 합계 약 1,900만원",
+    costNote:
+      "직항 왕복(성인 ~160만·소아 ~120만) + 국내선(인당 ~15만), 아파트형 숙소 2유닛 × 7박, 테마파크·식비 포함 추정",
+    flight: "직항 10시간 30분 · 시차 +2시간 (야간비행 — 시차적응 부담 없음)",
+    weather: "24~28°C · 한여름 — 자외선 강함",
+    kidScore: 4,
+    kidNote:
+      "테마파크·동물원·비치가 한 동선에. 다만 10시간 비행이 3세에게는 첫 관문 (야간비행으로 재우기 전략)",
+    highlights: [
+      "골드코스트 무비월드 · 씨월드 · 드림월드",
+      "타롱가 동물원 (페리+케이블카) · 와일드라이프 시드니",
+      "한여름 크리스마스 — 본다이 비치의 산타",
+    ],
+    pros: [
+      "장거리 중 유일하게 시차적응이 없는 옵션 (+1~2시간)",
+      "'여름 크리스마스'라는 대체 불가 경험",
+      "주방·세탁기 딸린 아파트형 숙소 — 아이 동반 체류 최적",
+    ],
+    cons: [
+      "12월 = 호주 성수기 — 비용이 독일에 근접",
+      "비행 10시간 + 국내선 환승 이동",
+      "테마파크·숙소 조기 예약 필수, 더위·자외선 대비",
+    ],
+    links: [
+      {
+        label: "아이 동반 골드코스트+시드니 7박8일 (트립스토어)",
+        url: "https://www.tripstore.kr/blog/%ED%98%B8%EC%A3%BC-%EC%97%AC%ED%96%89-%EC%BD%94%EC%8A%A4-%EC%B6%94%EC%B2%9C-%EC%95%84%EC%9D%B4-%EB%8F%99%EB%B0%98-%EA%B3%A8%EB%93%9C%EC%BD%94%EC%8A%A4%ED%8A%B8-%EC%8B%9C%EB%93%9C%EB%8B%88-7%EB%B0%958%EC%9D%BC",
+      },
+      {
+        label: "시드니 가족여행 완벽 가이드 (티스토리)",
+        url: "https://bulacoconut.com/entry/%EC%8B%9C%EB%93%9C%EB%8B%88-%EA%B0%80%EC%A1%B1%EC%97%AC%ED%96%89-%EC%99%84%EB%B2%BD-%EA%B0%80%EC%9D%B4%EB%93%9C-%EC%95%84%EC%9D%B4%EC%99%80-%ED%95%A8%EA%BB%98%ED%95%98%EB%8A%94-%EC%97%AC%ED%96%89",
+      },
+      {
+        label: "가족여행 패키지 일정 참고 (호주닷컴)",
+        url: "https://m.hojoo.kr/product/detail.html?product_no=506&cate_no=1&display_group=4",
+      },
+      {
+        label: "네이버 블로그 후기 검색",
+        url: naverBlogSearch("호주 골드코스트 시드니 아이랑 12월 후기"),
+      },
+    ],
+  },
 ];
 
 /** 비용·인원 가정 문구 — 페이지 하단 안내에 사용 */
