@@ -35,6 +35,15 @@ export interface TripEvent {
   url?: string;
 }
 
+/** 예약 가이드 (선택) — 예약 절차 + 공식/에이전시 링크 */
+export interface TripBookingGuide {
+  title: string;
+  intro?: string;
+  steps: TripFlowSection[];
+  links: TripOptionLink[];
+  note?: string;
+}
+
 /** 세부 페이지용 블로그 스타일 콘텐츠 */
 export interface TripDetail {
   /** 도입부 — 이런 여행이에요 */
@@ -50,6 +59,8 @@ export interface TripDetail {
   /** 3·5·7세 아이들 관점 */
   kids: string;
   tips: string[];
+  /** 예약 방법 안내 (선택) */
+  booking?: TripBookingGuide;
   gallery: TripGalleryImage[];
 }
 
@@ -181,24 +192,24 @@ export const tripOptions: TripOption[] = [
       ],
       eventPhotos: [
         {
-          src: "https://images.unsplash.com/photo-1669552698934-8c12ed9fe36b?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bnVyZW1iZXJnJTIwY2hyaXN0bWFzJTIwbWFya2V0fGVufDB8fDB8fHww",
-          alt: "뉘른베르크 크리스마스 마켓",
-          caption: "뉘른베르크 마켓의 노점들",
+          src: "https://images.unsplash.com/photo-1779832733316-a149a5b489ab?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+          alt: "프랑크푸르트 뢰머베르크 광장의 회전목마와 크리스마스 트리",
+          caption: "뢰머베르크 광장 — 회전목마와 대형 트리",
         },
         {
-          src: "https://images.unsplash.com/photo-1716202382461-4dc6b5389287?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bnVyZW1iZXJnJTIwY2hyaXN0bWFzJTIwbWFya2V0fGVufDB8fDB8fHww",
-          alt: "크리스마스 마켓 풍경",
-          caption: "점등된 마켓 광장",
+          src: "https://images.unsplash.com/photo-1765210057627-566c82b7bb2f?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+          alt: "케테 볼파르트 크리스마스 상점 앞 풍경",
+          caption: "케테 볼파르트 — 1년 내내 크리스마스인 상점",
         },
         {
-          src: "https://images.unsplash.com/photo-1716202382015-a194a6643511?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bnVyZW1iZXJnJTIwY2hyaXN0bWFzJTIwbWFya2V0fGVufDB8fDB8fHww",
-          alt: "마켓의 조명과 장식",
-          caption: "마켓의 조명과 장식",
+          src: "https://images.unsplash.com/photo-1708888071053-aabbe5af7615?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+          alt: "눈 내린 로텐부르크 구시가 거리와 탑",
+          caption: "겨울의 로텐부르크 구시가",
         },
         {
-          src: "https://images.unsplash.com/photo-1716202382425-12d7059fab54?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bnVyZW1iZXJnJTIwY2hyaXN0bWFzJTIwbWFya2V0fGVufDB8fDB8fHww",
-          alt: "겨울밤의 마켓 거리",
-          caption: "겨울밤의 마켓 거리",
+          src: "https://images.unsplash.com/photo-1484053801020-3a74ca659b03?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+          alt: "설경 속 노이슈반슈타인 성 전경",
+          caption: "눈 덮인 노이슈반슈타인 성",
         },
       ],
       flow: [
@@ -286,13 +297,21 @@ export const tripOptions: TripOption[] = [
         url: "https://experiences.myrealtrip.com/products/4254405",
       },
       {
+        label: "디즈니 크루즈 공식 사이트 (영문)",
+        url: "https://disneycruise.disney.go.com/",
+      },
+      {
+        label: "가든스 바이 더 베이 공식",
+        url: "https://www.gardensbythebay.com.sg/",
+      },
+      {
         label: "네이버 블로그 후기 검색",
         url: naverBlogSearch("디즈니 어드벤처 크루즈 싱가포르 아이랑 후기"),
       },
     ],
     detail: {
       intro:
-        "마리나베이 크루즈 센터에서 디즈니 어드벤처에 오르는 순간, 여행 준비가 끝나요. 이동도, 식당 검색도, '오늘 뭐 하지'도 없어요. 아이들은 연령별 키즈클럽으로, 어른은 선베드로. 저녁엔 온 가족이 브로드웨이급 공연을 보고, 복도에서 미키를 만나면 그날은 성공한 날이에요.",
+        "마리나베이 크루즈 센터에서 디즈니 어드벤처에 오르는 순간, 여행 준비가 끝나요. 이동도, 식당 검색도, '오늘 뭐 하지'도 없어요. 아이들은 연령별 키즈클럽으로, 어른은 선베드로. 저녁엔 온 가족이 브로드웨이급 공연을 보고, 복도에서 미키를 만나면 그날은 성공한 날이에요. 디즈니 어드벤처는 2025년 12월 싱가포르에서 취항한 아시아 최초의 디즈니 크루즈로, 중간 기항 없이 바다 위에서만 보내는 '크루즈 투 노웨어' 항로예요 — 하선·재승선 절차가 없으니 아이 셋을 데리고도 온전히 쉬는 일정이 됩니다. 배 안은 디즈니·마블·픽사 테마 구역으로 나뉘어 있어서, 3박 내내 '오늘은 어느 동네에서 놀까'를 고르는 재미가 있어요. 유일한 숙제는 예약 타이밍 — 12월 항차는 가장 먼저 매진되는 구간이라, 아래 예약 가이드를 참고해 서두르는 게 좋아요.",
       notice: {
         title: "12월 싱가포르 — 휴무 걱정은 없어요",
         items: [
@@ -329,46 +348,100 @@ export const tripOptions: TripOption[] = [
         },
         {
           src: "https://images.unsplash.com/photo-1589848014442-5f540ff95bea?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Z2FyZGVucyUyMGJ5JTIwdGhlJTIwYmF5JTIwY2hyaXN0bWFzfGVufDB8fDB8fHww",
-          alt: "크리스마스 시즌의 싱가포르",
-          caption: "크리스마스 시즌의 싱가포르",
+          alt: "마리나베이 샌즈와 싱가포르 스카이라인",
+          caption: "마리나베이 스카이라인",
         },
         {
           src: "https://images.unsplash.com/photo-1640225076272-e6e21da515ff?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Z2FyZGVucyUyMGJ5JTIwdGhlJTIwYmF5JTIwY2hyaXN0bWFzfGVufDB8fDB8fHww",
-          alt: "크리스마스 원더랜드의 조명",
-          caption: "크리스마스 원더랜드 조명",
+          alt: "크리스마스 원더랜드의 회전목마와 조명",
+          caption: "크리스마스 원더랜드의 회전목마",
         },
         {
-          src: "https://images.unsplash.com/photo-1640225076332-ad159067f30d?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z2FyZGVucyUyMGJ5JTIwdGhlJTIwYmF5JTIwY2hyaXN0bWFzfGVufDB8fDB8fHww",
-          alt: "원더랜드의 밤 풍경",
-          caption: "원더랜드의 밤",
+          src: "https://images.unsplash.com/photo-1570422849852-adf15f981007?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+          alt: "밤의 마리나베이 — 싱가포르 플라이어와 마리나베이 샌즈",
+          caption: "밤의 마리나베이 — 크루즈 출항 전야의 야경",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1708084026185-7fca3b12ee26?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+          alt: "주얼 창이의 실내 폭포와 열대 정원",
+          caption: "주얼 창이 실내 폭포 — 도착 첫날의 첫 코스",
         },
       ],
       flow: [
         {
           heading: "DAY 1–2 · 싱가포르 워밍업",
-          body: "주얼 창이의 실내 폭포로 시작해서, 저녁엔 가든스 바이 더 베이 슈퍼트리 쇼. 12월 싱가포르는 덥지만 어디든 에어컨이 있어서 아이들 컨디션 관리가 쉬워요.",
+          body: "주얼 창이의 실내 폭포로 시작해서, 저녁엔 가든스 바이 더 베이 슈퍼트리 쇼. 12월 싱가포르는 덥지만 어디든 에어컨이 있어서 아이들 컨디션 관리가 쉬워요. 둘째 날 저녁은 크리스마스 원더랜드 — 인공눈이 내리는 슈퍼트리 아래에서 크리스마스 기분을 미리 충전하고 배에 오르는 순서가 좋아요.",
         },
         {
-          heading: "DAY 3–5 · 디즈니 어드벤처 3박",
-          body: "승선하자마자 앱으로 캐릭터 그리팅과 공연을 예약하는 게 첫 미션. 낮엔 워터슬라이드와 수영장, 저녁엔 매일 다른 테마 레스토랑을 돌아요. 식사·공연·키즈클럽이 전부 요금에 포함 — 배 안에선 지갑 꺼낼 일이 거의 없어요.",
+          heading: "DAY 3 · 승선일 — 첫 미션은 앱 예약",
+          body: "마리나베이 크루즈 센터에서 체크인은 오전에 일찍 하는 게 유리해요 — 점심부터 선내 뷔페와 수영장을 쓸 수 있으니 반나절을 버는 셈이에요. 승선하자마자 디즈니 크루즈 앱으로 캐릭터 그리팅과 공연을 예약하는 게 첫 미션. 저녁엔 출항과 함께 데크에서 세일어웨이 파티가 열려요.",
+        },
+        {
+          heading: "DAY 3–5 · 선상 생활 — 아이는 클럽으로, 어른은 휴가로",
+          body: "낮엔 워터슬라이드와 수영장, 저녁엔 매일 다른 테마 레스토랑을 도는 로테이션 다이닝 — 서버가 같이 이동하며 아이들 취향을 기억해줘요. 아이들이 연령별 키즈클럽에 들어가 있는 동안 어른은 성인 전용 구역에서 진짜 휴가를 보내고, 밤엔 온 가족이 디즈니·마블 쇼를 봐요. 식사·공연·키즈클럽이 전부 요금에 포함 — 배 안에선 지갑 꺼낼 일이 거의 없어요.",
         },
         {
           heading: "DAY 6–7 · 싱가포르 마무리",
-          body: "하선 후 컨디션 보고 싱가포르 동물원(주롱은 3세 최애) 또는 유니버설 스튜디오 중 택일. 마지막 밤은 마리나베이 야경으로 마무리.",
+          body: "아침에 하선 후 컨디션 보고 싱가포르 동물원(3세 최애) 또는 유니버설 스튜디오 중 택일. 무리하고 싶지 않으면 호텔 수영장과 오차드로드 일루미네이션 산책만으로도 충분해요. 마지막 밤은 마리나베이 야경으로 마무리.",
         },
       ],
-      kids: "이 배는 사실상 3·5·7세를 위해 설계됐어요. 연령별 클럽이 나뉘어 있어서 셋 다 각자 레벨에 맞게 놀고, 부모는 몇 시간이나마 '여행 중 휴가'를 얻어요. 캐릭터 그리팅은 가족 단위 촬영이라 대기도 짧은 편.",
+      kids: "이 배는 사실상 3·5·7세를 위해 설계됐어요. 연령별 클럽이 나뉘어 있어서 셋 다 각자 레벨에 맞게 놀고, 부모는 몇 시간이나마 '여행 중 휴가'를 얻어요. 캐릭터 그리팅은 가족 단위 촬영이라 대기도 짧은 편. 배가 곧 목적지라 '오늘은 어디 가야 해서 일찍 일어나'가 없다는 것도 아이들에겐 큰 장점 — 낮잠 리듬을 지키면서도 하루가 꽉 차요. 유아 동반 가족을 위한 너서리(영유아 돌봄), 유아풀, 가족 전용 프로그램이 따로 있어서 3세도 소외되지 않아요.",
       tips: [
         "12월은 최성수기 — 예약은 빠를수록 좋고 가격 차이가 큼",
         "디즈니 크루즈 앱 필수 — 승선 즉시 공연·그리팅 예약",
-        "오션뷰 4인실 2개가 인사이드보다 만족도 높음",
+        "오션뷰 4인실 2개가 인사이드보다 만족도 높음 (두 가족은 인접 객실 요청)",
         "뱃멀미약 챙기기 (항로는 잔잔한 편이지만 보험용)",
-        "호텔+티켓 패키지·한인 에이전시 OBC 혜택 비교해보기",
+        "호텔+티켓 패키지·한인 에이전시 OBC(선내 크레딧) 혜택 비교해보기",
+        "승선일은 오전 체크인 — 점심부터 선내 시설을 다 쓸 수 있어요",
+        "온라인 체크인은 출항 전 미리 — 여권 유효기간 6개월 이상 확인",
+        "수영복·래시가드는 캐리온 가방에 — 짐이 객실에 오기 전에 수영장 직행",
       ],
+      booking: {
+        title: "디즈니 어드벤처 예약, 이렇게 하면 돼요",
+        intro:
+          "예약 창구는 크게 두 가지 — 디즈니 크루즈 공식 사이트(영문 직접 예약)와 한국 에이전시(한국어 상담·프로모션)예요. 12월 항차는 오픈 직후부터 빠지기 시작하니, 채널 비교보다 날짜 확보가 먼저예요.",
+        steps: [
+          {
+            heading: "1 · 항차 고르기",
+            body: "공식 사이트에서 12월 출항 캘린더를 열고 3박/4박 항차 중 일정에 맞는 날짜를 골라요. 크리스마스가 낀 항차(12/19~25 부근)가 가장 먼저 매진되는 구간이에요.",
+          },
+          {
+            heading: "2 · 객실 정하기",
+            body: "인사이드 < 오션뷰 < 베란다 순으로 비싸져요. 두 가족이면 4인 오션뷰 2개가 기준점 — 예약 시 '인접 객실(connecting/adjacent)' 요청을 꼭 남기세요. 3세 이하도 인원에 포함되니 객실 정원(4인)을 넘지 않는지 확인.",
+          },
+          {
+            heading: "3 · 채널 선택 & 결제",
+            body: "공식 사이트는 예약금(요금의 일부)을 걸고 잔금은 출항 전 마감일까지 — 마감일과 취소 수수료 규정을 예약 화면에서 꼭 확인하세요. 한국 에이전시(마이리얼트립·KKday·클룩 등)는 한국어 상담과 선내 크레딧(OBC)·프로모션이 장점이라 견적을 나란히 비교해보는 걸 추천해요.",
+          },
+          {
+            heading: "4 · 출항 전 준비",
+            body: "디즈니 크루즈 앱을 설치하고 온라인 체크인(승선 서류·결제카드 등록·승선 시간 선택)을 미리 끝내요. 키즈클럽 등록도 앱에서 — 공연·캐릭터 그리팅 예약은 승선 후 앱에서 열려요.",
+          },
+        ],
+        links: [
+          {
+            label: "디즈니 크루즈 공식 예약 (영문)",
+            url: "https://disneycruise.disney.go.com/",
+          },
+          {
+            label: "마이리얼트립 — 디즈니 어드벤처 3박4일",
+            url: "https://experiences.myrealtrip.com/products/4254405",
+          },
+          {
+            label: "KKday — 디즈니 크루즈 가격 가이드",
+            url: "https://www.kkday.com/ko/blog/35492/asia-singapore-disneycruise",
+          },
+          {
+            label: "클룩 — 디즈니 크루즈 검색",
+            url: "https://www.klook.com/ko/search/result/?query=%EB%94%94%EC%A6%88%EB%8B%88%20%ED%81%AC%EB%A3%A8%EC%A6%88",
+          },
+        ],
+        note: "가격·취소 규정은 항차와 객실 등급, 예약 시점에 따라 크게 달라져요. 두 가족 7인 구성이면 전화·채팅 상담으로 인접 객실 확보 가능 여부부터 확인하는 게 순서예요.",
+      },
       gallery: [
         {
-          src: "https://images.unsplash.com/photo-1707342614540-023ae9b375c6?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGlzbmV5JTIwY3J1aXNlJTIwc2hpcHxlbnwwfHwwfHx8MA%3D%3D",
-          alt: "디즈니 크루즈 선상",
+          src: "https://images.unsplash.com/photo-1700597312989-435871dce1fd?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+          alt: "디즈니 크루즈 풀덱과 선베드",
           caption: "배 전체가 하나의 테마파크",
         },
         {
@@ -427,13 +500,25 @@ export const tripOptions: TripOption[] = [
         url: "https://kr.trip.com/blog/all-about-hongkong-disneyland-and-essential-tips/",
       },
       {
+        label: "홍콩 디즈니랜드 공식 (한국어)",
+        url: "https://www.hongkongdisneyland.com/ko/",
+      },
+      {
+        label: "오션파크 공식",
+        url: "https://www.oceanpark.com.hk/en",
+      },
+      {
+        label: "홍콩 관광청 공식 (한국어)",
+        url: "https://www.discoverhongkong.com/kr/index.html",
+      },
+      {
         label: "네이버 블로그 후기 검색",
         url: naverBlogSearch("홍콩 12월 아이랑 가족여행 후기"),
       },
     ],
     detail: {
       intro:
-        "12월의 홍콩은 1년 중 가장 쾌적해요 — 맑고 건조한 20도 안팎, 걷기 딱 좋은 날씨. 그리고 이 도시는 크리스마스에 진심이에요. 침사추이 건물들이 통째로 일루미네이션이 되고, 디즈니랜드는 겨울 이벤트로 반짝여요. 독일의 크리스마스 감성을 3시간 45분 비행으로 맛보는 압축판입니다.",
+        "12월의 홍콩은 1년 중 가장 쾌적해요 — 맑고 건조한 20도 안팎, 걷기 딱 좋은 날씨. 그리고 이 도시는 크리스마스에 진심이에요. 침사추이 건물들이 통째로 일루미네이션이 되고, 센트럴 동상광장엔 20m 트리와 크리스마스 마을이 서고, 디즈니랜드는 겨울 이벤트로 반짝여요. 독일의 크리스마스 감성을 3시간 45분 비행으로 맛보는 압축판입니다. 이 여행의 진짜 강점은 밀도예요 — 디즈니랜드, 판다가 있는 오션파크, 피크트램, 스타페리, 하버 야경까지 전부 30분 이동권 안에 있어서, 4박 5일 동안 '이동으로 버리는 시간'이 거의 없어요. 아이 셋과 다니면 이 차이가 하루 체력을 좌우해요. 저녁마다 어디서든 야경이 기본으로 깔리니, 낮엔 파크·낮잠, 해 지면 하버로 나가는 리듬만 지키면 실패가 없는 도시예요.",
       notice: {
         title: "12월 홍콩 — 연휴에도 다 열어요 (대신 비싸요)",
         items: [
@@ -457,6 +542,12 @@ export const tripOptions: TripOption[] = [
           url: "https://www.nextstophongkong.com/hong-kong-disneyland-christmas-celebration/",
         },
         {
+          name: "심포니 오브 라이트",
+          period: "매일 20:00 · 무료",
+          body: "빅토리아 하버 양안 40여 개 빌딩이 참여하는 레이저·조명 쇼 — 침사추이 해변 산책로나 스타페리 위에서 보면 공짜 특등석이에요.",
+          url: "https://www.discoverhongkong.com/kr/explore/attractions/a-symphony-of-lights.html",
+        },
+        {
           name: "박싱데이 세일",
           period: "12/26~27",
           body: "독일에선 상점이 닫는 날, 홍콩에선 최대 세일이 열려요 — 아이 옷·장난감 쇼핑 타이밍.",
@@ -464,47 +555,59 @@ export const tripOptions: TripOption[] = [
       ],
       eventPhotos: [
         {
-          src: "https://images.unsplash.com/photo-1577698266701-248a54a93298?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9uZyUyMGtvbmclMjBjaHJpc3RtYXN8ZW58MHx8MHx8fDA%3D",
-          alt: "크리스마스 시즌의 홍콩 거리",
-          caption: "크리스마스 시즌의 홍콩 거리",
+          src: "https://images.unsplash.com/photo-1672189276153-bd5af56b86d5?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+          alt: "홍콩 스카이라인을 배경으로 선 대형 크리스마스 트리",
+          caption: "하버 앞 대형 크리스마스 트리",
         },
         {
-          src: "https://images.unsplash.com/photo-1543891732-2684d52f1e03?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8aG9uZyUyMGtvbmclMjBjaHJpc3RtYXN8ZW58MHx8MHx8fDA%3D",
-          alt: "홍콩 야경과 일루미네이션",
-          caption: "홍콩 야경과 일루미네이션",
+          src: "https://images.unsplash.com/photo-1767921148120-9990f595979c?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+          alt: "밤의 센트럴 크리스마스 타운과 빌딩 숲",
+          caption: "센트럴 크리스마스 타운 — 윈터페스트의 중심",
         },
         {
           src: "https://images.unsplash.com/photo-1671152493959-9b164c02eaa8?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8aG9uZyUyMGtvbmclMjBjaHJpc3RtYXN8ZW58MHx8MHx8fDA%3D",
-          alt: "센트럴의 크리스마스 장식",
-          caption: "센트럴의 크리스마스 장식",
+          alt: "1881 헤리티지의 크리스마스 장식",
+          caption: "침사추이 1881 헤리티지의 크리스마스",
         },
         {
-          src: "https://images.unsplash.com/photo-1644353765405-90b1dfec0582?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8aG9uZyUyMGtvbmclMjBjaHJpc3RtYXN8ZW58MHx8MHx8fDA%3D",
-          alt: "침사추이의 연말 분위기",
-          caption: "침사추이의 연말 분위기",
+          src: "https://images.unsplash.com/photo-1767921148132-96bb784bfce9?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+          alt: "밤의 시계탑과 크리스마스 트리들",
+          caption: "시계탑과 크리스마스 트리 — 밤의 센트럴",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1606447168767-b6f85c6205af?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+          alt: "빅토리아 하버의 붉은 정크선과 야경",
+          caption: "빅토리아 하버 — 정크선과 야경",
         },
       ],
       flow: [
         {
           heading: "DAY 1–2 · 디즈니랜드 (호텔 1박 추천)",
-          body: "홍콩 디즈니는 아담해서 오히려 유아 동반에 최적이에요. 겨울왕국 구역 '월드 오브 프로즌'과 라이온킹 공연이 하이라이트. 폐장 불꽃까지 보려면 파크 호텔에서 1박 하는 게 체력적으로 편해요.",
+          body: "홍콩 디즈니는 아담해서 오히려 유아 동반에 최적이에요. 겨울왕국 구역 '월드 오브 프로즌'과 라이온킹 공연이 하이라이트 — 프로즌 구역은 오픈 직후가 가장 한산하니 개장 시간에 맞춰 직행하세요. 12월엔 성 앞 크리스마스 콘서트와 겨울 데코가 더해져 파크 전체가 시즌 무드예요. 폐장 불꽃까지 보려면 파크 호텔에서 1박 하는 게 체력적으로 편해요 — 낮잠이 필요한 3세를 데리고 중간에 호텔로 후퇴했다가 저녁에 재입장하는 것도 가능해져요.",
         },
         {
           heading: "DAY 3 · 오션파크",
-          body: "판다 보고, 케이블카 타고 산을 넘어 아쿠아리움까지. 케이블카에서 내려다보는 남중국해 풍경은 어른들 몫이에요.",
+          body: "판다 보고, 케이블카 타고 산을 넘어 아쿠아리움까지. 파크가 산 위·아래 두 구역으로 나뉘어 있어서 케이블카와 해저터널 열차가 이동 수단이자 어트랙션이에요. 유아 구역 '위스커스 하버'는 3·5세 눈높이에 딱. 케이블카에서 내려다보는 남중국해 풍경은 어른들 몫이에요.",
         },
         {
-          heading: "DAY 4–5 · 시티 & 일루미네이션",
-          body: "피크트램으로 빅토리아 피크에 오르고, 저녁엔 스타페리를 타고 심포니 오브 라이트 야경을 봐요. 마지막 날은 딤섬 브런치와 침사추이 크리스마스 장식 산책으로 마무리.",
+          heading: "DAY 4 · 피크트램과 하버 야경",
+          body: "오전엔 피크트램으로 빅토리아 피크에 올라 도시 전경을 보고, 오후엔 침사추이로 넘어가 해변 산책로와 1881 헤리티지의 크리스마스 장식을 구경해요. 저녁 8시엔 심포니 오브 라이트 — 스타페리를 타고 바다 위에서 보면 10분 남짓한 항해가 그대로 야경 크루즈가 돼요.",
+        },
+        {
+          heading: "DAY 5 · 딤섬 브런치와 마무리",
+          body: "마지막 날은 느긋하게 딤섬 브런치 — 아이들도 잘 먹는 하가우·창펀·에그타르트 위주로. 시간이 남으면 미드레벨 에스컬레이터나 트램 한 구간을 타보고, 공항 가는 길에 시티게이트 아울렛에 들러도 좋아요.",
         },
       ],
-      kids: "디즈니랜드의 유아용 어트랙션 비중이 높아 3세도 탈 게 많고, 도시가 컴팩트해서 이동이 다 30분 안쪽이에요. 지하철·페리·트램 — 탈것 자체가 아이들에겐 어트랙션이 돼요.",
+      kids: "디즈니랜드의 유아용 어트랙션 비중이 높아 3세도 탈 게 많고, 도시가 컴팩트해서 이동이 다 30분 안쪽이에요. 지하철·페리·트램 — 탈것 자체가 아이들에겐 어트랙션이 돼요. 2층 트램과 2층 버스 맨 앞자리는 그 자체로 놀이기구고, 스타페리는 5분 항해에 아이 요금 몇백 원 수준. 식사도 걱정보다 쉬워요 — 딤섬·완탕면·에그타르트처럼 아이 입에 맞는 메뉴가 많고, 몰마다 패밀리 레스토랑과 기저귀 교환대가 갖춰져 있어요.",
       tips: [
         "파크 내 생수가 비싸요 (병당 ~4천원) — 1인 1병 반입 가능",
         "입장 즉시 앱에서 '숲 속의 플레이하우스' 등 공연 예약",
         "디즈니 호텔 직판 '호텔+티켓' 패키지가 15~20% 저렴",
-        "옥토퍼스 카드 하나로 모든 교통 해결",
+        "옥토퍼스 카드 하나로 모든 교통 해결 (앱으로 아이폰에도 발급 가능)",
         "12월 크리스마스 주간은 최성수기 — 평일 방문 추천",
+        "심포니 오브 라이트는 매일 20시 — 저녁 일정을 하버 근처로 잡기",
+        "숙소는 침사추이 쪽이 동선 유리 — 야경·페리·MTR이 도보권",
+        "낮 20도라도 실내는 에어컨이 강해요 — 아이들 얇은 겉옷 필수",
       ],
       gallery: [
         {
@@ -606,24 +709,24 @@ export const tripOptions: TripOption[] = [
       ],
       eventPhotos: [
         {
-          src: "https://images.unsplash.com/photo-1595000603257-1530753bd7eb?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8amFwYW5lc2UlMjBsYW50ZXJuJTIwZmVzdGl2YWx8ZW58MHx8MHx8fDA%3D",
-          alt: "랜턴 축제의 등불",
-          caption: "랜턴 축제의 등불",
+          src: "https://images.unsplash.com/photo-1614071659313-fd1bb53ce2a9?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+          alt: "츄라우미 수족관 대수조 앞에 선 사람과 고래상어",
+          caption: "츄라우미 수족관 — 고래상어의 대수조",
         },
         {
-          src: "https://images.unsplash.com/photo-1757944075647-2498be56bb62?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8amFwYW5lc2UlMjBsYW50ZXJuJTIwZmVzdGl2YWx8ZW58MHx8MHx8fDA%3D",
-          alt: "일본식 랜턴 일루미네이션",
-          caption: "일본식 랜턴 일루미네이션",
+          src: "https://images.unsplash.com/photo-1648130024551-8e71ba702356?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+          alt: "아메리칸 빌리지의 관람차와 운하 풍경",
+          caption: "아메리칸 빌리지 — 관람차가 있는 거리",
         },
         {
-          src: "https://images.unsplash.com/photo-1700323912393-f0b51a623997?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8amFwYW5lc2UlMjBsYW50ZXJuJTIwZmVzdGl2YWx8ZW58MHx8MHx8fDA%3D",
-          alt: "밤을 밝히는 랜턴들",
-          caption: "밤을 밝히는 랜턴들",
+          src: "https://images.unsplash.com/photo-1785733249951-4d7bc8fb8472?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+          alt: "코우리 대교와 에메랄드빛 바다, 백사장",
+          caption: "코우리 대교 — 북부 드라이브의 하이라이트",
         },
         {
-          src: "https://images.unsplash.com/photo-1760778706695-cc845c07ca89?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8amFwYW5lc2UlMjBsYW50ZXJuJTIwZmVzdGl2YWx8ZW58MHx8MHx8fDA%3D",
-          alt: "축제의 등불 거리",
-          caption: "축제의 등불 거리",
+          src: "https://images.unsplash.com/photo-1573044010623-6fbaf83044e0?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+          alt: "만자모 절벽과 푸른 바다 전경",
+          caption: "만자모 절벽 전망",
         },
       ],
       flow: [
@@ -746,24 +849,24 @@ export const tripOptions: TripOption[] = [
       ],
       eventPhotos: [
         {
-          src: "https://images.unsplash.com/photo-1581242693425-36ca662d99f4?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGhpbGlwcGluZXMlMjBjaHJpc3RtYXN8ZW58MHx8MHx8fDA%3D",
-          alt: "필리핀의 크리스마스 파롤",
-          caption: "필리핀 크리스마스의 상징, 파롤",
-        },
-        {
           src: "https://images.unsplash.com/photo-1669991504530-f0ad847fe34c?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGhpbGlwcGluZXMlMjBjaHJpc3RtYXN8ZW58MHx8MHx8fDA%3D",
-          alt: "크리스마스 시즌의 필리핀 거리",
-          caption: "크리스마스 시즌의 거리",
+          alt: "파롤 장식으로 만든 대형 크리스마스 트리",
+          caption: "파롤로 만든 대형 트리 — 필리핀식 크리스마스",
         },
         {
-          src: "https://images.unsplash.com/photo-1671837993877-d28f329eac2d?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGhpbGlwcGluZXMlMjBjaHJpc3RtYXN8ZW58MHx8MHx8fDA%3D",
-          alt: "파롤 등불 장식",
-          caption: "파롤 등불 장식",
+          src: "https://images.unsplash.com/photo-1583685133115-90748ccbe274?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+          alt: "산호초 라군에 떠 있는 방카 보트들의 항공 풍경",
+          caption: "아일랜드 호핑 — 하늘에서 본 라군과 방카 보트",
         },
         {
-          src: "https://images.unsplash.com/photo-1669991504272-19c28fd98c15?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cGhpbGlwcGluZXMlMjBjaHJpc3RtYXN8ZW58MHx8MHx8fDA%3D",
-          alt: "필리핀 크리스마스 조명",
-          caption: "필리핀 크리스마스 조명",
+          src: "https://images.unsplash.com/photo-1751814584924-48c8feb87345?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+          alt: "백사장에 정박한 방카 보트와 파란 하늘",
+          caption: "건기의 해변 — 방카 보트와 백사장",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1564425229770-faa6486ce562?fm=jpg&q=60&w=3000&auto=format&fit=crop",
+          alt: "섬들 사이 바다에 떠 있는 보트들",
+          caption: "섬과 섬 사이 — 호핑 투어의 풍경",
         },
       ],
       flow: [

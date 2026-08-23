@@ -13,6 +13,7 @@ import {
   ExternalLink,
   Lightbulb,
   PartyPopper,
+  Ticket,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -276,6 +277,49 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
           ))}
         </ul>
       </Section>
+
+      {/* 예약 가이드 — 절차 + 예약 채널 링크 */}
+      {detail.booking && (
+        <Section delay={0.24}>
+          <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
+            <Ticket className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+            {detail.booking.title}
+          </h2>
+          {detail.booking.intro && (
+            <p className="mt-3 text-sm leading-relaxed text-foreground/90">
+              {detail.booking.intro}
+            </p>
+          )}
+          <div className="mt-4 space-y-5">
+            {detail.booking.steps.map((step) => (
+              <div key={step.heading} className="space-y-1.5">
+                <h3 className="text-sm font-semibold text-primary">{step.heading}</h3>
+                <p className="text-sm leading-relaxed text-foreground/90">{step.body}</p>
+              </div>
+            ))}
+          </div>
+          <ul className="mt-5 grid gap-x-16 gap-y-2.5 sm:grid-cols-2">
+            {detail.booking.links.map((l) => (
+              <li key={l.url}>
+                <a
+                  href={l.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-start gap-1.5 text-sm text-primary underline-offset-2 hover:underline"
+                >
+                  <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+                  {l.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+          {detail.booking.note && (
+            <p className="mt-4 border-l-2 border-amber-400/70 pl-3 text-sm leading-relaxed">
+              {detail.booking.note}
+            </p>
+          )}
+        </Section>
+      )}
 
       {/* 장점 / 단점 — 2컬럼, 박스 없이 */}
       <Section delay={0.25}>
