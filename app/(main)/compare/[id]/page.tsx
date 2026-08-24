@@ -21,15 +21,65 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { KidScore } from "@/components/compare/kid-score";
-import { tripOptions, type TripBookingGuide } from "@/lib/data/trip-options";
+import {
+  tripOptions,
+  type TripBookingGuide,
+  type TripGalleryImage,
+} from "@/lib/data/trip-options";
 
 const fadeUp = {
   initial: { opacity: 0, y: 12 },
   animate: { opacity: 1, y: 0 },
 };
 
+/** 가로 스크롤 사진 스트립 — 클릭하면 라이트박스로 확대 */
+function PhotoStrip({
+  photos,
+  label,
+  onOpen,
+}: {
+  photos: TripGalleryImage[];
+  label: string;
+  onOpen: (index: number) => void;
+}) {
+  return (
+    <div
+      className="mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2"
+      role="list"
+      aria-label={label}
+    >
+      {photos.map((img, i) => (
+        <button
+          key={img.src}
+          type="button"
+          role="listitem"
+          onClick={() => onOpen(i)}
+          aria-label={`${img.caption} 크게 보기`}
+          className="group relative h-28 w-44 shrink-0 snap-start overflow-hidden rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <Image
+            src={img.src}
+            alt={img.alt}
+            fill
+            sizes="176px"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        </button>
+      ))}
+    </div>
+  );
+}
+
 /** 가이드 섹션 — 예약 가이드·문화 가이드 등 steps+links 형태 공용 렌더러 */
-function GuideSection({ guide, icon }: { guide: TripBookingGuide; icon: React.ReactNode }) {
+function GuideSection({
+  guide,
+  icon,
+  onOpenPhoto,
+}: {
+  guide: TripBookingGuide;
+  icon: React.ReactNode;
+  onOpenPhoto?: (photos: TripGalleryImage[], index: number) => void;
+}) {
   return (
     <Section delay={0.24}>
       <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
@@ -47,6 +97,13 @@ function GuideSection({ guide, icon }: { guide: TripBookingGuide; icon: React.Re
           </div>
         ))}
       </div>
+      {guide.photos && guide.photos.length > 0 && onOpenPhoto && (
+        <PhotoStrip
+          photos={guide.photos}
+          label={`${guide.title} 사진`}
+          onOpen={(i) => onOpenPhoto(guide.photos!, i)}
+        />
+      )}
       <ul className="mt-5 grid gap-x-16 gap-y-2.5 sm:grid-cols-2">
         {guide.links.map((l) => (
           <li key={l.url}>
@@ -93,13 +150,21 @@ function Section({
 export default function TripDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const option = tripOptions.find((o) => o.id === id);
-  // 이벤트 사진 라이트박스 — 인덱스 기반이라 모달 안에서 좌우 이동 가능
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  const photos = option?.detail.eventPhotos ?? [];
-  const lightbox = lightboxIndex !== null ? photos[lightboxIndex] : null;
+  // 사진 라이트박스 — 어떤 사진 묶음이든 열 수 있고, 모달 안에서 좌우 이동 가능
+  const [lightboxState, setLightboxState] = useState<{
+    photos: TripGalleryImage[];
+    index: number;
+  } | null>(null);
+  const photos = lightboxState?.photos ?? [];
+  const lightbox = lightboxState ? lightboxState.photos[lightboxState.index] : null;
+  const openLightbox = (photos: TripGalleryImage[], index: number) =>
+    setLightboxState({ photos, index });
   const stepLightbox = (dir: 1 | -1) => {
-    if (lightboxIndex === null || photos.length === 0) return;
-    setLightboxIndex((lightboxIndex + dir + photos.length) % photos.length);
+    setLightboxState((prev) =>
+      prev
+        ? { ...prev, index: (prev.index + dir + prev.photos.length) % prev.photos.length }
+        : prev
+    );
   };
 
   if (!option) {
@@ -242,30 +307,11 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
 
           {/* 이벤트 사진 캐러셀 — 클릭하면 크게 보기 */}
           {detail.eventPhotos && detail.eventPhotos.length > 0 && (
-            <div
-              className="mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2"
-              role="list"
-              aria-label="시즌 이벤트 사진"
-            >
-              {detail.eventPhotos.map((img, i) => (
-                <button
-                  key={img.src}
-                  type="button"
-                  role="listitem"
-                  onClick={() => setLightboxIndex(i)}
-                  aria-label={`${img.caption} 크게 보기`}
-                  className="group relative h-28 w-44 shrink-0 snap-start overflow-hidden rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <Image
-                    src={img.src}
-                    alt={img.alt}
-                    fill
-                    sizes="176px"
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                </button>
-              ))}
-            </div>
+            <PhotoStrip
+              photos={detail.eventPhotos}
+              label="시즌 이벤트 사진"
+              onOpen={(i) => openLightbox(detail.eventPhotos!, i)}
+            />
           )}
         </Section>
       )}
@@ -389,6 +435,7 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
         <GuideSection
           guide={detail.booking}
           icon={<Ticket className="h-4 w-4 shrink-0 text-primary" aria-hidden />}
+          onOpenPhoto={openLightbox}
         />
       )}
 
@@ -398,6 +445,7 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
           key={guide.title}
           guide={guide}
           icon={<Sparkles className="h-4 w-4 shrink-0 text-primary" aria-hidden />}
+          onOpenPhoto={openLightbox}
         />
       ))}
 
@@ -468,7 +516,7 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
       <Dialog
         open={lightbox !== null}
         onOpenChange={(open) => {
-          if (!open) setLightboxIndex(null);
+          if (!open) setLightboxState(null);
         }}
       >
         <DialogContent
@@ -515,7 +563,7 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
                 {lightbox.caption}
                 {photos.length > 1 && (
                   <span className="ml-2 tabular-nums opacity-70">
-                    {(lightboxIndex ?? 0) + 1} / {photos.length}
+                    {(lightboxState?.index ?? 0) + 1} / {photos.length}
                   </span>
                 )}
               </figcaption>

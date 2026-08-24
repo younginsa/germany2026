@@ -53,6 +53,8 @@ export interface TripBookingGuide {
   steps: TripFlowSection[];
   links: TripOptionLink[];
   note?: string;
+  /** 가이드 사진 캐러셀 — 클릭 시 확대 (선택) */
+  photos?: TripGalleryImage[];
 }
 
 /** 세부 페이지용 블로그 스타일 콘텐츠 */
@@ -623,6 +625,22 @@ export const tripOptions: TripOption[] = [
           ],
           links: [
             {
+              label: "📸 실제 문꾸미기 사진·영상 (인스타그램)",
+              url: "https://www.instagram.com/p/DWL3XFjk8Ld/",
+            },
+            {
+              label: "📸 디즈니크루즈 문꾸미기 릴스",
+              url: "https://www.instagram.com/reel/DbVLATjt8BY/",
+            },
+            {
+              label: "📸 픽시더스트 문꾸미기 (유튜브 쇼츠)",
+              url: "https://www.youtube.com/shorts/P4Y_4bbFNK8",
+            },
+            {
+              label: "📸 인스타그램 #디즈니크루즈문꾸미기 태그",
+              url: "https://www.instagram.com/explore/tags/%EB%94%94%EC%A6%88%EB%8B%88%ED%81%AC%EB%A3%A8%EC%A6%88%EB%AC%B8%EA%BE%B8%EB%AF%B8%EA%B8%B0/",
+            },
+            {
               label: "문꾸미기·FE 실전 후기 (마일모아)",
               url: "https://www.milemoa.com/bbs/board/11097909",
             },
@@ -635,11 +653,68 @@ export const tripOptions: TripOption[] = [
               url: "https://www.cruisecritic.com/articles/fish-extenders-on-disney-cruise-line",
             },
             {
-              label: "문꾸미기 영상 (인스타그램)",
-              url: "https://www.instagram.com/p/DWL3XFjk8Ld/",
+              label: "Etsy — 크루즈 도어 자석 쇼핑",
+              url: "https://www.etsy.com/search?q=disney%20cruise%20door%20magnets",
             },
           ],
           note: "디즈니 어드벤처(싱가포르)는 취항 초기라 FE 문화가 미국 노선만큼 정착되진 않았어요 — 우리 항차 페이스북 그룹에 FE 모집 글이 있는지 먼저 확인하고, 없어도 문꾸미기만으로 충분히 재밌어요. 참고: 일부 컨시어지 등급은 목재 문이라 자석이 안 붙어요.",
+          photos: [
+            {
+              src: "https://images.unsplash.com/photo-1670499709068-09c3dd290cc0?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y3J1aXNlJTIwc2hpcCUyMGNvcnJpZG9yfGVufDB8fDB8fHww",
+              alt: "크루즈 선실 복도",
+              caption: "똑같이 생긴 복도 — 문꾸미기가 시작된 이유",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1596754125792-b003864a168e?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y3J1aXNlJTIwc2hpcCUyMGNvcnJpZG9yfGVufDB8fDB8fHww",
+              alt: "크루즈 객실 복도의 문들",
+              caption: "이 문들 중 하나가 우리 방 — 자석 하나면 바로 찾아요",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1670499709277-3d56f64e2857?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y3J1aXNlJTIwc2hpcCUyMGNvcnJpZG9yfGVufDB8fDB8fHww",
+              alt: "크루즈 선내 복도 풍경",
+              caption: "복도 산책 = 남의 집 문 구경하는 재미",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1487770931682-b80013ed9cc9?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZnJpZGdlJTIwbWFnbmV0c3xlbnwwfHwwfHx8MA%3D%3D",
+              alt: "다양한 자석들",
+              caption: "준비물은 오직 자석 — 테이프·접착제는 금지",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1597502321303-ac7965ad7e8e?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZnJpZGdlJTIwbWFnbmV0c3xlbnwwfHwwfHx8MA%3D%3D",
+              alt: "냉장고에 붙은 자석들",
+              caption: "커스텀 자석은 Etsy에서 $10~30",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1609446154807-d56805f0e007?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8a2lkcyUyMGNyYWZ0aW5nJTIwdG9nZXRoZXJ8ZW58MHx8MHx8fDA%3D",
+              alt: "아이와 함께 만들기",
+              caption: "출발 전 아이와 DIY — 자석 시트에 인쇄물 붙이기",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1617117206620-b01f2919ff86?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8a2lkcyUyMGNyYWZ0aW5nJTIwdG9nZXRoZXJ8ZW58MHx8MHx8fDA%3D",
+              alt: "만들기 재료들",
+              caption: "7세는 직접 그리고, 3세는 붙이기 담당",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1604118464816-5e2bd7b863c2?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.0.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c21hbGwlMjBnaWZ0JTIwYmFnc3xlbnwwfHwwfHx8MA%3D%3D",
+              alt: "작은 선물 주머니들",
+              caption: "피시 익스텐더에 넣는 선물은 $1~5 수준",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1677753727712-c79ce4c420c1?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.0.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c21hbGwlMjBnaWZ0JTIwYmFnc3xlbnwwfHwwfHx8MA%3D%3D",
+              alt: "포장된 작은 선물들",
+              caption: "모르는 가족에게 받는 깜짝 선물의 재미",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1625768376503-68d2495d78c5?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3RpY2tlcnMlMjBjcmFmdHxlbnwwfHwwfHx8MA%3D%3D",
+              alt: "스티커 모음",
+              caption: "픽시더스트용 스티커 — 부담 없는 입문 버전",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1621252756235-7f37e5e5125e?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3RpY2tlcnMlMjBjcmFmdHxlbnwwfHwwfHx8MA%3D%3D",
+              alt: "다양한 스티커들",
+              caption: "아이가 직접 고른 스티커를 나눠주는 즐거움",
+            },
+          ],
         },
       ],
       gallery: [
