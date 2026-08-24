@@ -12,6 +12,7 @@ import {
   ChevronRight,
   ExternalLink,
   Footprints,
+  Table2,
   Lightbulb,
   PartyPopper,
   Ticket,
@@ -222,6 +223,56 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
           )}
         </Section>
       )}
+
+      {/* 미니 비교표 — 이동수단·일정 배분 등 */}
+      {detail.tables?.map((table) => (
+        <Section key={table.title} delay={0.13}>
+          <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
+            <Table2 className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+            {table.title}
+          </h2>
+          {table.intro && (
+            <p className="mt-2 text-sm text-muted-foreground">{table.intro}</p>
+          )}
+          <div className="mt-4 overflow-x-auto rounded-xl border">
+            <table className="w-full min-w-[760px] border-collapse text-[13px]">
+              <thead>
+                <tr className="border-b bg-secondary/50">
+                  <th className="sticky left-0 z-10 w-32 min-w-32 bg-secondary/50 p-3 backdrop-blur" />
+                  {table.columns.map((column) => (
+                    <th
+                      key={column}
+                      className="min-w-48 p-3 text-left align-bottom text-sm font-semibold tracking-tight"
+                    >
+                      {column}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {table.rows.map((row) => (
+                  <tr key={row.label} className="border-b align-top last:border-b-0">
+                    <th
+                      scope="row"
+                      className="sticky left-0 z-10 w-32 min-w-32 bg-card/95 p-3 text-left align-top text-xs font-medium text-muted-foreground backdrop-blur"
+                    >
+                      {row.label}
+                    </th>
+                    {row.cells.map((cell, ci) => (
+                      <td key={ci} className="min-w-48 p-3 leading-relaxed">
+                        {cell}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {table.note && (
+            <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{table.note}</p>
+          )}
+        </Section>
+      ))}
 
       {/* 여행의 흐름 */}
       <Section delay={0.15}>
