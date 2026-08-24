@@ -119,7 +119,7 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
             <dd className="mt-1 text-sm font-medium leading-snug">{option.flight}</dd>
           </div>
           <div>
-            <dt className="text-xs text-muted-foreground">12월 날씨</dt>
+            <dt className="text-xs text-muted-foreground">날씨 · 시즌</dt>
             <dd className="mt-1 text-sm font-medium leading-snug">{option.weather}</dd>
           </div>
           <div>

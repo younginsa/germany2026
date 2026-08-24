@@ -66,6 +66,8 @@ export interface TripDetail {
 
 export interface TripOption {
   id: string;
+  /** 카드 그룹 — 미지정 시 "winter" (겨울 가족여행 시나리오) */
+  group?: "winter" | "trail";
   title: string;
   emoji: string;
   badge: string;
@@ -1046,8 +1048,491 @@ export const tripOptions: TripOption[] = [
       ],
     },
   },
+
+  /* ─── 걷기·트레일 그룹 ─────────────────────────────── */
+  {
+    id: "santiago",
+    group: "trail",
+    title: "산티아고 순례길",
+    emoji: "🥾",
+    badge: "버킷리스트",
+    subtitle: "사리아 → 산티아고 120km — 가족 순례 걷기",
+    image:
+      "https://images.unsplash.com/photo-1641218356058-1a8988a5135b?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FtaW5vJTIwZGUlMjBzYW50aWFnb3xlbnwwfHwwfHx8MA%3D%3D",
+    imageAlt: "산티아고 순례길의 들판과 순례자",
+    period: "9박 10일 (걷기 7일 + 이동)",
+    costPerFamily: "약 650만원",
+    costGroup: "두 가족 합계 약 1,300만원",
+    costNote:
+      "마드리드 왕복 항공(성인 ~140만·소아 ~110만), 기차 이동, 가족실 숙소 9박, 짐 배송 서비스·식비 포함 추정",
+    flight: "직항 14시간 30분 (마드리드) · 시차 8시간",
+    weather: "최적 5~6월·9월 · 12월은 우천·짧은 해로 비추천",
+    kidScore: 2,
+    kidNote:
+      "완주 증명서가 나오는 최소 구간(100km)이라 마을·카페가 촘촘하지만, 3세는 유모차·캐리어 필수 — '언젠가 함께'용 버킷리스트에 가까워요",
+    highlights: [
+      "사리아 → 산티아고 마지막 120km (완주 증명서 발급 구간)",
+      "노란 화살표와 조개껍데기 따라 걷는 순례자 경험",
+      "산티아고 대성당 도착의 감동 + 순례자 미사",
+    ],
+    pros: [
+      "완주 증명서 — 7세에게 평생 남을 성취 경험",
+      "마을·카페·숙소가 촘촘해 가족 걷기에 가장 안전한 구간",
+      "짐 배송 서비스(구간당 4~8유로)로 맨몸 걷기 가능",
+    ],
+    cons: [
+      "3세 동반 시 하루 10km 이하로 잘라야 — 일정이 2배로 늘어남",
+      "장거리 비행 + 시차 8시간",
+      "12월 부적합 — 5~6월 또는 9월로 계획해야",
+    ],
+    links: [
+      {
+        label: "사리아 100km 완주 가이드 (트립스토어)",
+        url: "https://www.tripstore.kr/blog/%EC%82%B0%ED%8B%B0%EC%95%84%EA%B3%A0-%EC%88%9C%EB%A1%80%EA%B8%B8-3%EC%9D%BC-%EC%BD%94%EC%8A%A4-%EC%A7%81%EC%9E%A5%EC%9D%B8-100km-%EC%95%95%EC%B6%95",
+      },
+      {
+        label: "직장인 7일 코스 (브런치)",
+        url: "https://brunch.co.kr/@yanatrip/244",
+      },
+      {
+        label: "인솔자 동반 100km 패키지 (내일투어)",
+        url: "https://www.naeiltour.co.kr/sub/view.asp?gotp=M&area_detail_cd=OMEE003&good_cd=MEKE12&chk_tm=Y",
+      },
+      {
+        label: "네이버 블로그 후기 검색",
+        url: naverBlogSearch("산티아고 순례길 아이랑 가족"),
+      },
+    ],
+    detail: {
+      intro:
+        "매일 아침 배낭 대신 물병 하나 들고, 노란 화살표를 따라 걷기만 하면 되는 여행이에요. 갈리시아의 초록 들판과 돌담 마을을 지나며 하루 10~15km — 도착한 마을의 알베르게에서 저녁을 먹고, 다음 날 또 걷습니다. 마지막 날 산티아고 대성당 광장에 도착하면, 아이들 이름이 적힌 라틴어 완주 증명서가 기다려요.",
+      notice: {
+        title: "이 여행은 12월용이 아니에요",
+        items: [
+          "갈리시아의 12월은 비가 잦고 해가 짧아 아이 동반 걷기에 부적합 — 5~6월 또는 9월 초가 최적이에요.",
+          "성수기(5~9월)엔 사리아 구간 숙소가 빨리 차요 — 가족실은 특히 미리 예약 필수.",
+          "완주 증명서는 도보 100km 이상 + 순례자 여권에 하루 2개 이상 스탬프가 조건이에요.",
+        ],
+        footnote: "3·5·7세 기준으론 '지금'보다 아이들이 조금 더 큰 뒤가 현실적 — 장기 버킷리스트 카드예요",
+      },
+      events: [
+        {
+          name: "순례자 미사 & 보타푸메이로",
+          period: "산티아고 대성당 · 매일",
+          body: "도착 순례자를 위한 미사 — 운이 좋으면 대형 향로 '보타푸메이로'가 천장을 가로지르는 장관을 볼 수 있어요.",
+        },
+        {
+          name: "순례자 여권 스탬프 모으기",
+          period: "걷는 내내",
+          body: "성당·카페·알베르게마다 도장이 달라요. 아이들에겐 이게 포켓몬 스탬프 랠리 — 하루 2개 이상이 완주 인정 조건.",
+        },
+        {
+          name: "100km 표지석 인증",
+          period: "사리아 출발 직후",
+          body: "산티아고까지 남은 거리가 새겨진 표지석 — 100.000km 표지석 앞이 순례길 대표 포토존이에요.",
+        },
+      ],
+      eventPhotos: [
+        {
+          src: "https://images.unsplash.com/photo-1551176808-bb328dac763a?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y2FtaW5vJTIwZGUlMjBzYW50aWFnb3xlbnwwfHwwfHx8MA%3D%3D",
+          alt: "순례길 위의 조개껍데기 이정표",
+          caption: "조개껍데기와 노란 화살표가 길잡이",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1641218356045-fe06f6bf945d?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Y2FtaW5vJTIwZGUlMjBzYW50aWFnb3xlbnwwfHwwfHx8MA%3D%3D",
+          alt: "갈리시아의 순례길 풍경",
+          caption: "갈리시아의 초록 들판",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1638704645810-708030b50ce5?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Y2FtaW5vJTIwZGUlMjBzYW50aWFnb3xlbnwwfHwwfHx8MA%3D%3D",
+          alt: "순례길을 걷는 순례자들",
+          caption: "하루 10~15km, 우리 페이스로",
+        },
+      ],
+      flow: [
+        {
+          heading: "DAY 1–2 · 마드리드 in, 기차로 사리아",
+          body: "마드리드에서 하루 시차 적응 후 고속열차+버스로 사리아 이동. 순례자 여권을 만들고 첫 스탬프를 찍는 것으로 여행이 시작돼요.",
+        },
+        {
+          heading: "DAY 3–9 · 걷기 7일 — 사리아에서 산티아고까지",
+          body: "포르토마린, 팔라스 데 레이, 아르수아… 보통 5일 구간을 아이 페이스에 맞춰 7일로 나눠요. 짐은 아침에 배송 서비스로 다음 숙소에 보내고, 유모차용 우회 도로가 있는 구간을 미리 체크합니다.",
+        },
+        {
+          heading: "DAY 10 · 산티아고 대성당, 그리고 증명서",
+          body: "오브라도이로 광장에 도착해 대성당을 올려다보는 순간이 이 여행의 전부예요. 순례자 사무소에서 아이들 이름으로 완주 증명서를 받고, 순례자 미사로 마무리.",
+        },
+      ],
+      kids: "7세는 스탬프 수집과 '오늘 몇 km 걸었는지'에 진심이 되고, 5세는 절반쯤 걷고 절반은 업혀 갈 각오가 필요해요. 3세는 트레킹용 유모차나 캐리어가 사실상 필수 — 그래서 이 카드는 몇 년 뒤를 위한 버킷리스트에 가깝습니다.",
+      tips: [
+        "짐 배송(Jacotrans 등) 구간당 4~8유로 — 가족 여행의 필수템",
+        "숙소는 공립 알베르게보다 가족실 있는 사설·펜션으로",
+        "하루 걷기는 오전에 끝내는 설계 (오후는 마을에서 놀기)",
+        "아이용 순례자 여권 각자 만들기 — 동기부여 최고",
+        "5~6월·9월 초가 최적 시즌, 숙소는 미리 예약",
+      ],
+      gallery: [
+        {
+          src: "https://images.unsplash.com/photo-1635102043380-c2f44f1d8b88?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y2FtaW5vJTIwZGUlMjBzYW50aWFnb3xlbnwwfHwwfHx8MA%3D%3D",
+          alt: "산티아고 순례길의 시골길",
+          caption: "돌담과 들판 사이로 이어지는 길",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1495423848257-eb597d257305?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGNhbWlubyUyMGRlJTIwc2FudGlhZ298ZW58MHx8MHx8fDA%3D",
+          alt: "순례길의 풍경",
+          caption: "걷는 만큼만 보이는 풍경들",
+        },
+      ],
+    },
+  },
+  {
+    id: "yosemite-yellowstone",
+    group: "trail",
+    title: "요세미티 + 옐로스톤",
+    emoji: "🏞️",
+    badge: "대자연 로드트립",
+    subtitle: "미 서부 국립공원 2주 로드트립",
+    image:
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8eW9zZW1pdGV8ZW58MHx8MHx8fDA%3D",
+    imageAlt: "요세미티 밸리의 절경",
+    period: "13박 14일 (여름 시즌)",
+    costPerFamily: "약 1,100만원",
+    costGroup: "두 가족 합계 약 2,200만원",
+    costNote:
+      "SF 왕복 항공(성인 ~130만·소아 ~100만) + 국내선(SFO→보즈먼), SUV 렌터카 2대, 롯지·모텔 13박, 식비·입장료 포함 추정",
+    flight: "직항 10시간 30분 (SF) · 시차 -17시간",
+    weather: "최적 6~9월 · 12월엔 옐로스톤 도로 폐쇄 (설상차 투어만)",
+    kidScore: 3,
+    kidNote:
+      "간헐천·들소·주니어 레인저는 아이들 최애지만, 하루 3~5시간 드라이브 구간이 3세에게 부담 — 구간 설계가 관건",
+    highlights: [
+      "요세미티 밸리 — 엘 캐피탄·하프돔·폭포",
+      "옐로스톤 올드 페이스풀 간헐천 + 들소 떼",
+      "주니어 레인저 프로그램 (국립공원 배지 수집)",
+    ],
+    pros: [
+      "압도적 스케일 — 아이 인생 첫 '대자연' 경험",
+      "주니어 레인저·캠프파이어 토크 등 가족 프로그램 풍부",
+      "롯지·캠핑·모텔 등 숙소 스타일 선택지 다양",
+    ],
+    cons: [
+      "두 공원 간 1,300km — 국내선 점프 없이는 이동이 여행의 절반",
+      "비용 최고 수준 + 공원 내 숙소는 1년 전 예약 경쟁",
+      "시차 -17시간 적응과 여름 성수기 인파",
+    ],
+    links: [
+      {
+        label: "요세미티 가족여행 후기 (마이리얼트립 커뮤니티)",
+        url: "https://www.myrealtrip.com/community/posts/26836",
+      },
+      {
+        label: "요세미티 2박3일 실비용 후기 (마일모아)",
+        url: "https://www.milemoa.com/bbs/board/8638910",
+      },
+      {
+        label: "아이와 옐로스톤 가이드 (론리플래닛, 영문)",
+        url: "https://www.lonelyplanet.com/articles/yellowstone-national-park-with-kids",
+      },
+      {
+        label: "네이버 블로그 후기 검색",
+        url: naverBlogSearch("미서부 국립공원 아이랑 로드트립 후기"),
+      },
+    ],
+    detail: {
+      intro:
+        "차창 밖으로 엘 캐피탄의 수직 절벽이 나타나는 순간, 어른도 아이도 말을 잃는 여행이에요. 요세미티의 화강암 계곡에서 시작해 비행기로 한 번 점프하면, 이번엔 김이 솟는 간헐천과 도로를 막는 들소 떼의 옐로스톤. 매일 밤 롯지 캠프파이어에서 마시멜로를 굽는, 미국식 대자연 로드트립의 정석입니다.",
+      notice: {
+        title: "여름 여행이에요 — 예약 전쟁 미리 알기",
+        items: [
+          "옐로스톤 주요 도로는 11월~4월 폐쇄 (설상차 투어만 가능) — 6~9월 여행으로 계획해야 해요.",
+          "요세미티는 여름 성수기 차량 입장 예약제(사전 예약)를 운영해요 — 공원 내 롯지는 1년 전부터 경쟁.",
+          "두 공원은 1,300km 떨어져 있어요 — SFO→보즈먼 국내선(2시간)으로 점프하는 게 아이 동반의 정답.",
+        ],
+        footnote: "미국 국립공원 연간 패스(America the Beautiful, $80)로 두 공원 입장료 해결",
+      },
+      events: [
+        {
+          name: "주니어 레인저 프로그램",
+          period: "연중 · 무료",
+          body: "방문자 센터에서 활동지를 받아 미션을 완수하면 레인저가 배지를 수여해요 — 5·7세가 공원마다 배지를 모으는 재미.",
+          url: "https://www.nps.gov/kids/junior-ranger-programs.htm",
+        },
+        {
+          name: "올드 페이스풀 분출",
+          period: "약 90분 간격",
+          body: "예측 시간에 맞춰 벤치에 앉으면 수십 미터 물기둥이 솟아요 — 방문자 센터와 앱에서 다음 분출 시간을 알려줘요.",
+        },
+        {
+          name: "라마 밸리 와일드라이프 워칭",
+          period: "새벽·해질녘",
+          body: "'미국의 세렝게티' — 들소 떼는 기본, 운 좋으면 곰과 늑대까지. 차 안에서 쌍안경으로 보는 사파리예요.",
+        },
+      ],
+      eventPhotos: [
+        {
+          src: "https://images.unsplash.com/photo-1472396961693-142e6e269027?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8eW9zZW1pdGV8ZW58MHx8MHx8fDA%3D",
+          alt: "요세미티의 사슴과 초원",
+          caption: "야생동물이 일상인 공원",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1488441770602-aed21fc49bd5?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8eW9zZW1pdGV8ZW58MHx8MHx8fDA%3D",
+          alt: "요세미티 계곡의 풍경",
+          caption: "요세미티 밸리의 아침",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1607550295261-851fa60d8ed2?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8eWVsbG93c3RvbmV8ZW58MHx8MHx8fDA%3D",
+          alt: "옐로스톤의 간헐천",
+          caption: "옐로스톤의 간헐천 지대",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1529439322271-42931c09bce1?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8eWVsbG93c3RvbmV8ZW58MHx8MHx8fDA%3D",
+          alt: "옐로스톤의 들소",
+          caption: "도로를 막는 들소 떼 — 옐로스톤의 러시아워",
+        },
+      ],
+      flow: [
+        {
+          heading: "DAY 1–5 · 샌프란시스코 & 요세미티",
+          body: "SF에서 이틀 시차 적응(케이블카·피어39) 후 요세미티로. 밸리 산책로는 유모차도 OK — 터널뷰, 면사포 폭포, 미러 호수까지 짧은 하이킹 위주로 이틀이면 충분해요.",
+        },
+        {
+          heading: "DAY 6–7 · 국내선 점프, 몬태나로",
+          body: "SFO에서 보즈먼까지 2시간 비행 — 1,300km 운전을 건너뛰는 핵심 설계예요. 보즈먼에서 렌터카를 다시 받아 옐로스톤 북쪽 게이트로.",
+        },
+        {
+          heading: "DAY 8–12 · 옐로스톤 & 그랜드티턴",
+          body: "올드 페이스풀, 그랜드 프리즈매틱의 무지개 온천, 라마 밸리 들소 떼까지 — 하루 한 구역씩 천천히. 남쪽으로 이어지는 그랜드티턴에서 호수 카누 하루를 보태면 완벽해요.",
+        },
+        {
+          heading: "DAY 13–14 · 귀국",
+          body: "보즈먼 → SF 경유 귀국. 시차가 커서 돌아온 뒤 이틀은 일정을 비워두는 게 좋아요.",
+        },
+      ],
+      kids: "간헐천이 솟는 순간의 환호성, 도로를 막은 들소를 차 안에서 구경하는 긴장감, 배지를 받으며 레인저와 하이파이브 — 5·7세에겐 인생 여행이 돼요. 3세는 차량 이동이 관건이라 낮잠 시간과 드라이브 구간을 맞추는 설계가 필요합니다.",
+      tips: [
+        "국립공원 연간 패스 America the Beautiful ($80) — 두 공원이면 본전",
+        "공원 내 롯지는 1년 전, 늦었다면 게이트 타운 모텔로",
+        "음식은 곰 보관함(Bear Box) 규정 필수 준수",
+        "옐로스톤은 고도 2,400m — 도착 첫날은 가볍게",
+        "쌍안경 + 아이용 국립공원 여권(스탬프북) 챙기기",
+      ],
+      gallery: [
+        {
+          src: "https://images.unsplash.com/photo-1498429089284-41f8cf3ffd39?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8eW9zZW1pdGV8ZW58MHx8MHx8fDA%3D",
+          alt: "요세미티의 절벽과 계곡",
+          caption: "엘 캐피탄 — 차에서 내리는 순간 압도",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1608233695800-34245ba7274f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8eWVsbG93c3RvbmV8ZW58MHx8MHx8fDA%3D",
+          alt: "옐로스톤의 온천 지대",
+          caption: "그랜드 프리즈매틱의 색은 실물이 더해요",
+        },
+      ],
+    },
+  },
+  {
+    id: "jeju-olle",
+    group: "trail",
+    title: "제주 올레길",
+    emoji: "🍊",
+    badge: "가성비 힐링",
+    subtitle: "올레 7코스 걷기 + 감성 스팟 위크",
+    image:
+      "https://images.unsplash.com/photo-1612977512598-3b8d6a498bbb?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8amVqdSUyMGlzbGFuZHxlbnwwfHwwfHx8MA%3D%3D",
+    imageAlt: "제주 해안의 풍경",
+    period: "3박 4일",
+    costPerFamily: "약 100만원",
+    costGroup: "두 가족 합계 약 200만원",
+    costNote:
+      "국내선 왕복(인당 ~10만), 숙소 2룸 × 3박, 렌터카 2대·식비·카페 포함 추정 (연휴 성수기엔 항공 변동)",
+    flight: "직항 1시간 10분 · 시차 없음",
+    weather: "12월 5~11°C · 바람 강함 — 걷기엔 오히려 선선해서 좋아요",
+    kidScore: 5,
+    kidNote:
+      "비행 1시간 + 한국어 + 병원 인프라 — 아이 셋 데리고 가장 마음 편한 옵션. 코스는 컨디션 따라 자유롭게 자르면 돼요",
+    highlights: [
+      "올레 7코스 — 올레꾼 선정 최고의 길 (외돌개·돔베낭길)",
+      "서건도 '모세의 기적' 바닷길 (간조 체험)",
+      "감성 카페 + 느린 우체통 (1년 뒤 도착하는 엽서)",
+    ],
+    pros: [
+      "비용·이동 부담 최소 — 마음먹으면 다음 주에도 가능",
+      "구간을 아이 컨디션에 맞춰 자유롭게 조절",
+      "겨울에도 충분히 걸을 수 있는 유일한 트레일 옵션",
+    ],
+    cons: [
+      "'해외여행'의 특별함은 없음",
+      "12월 제주 바람이 매서움 — 방풍 자켓 필수",
+      "연휴 성수기 항공권·렌터카 가격 변동",
+    ],
+    links: [
+      {
+        label: "제주올레 공식 — 코스 지도·안내",
+        url: "https://www.jejuolle.org/trail",
+      },
+      {
+        label: "올레 7코스 안내 (비짓제주)",
+        url: "https://www.visitjeju.net/kr/detail/view?contentsid=CNTS_000000000020299",
+      },
+      {
+        label: "올레꾼이 뽑은 최고의 길 7코스 (브런치)",
+        url: "https://brunch.co.kr/@yeohae/125",
+      },
+      {
+        label: "제주 스팟 큐레이션 (@all.about.jeju)",
+        url: "https://www.instagram.com/all.about.jeju/",
+      },
+      {
+        label: "네이버 블로그 후기 검색",
+        url: naverBlogSearch("제주 올레길 아이랑 겨울"),
+      },
+    ],
+    detail: {
+      intro:
+        "아침 비행기를 타면 점심 전에 서귀포 바닷가를 걷고 있는 여행이에요. 올레꾼들이 '최고의 길'로 꼽는 7코스에서 마음에 드는 구간만 골라 걷고, 지치면 범섬이 보이는 오션뷰 카페로. 간조에 맞추면 서건도까지 바닷길이 열리고, 돔베낭길 빨간 우체통에 넣은 엽서는 1년 뒤 우리 집에 도착해요.",
+      notice: {
+        title: "12월 제주 걷기 — 준비물이 절반",
+        items: [
+          "제주의 겨울 바람은 체감온도를 뚝 떨어뜨려요 — 방풍 자켓·비니 필수, 대신 걷기엔 땀 안 나는 최적 온도.",
+          "서건도 바닷길은 간조에만 열려요 — 물때표(간조 시간)를 미리 확인하고 일정을 맞추세요.",
+          "7코스 일부는 바윗길이라 유모차 불가 — 유모차 구간은 칠십리 시공원~외돌개 위주로.",
+        ],
+        footnote: "코스·날씨 변동은 제주올레 공식 사이트에서 출발 전 확인",
+      },
+      events: [
+        {
+          name: "동백꽃 시즌",
+          period: "12월 ~ 2월",
+          body: "겨울 제주의 주인공 — 카멜리아힐·동백포레스트가 만개해요. 붉은 동백 카펫 위 아이들 사진은 겨울 제주의 상징.",
+          url: "https://www.visitjeju.net/kr/detail/view?contentsid=CONT_000000000500349",
+        },
+        {
+          name: "감귤 따기 체험",
+          period: "11월 ~ 1월",
+          body: "과수원에서 직접 따서 바구니 가득 — 3·5·7세 모두 실패 없는 겨울 제주 필수 코스예요.",
+        },
+        {
+          name: "느린 우체통 엽서 쓰기",
+          period: "연중 · 7코스 돔베낭길",
+          body: "1년 뒤 도착하는 엽서 — '내년의 우리'에게 아이들 손글씨로 편지를 남겨요.",
+        },
+      ],
+      eventPhotos: [
+        {
+          src: "https://images.unsplash.com/photo-1701178086825-c1ca5fab2f34?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8amVqdSUyMGlzbGFuZHxlbnwwfHwwfHx8MA%3D%3D",
+          alt: "제주의 해안 절경",
+          caption: "7코스의 해안 절경",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1717947464554-54d935c2155f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8amVqdSUyMGlzbGFuZHxlbnwwfHwwfHx8MA%3D%3D",
+          alt: "제주 바다와 현무암 해변",
+          caption: "현무암과 에메랄드 바다",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1612977423916-8e4bb45b5233?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8amVqdSUyMGlzbGFuZHxlbnwwfHwwfHx8MA%3D%3D",
+          alt: "제주의 오름과 들판",
+          caption: "오름 너머로 지는 해",
+        },
+      ],
+      flow: [
+        {
+          heading: "DAY 1 · 도착, 서귀포 베이스캠프",
+          body: "아침 비행기로 도착해 렌터카 픽업, 서귀포에 짐을 풀어요. 오후엔 가볍게 칠십리 시공원 산책 — 전망대에서 천지연 폭포와 새연교가 한눈에 들어와요.",
+        },
+        {
+          heading: "DAY 2 · 올레 7코스, 우리만큼만 걷기",
+          body: "외돌개에서 출발해 수봉로~속골 자연생태길까지 — 전체 17.7km 중 아이 페이스로 4~6km만 골라 걸어요. 범섬 오션뷰 카페에서 쉬고, 돔베낭길 느린 우체통에 엽서 한 장.",
+        },
+        {
+          heading: "DAY 3 · 간조의 서건도 + 감성 스팟 데이",
+          body: "물때에 맞춰 서건도 바닷길을 건너는 '모세의 기적' 체험. 오후엔 동백 명소나 감귤 따기 체험 — 겨울 제주에서만 되는 것들로 채워요.",
+        },
+        {
+          heading: "DAY 4 · 오전 마무리, 귀국",
+          body: "숙소 근처 해변 산책과 브런치 후 오후 비행기로 — 짧아서 아이 컨디션이 무너질 틈이 없는 일정이에요.",
+        },
+      ],
+      kids: "이 옵션의 진짜 장점은 '실패해도 괜찮다'는 것 — 아이가 아프면 병원이 30분 안에 있고, 날씨가 나쁘면 실내로 바꾸면 되고, 걷기 싫다면 차로 이동하면 돼요. 3·5·7세 모두에게 부담 제로인 유일한 트레일 카드입니다.",
+      tips: [
+        "물때표(간조 시각) 확인 — 서건도는 간조 전후 1~2시간만",
+        "올레 패스포트를 사면 아이들 스탬프 수집 재미 배가",
+        "방풍 자켓 + 비니 — 12월 제주 바람 대비 필수",
+        "감성 스팟 큐레이션 계정(@all.about.jeju 등)에서 최신 카페 체크",
+        "연휴 낀 주말은 항공·렌터카 먼저 확정",
+      ],
+      gallery: [
+        {
+          src: "https://images.unsplash.com/photo-1562680802-9cf8b15f419d?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8amVqdSUyMGlzbGFuZHxlbnwwfHwwfHx8MA%3D%3D",
+          alt: "제주 해안 산책로",
+          caption: "바다를 끼고 걷는 올레길",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1616798249081-30877e213b16?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8amVqdSUyMGlzbGFuZHxlbnwwfHwwfHx8MA%3D%3D",
+          alt: "제주의 겨울 풍경",
+          caption: "겨울에도 초록인 섬",
+        },
+      ],
+    },
+  },
 ];
 
 /** 비용·인원 가정 문구 — 페이지 하단 안내에 사용 */
 export const COMPARE_ASSUMPTIONS =
   "비용은 2026년 12월 성수기 기준 추정치입니다 (어른 4 + 아이 3·5·7세 두 가족 기준, 가족당 = 전체 ÷ 2). 실제 가격은 예약 시점·객실 등급에 따라 크게 달라질 수 있어요.";
+
+/* ─── 아웃도어맘·밴라이프 컨셉 (자리표시 카드) ─────────────
+ * 구체 스팟이 정해지면 tripOptions의 정식 카드로 교체 예정.
+ * 세 카드 모두 /compare/outdoormom 리서치 보드로 연결됩니다. */
+
+export interface ConceptCard {
+  id: string;
+  title: string;
+  emoji: string;
+  badge: string;
+  subtitle: string;
+  image: string;
+  imageAlt: string;
+  /** 클릭 시 이동할 경로 */
+  href: string;
+  /** 후보 방향 힌트 */
+  hint: string;
+}
+
+export const outdoormomCards: ConceptCard[] = [
+  {
+    id: "outdoormom-ocean",
+    title: "오션뷰 밴캠프",
+    emoji: "🌊",
+    badge: "컨셉 리서치 중",
+    subtitle: "창문 너머가 바로 바다인 아침 — 파도 소리로 기상",
+    image:
+      "https://images.unsplash.com/photo-1541269481801-f7bbef6d81bd?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FtcGVydmFuJTIwb2NlYW58ZW58MHx8MHx8fDA%3D",
+    imageAlt: "바닷가에 세워진 캠퍼밴",
+    href: "/compare/outdoormom",
+    hint: "후보: 강원 동해안 솔숲 캠핑장 · 제주 함덕 차박",
+  },
+  {
+    id: "outdoormom-forest",
+    title: "숲속 트레일 캠프",
+    emoji: "🌲",
+    badge: "컨셉 리서치 중",
+    subtitle: "초록이 가득한 숲길 산책 — 아침 안개 속 포레스트 워크",
+    image:
+      "https://images.unsplash.com/photo-1505635725851-c2cfe9e29112?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9yZXN0JTIwcGF0aCUyMGdyZWVufGVufDB8fDB8fHww",
+    imageAlt: "초록 잎이 우거진 숲길",
+    href: "/compare/outdoormom",
+    hint: "후보: 강릉 연곡 솔숲 · 뉴질랜드 로토루아 숲",
+  },
+  {
+    id: "outdoormom-lake",
+    title: "호수 자연 캠프",
+    emoji: "🦆",
+    badge: "컨셉 리서치 중",
+    subtitle: "오리가 노니는 호수, 물수제비와 자연 속 다이빙",
+    image:
+      "https://images.unsplash.com/photo-1465189684280-6a8fa9b19a7a?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bGFrZSUyMG1vcm5pbmclMjBtaXN0fGVufDB8fDB8fHww",
+    imageAlt: "아침 안개가 낀 호수",
+    href: "/compare/outdoormom",
+    hint: "후보: 뉴질랜드 테카포·와나카 호수 캠퍼밴",
+  },
+];

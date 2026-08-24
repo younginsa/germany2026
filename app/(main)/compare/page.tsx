@@ -7,8 +7,17 @@ import { ArrowRight, Baby, CalendarRange, ExternalLink, Plane, ThermometerSun } 
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { KidScore } from "@/components/compare/kid-score";
-import { tripOptions, COMPARE_ASSUMPTIONS, type TripOption } from "@/lib/data/trip-options";
+import {
+  tripOptions,
+  outdoormomCards,
+  COMPARE_ASSUMPTIONS,
+  type ConceptCard,
+  type TripOption,
+} from "@/lib/data/trip-options";
 import { cn } from "@/lib/utils";
+
+const winterOptions = tripOptions.filter((o) => (o.group ?? "winter") === "winter");
+const trailOptions = tripOptions.filter((o) => o.group === "trail");
 
 const fadeUp = {
   initial: { opacity: 0, y: 12 },
@@ -61,6 +70,52 @@ function OptionCard({ option, index }: { option: TripOption; index: number }) {
               </p>
               <span className="inline-flex items-center gap-0.5 text-xs font-medium text-primary">
                 자세히
+                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden />
+              </span>
+            </div>
+          </div>
+        </Card>
+      </Link>
+    </motion.div>
+  );
+}
+
+/** 컨셉 자리표시 카드 — 스팟 확정 전, 리서치 보드로 연결 */
+function ConceptCardView({ card, index }: { card: ConceptCard; index: number }) {
+  return (
+    <motion.div
+      {...fadeUp}
+      transition={{ duration: 0.4, delay: 0.05 * index }}
+      className="flex"
+    >
+      <Link href={card.href} className="group flex w-full">
+        <Card className="flex w-full flex-col overflow-hidden border-dashed transition-shadow group-hover:shadow-[var(--shadow-lifted)]">
+          <div className="relative h-40 w-full overflow-hidden">
+            <Image
+              src={card.image}
+              alt={card.imageAlt}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+            />
+            <span className="absolute left-3 top-3">
+              <Badge variant="secondary" className="bg-card/90 backdrop-blur">
+                {card.badge}
+              </Badge>
+            </span>
+          </div>
+          <div className="flex flex-1 flex-col gap-2 p-4">
+            <h3 className="text-base font-semibold tracking-tight">
+              {card.emoji} {card.title}
+            </h3>
+            <p className="text-xs leading-relaxed text-muted-foreground">{card.subtitle}</p>
+            <p className="mt-auto pt-2 text-xs leading-relaxed text-muted-foreground">
+              {card.hint}
+            </p>
+            <div className="flex items-center justify-between pt-1">
+              <span className="text-sm font-medium text-muted-foreground">장소 미정</span>
+              <span className="inline-flex items-center gap-0.5 text-xs font-medium text-primary">
+                리서치 보드
                 <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden />
               </span>
             </div>
@@ -171,20 +226,56 @@ export default function ComparePage() {
       <motion.header {...fadeUp} transition={{ duration: 0.4 }}>
         <h1 className="text-2xl font-bold tracking-tight">여행비교</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          2026년 12월, 두 가족(어른 4 · 아이 3·5·7세)의 겨울 여행 — 6가지 시나리오를 비교하고
-          함께 결정해요
+          두 가족(어른 4 · 아이 3·5·7세)의 다음 여행 — 겨울 시나리오 6개와 걷기·아웃도어
+          컨셉까지 비교하고 함께 결정해요
         </p>
       </motion.header>
 
-      {/* 옵션 카드 — 이미지로 먼저 그림 그리기 */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {tripOptions.map((option, i) => (
-          <OptionCard key={option.id} option={option} index={i} />
-        ))}
-      </div>
+      {/* 겨울 가족여행 시나리오 */}
+      <section className="space-y-4">
+        <motion.h2 {...fadeUp} transition={{ duration: 0.4 }} className="text-lg font-semibold tracking-tight">
+          ❄️ 겨울 가족여행 시나리오
+        </motion.h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {winterOptions.map((option, i) => (
+            <OptionCard key={option.id} option={option} index={i} />
+          ))}
+        </div>
+      </section>
+
+      {/* 걷기·트레일 여행 */}
+      <section className="space-y-4">
+        <motion.h2 {...fadeUp} transition={{ duration: 0.4 }} className="text-lg font-semibold tracking-tight">
+          🥾 걷기 · 트레일 여행
+        </motion.h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {trailOptions.map((option, i) => (
+            <OptionCard key={option.id} option={option} index={i} />
+          ))}
+        </div>
+      </section>
+
+      {/* 아웃도어맘 · 밴라이프 컨셉 (자리표시) */}
+      <section className="space-y-4">
+        <motion.h2 {...fadeUp} transition={{ duration: 0.4 }} className="text-lg font-semibold tracking-tight">
+          🚐 아웃도어맘 · 밴라이프 <span className="text-sm font-normal text-muted-foreground">컨셉 리서치 중 — 카드를 누르면 리서치 보드로</span>
+        </motion.h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {outdoormomCards.map((card, i) => (
+            <ConceptCardView key={card.id} card={card} index={i} />
+          ))}
+        </div>
+      </section>
 
       {/* 비교표 */}
-      <motion.div {...fadeUp} transition={{ duration: 0.4, delay: 0.2 }}>
+      <motion.div {...fadeUp} transition={{ duration: 0.4, delay: 0.2 }} className="space-y-3">
+        <div>
+          <h2 className="text-lg font-semibold tracking-tight">📊 겨울 시나리오 비교표</h2>
+          <p className="mt-1 text-xs text-muted-foreground">
+            걷기·트레일 카드는 최적 시즌이 달라 표에서 제외 — 각 카드의 세부 페이지에서
+            확인하세요.
+          </p>
+        </div>
         <Card className="overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[1300px] border-collapse text-xs sm:text-[13px]">
@@ -193,7 +284,7 @@ export default function ComparePage() {
                   <th className="sticky left-0 z-10 w-36 min-w-36 bg-secondary/50 p-3 text-left align-bottom font-medium text-muted-foreground backdrop-blur">
                     항목
                   </th>
-                  {tripOptions.map((o) => (
+                  {winterOptions.map((o) => (
                     <th key={o.id} className="min-w-44 p-3 text-left align-bottom">
                       <Link href={`/compare/${o.id}`} className="group inline-block">
                         <p className="text-sm font-semibold tracking-tight underline-offset-2 group-hover:underline">
@@ -219,7 +310,7 @@ export default function ComparePage() {
                     >
                       {row.label}
                     </th>
-                    {tripOptions.map((o) => (
+                    {winterOptions.map((o) => (
                       <td key={o.id} className="min-w-44 p-3 leading-relaxed">
                         {row.render(o)}
                       </td>
