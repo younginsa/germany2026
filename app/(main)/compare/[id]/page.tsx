@@ -15,17 +15,61 @@ import {
   Table2,
   Lightbulb,
   PartyPopper,
+  Sparkles,
   Ticket,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { KidScore } from "@/components/compare/kid-score";
-import { tripOptions } from "@/lib/data/trip-options";
+import { tripOptions, type TripBookingGuide } from "@/lib/data/trip-options";
 
 const fadeUp = {
   initial: { opacity: 0, y: 12 },
   animate: { opacity: 1, y: 0 },
 };
+
+/** 가이드 섹션 — 예약 가이드·문화 가이드 등 steps+links 형태 공용 렌더러 */
+function GuideSection({ guide, icon }: { guide: TripBookingGuide; icon: React.ReactNode }) {
+  return (
+    <Section delay={0.24}>
+      <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
+        {icon}
+        {guide.title}
+      </h2>
+      {guide.intro && (
+        <p className="mt-3 text-sm leading-relaxed text-foreground/90">{guide.intro}</p>
+      )}
+      <div className="mt-4 space-y-5">
+        {guide.steps.map((step) => (
+          <div key={step.heading} className="space-y-1.5">
+            <h3 className="text-sm font-semibold text-primary">{step.heading}</h3>
+            <p className="text-sm leading-relaxed text-foreground/90">{step.body}</p>
+          </div>
+        ))}
+      </div>
+      <ul className="mt-5 grid gap-x-16 gap-y-2.5 sm:grid-cols-2">
+        {guide.links.map((l) => (
+          <li key={l.url}>
+            <a
+              href={l.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-start gap-1.5 text-sm text-primary underline-offset-2 hover:underline"
+            >
+              <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+              {l.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      {guide.note && (
+        <p className="mt-4 border-l-2 border-amber-400/70 pl-3 text-sm leading-relaxed">
+          {guide.note}
+        </p>
+      )}
+    </Section>
+  );
+}
 
 /** 구분선으로 나뉘는 본문 섹션 (airbnb 스타일) */
 function Section({
@@ -342,46 +386,20 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
 
       {/* 예약 가이드 — 절차 + 예약 채널 링크 */}
       {detail.booking && (
-        <Section delay={0.24}>
-          <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
-            <Ticket className="h-4 w-4 shrink-0 text-primary" aria-hidden />
-            {detail.booking.title}
-          </h2>
-          {detail.booking.intro && (
-            <p className="mt-3 text-sm leading-relaxed text-foreground/90">
-              {detail.booking.intro}
-            </p>
-          )}
-          <div className="mt-4 space-y-5">
-            {detail.booking.steps.map((step) => (
-              <div key={step.heading} className="space-y-1.5">
-                <h3 className="text-sm font-semibold text-primary">{step.heading}</h3>
-                <p className="text-sm leading-relaxed text-foreground/90">{step.body}</p>
-              </div>
-            ))}
-          </div>
-          <ul className="mt-5 grid gap-x-16 gap-y-2.5 sm:grid-cols-2">
-            {detail.booking.links.map((l) => (
-              <li key={l.url}>
-                <a
-                  href={l.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-start gap-1.5 text-sm text-primary underline-offset-2 hover:underline"
-                >
-                  <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
-                  {l.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-          {detail.booking.note && (
-            <p className="mt-4 border-l-2 border-amber-400/70 pl-3 text-sm leading-relaxed">
-              {detail.booking.note}
-            </p>
-          )}
-        </Section>
+        <GuideSection
+          guide={detail.booking}
+          icon={<Ticket className="h-4 w-4 shrink-0 text-primary" aria-hidden />}
+        />
       )}
+
+      {/* 추가 가이드 — 문꾸미기 등 문화·준비 가이드 */}
+      {detail.guides?.map((guide) => (
+        <GuideSection
+          key={guide.title}
+          guide={guide}
+          icon={<Sparkles className="h-4 w-4 shrink-0 text-primary" aria-hidden />}
+        />
+      ))}
 
       {/* 장점 / 단점 — 2컬럼, 박스 없이 */}
       <Section delay={0.25}>

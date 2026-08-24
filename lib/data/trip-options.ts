@@ -74,6 +74,8 @@ export interface TripDetail {
   tips: string[];
   /** 예약 방법 안내 (선택) */
   booking?: TripBookingGuide;
+  /** 추가 가이드 섹션들 (선택) — 예: 크루즈 문꾸미기 문화 */
+  guides?: TripBookingGuide[];
   gallery: TripGalleryImage[];
 }
 
@@ -594,8 +596,52 @@ export const tripOptions: TripOption[] = [
             url: "https://www.klook.com/ko/search/result/?query=%EB%94%94%EC%A6%88%EB%8B%88%20%ED%81%AC%EB%A3%A8%EC%A6%88",
           },
         ],
-        note: "가격·취소 규정은 항차와 객실 등급, 예약 시점에 따라 크게 달라져요. 두 가족 7인 구성이면 전화·채팅 상담으로 인접 객실 확보 가능 여부부터 확인하는 게 순서예요.",
+        note: "가격·취소 규정은 항차와 객실 등급, 예약 시점에 따라 크게 달라져요. 성인 2 + 아이 2는 오션뷰 4인실 정원에 딱 맞으니, 예약 인원(3세 포함 4명)만 정확히 입력하면 돼요.",
       },
+      guides: [
+        {
+          title: "문꾸미기 & 피시 익스텐더 — 디즈니 크루즈의 숨은 문화",
+          intro:
+            "선실 문이 철제라 자석이 붙어요. 그래서 디즈니 크루즈에선 출항 전부터 자석을 준비해 각자 방 문을 꾸미는 '문꾸미기'가 전통이 됐어요 — 똑같이 생긴 긴 복도에서 우리 방을 한눈에 찾는 실용성에, 남의 집 문 구경하는 재미까지. 강제성 없는 순수 자율 문화입니다.",
+          steps: [
+            {
+              heading: "1 · 기본 룰 — 자석만, 내 문에만 (2026년 6월 개정)",
+              body: "테이프·접착제·젤 부착물은 문 도장이 상해서 금지 — 위반으로 문이 손상되면 건당 $100 배상이에요. 장식은 내 방 문에만 가능하고 복도 벽·천장은 금지, 문에 거는 오버도어 행거와 소리·영상 나는 장식도 금지. 즉, '자석으로 문 위에서만'이 전부예요.",
+            },
+            {
+              heading: "2 · 준비물 — 커스텀 자석이 반, DIY가 반",
+              body: "Etsy에서 가족 이름·'First Cruise' 뱃지 커스텀 자석이 $10~30, 아마존에선 'cruise door magnets'로 검색하면 세트가 나와요. 요즘 유행은 DIY — ChatGPT로 우리 가족 캐릭터 이미지를 만들어 인쇄한 뒤 자석 시트(다이소·문구점)에 붙이면 끝. 7세·3세 이름과 미키 귀만 있어도 충분히 예뻐요.",
+            },
+            {
+              heading: "3 · 피시 익스텐더(FE) — 낯선 가족들과 선물 교환",
+              body: "방 문 옆의 물고기 모양 금속 장식(원래 우편물 꽂이)에 헝겊 주머니를 걸어두면, 같은 항차의 다른 가족들이 항해 중 몰래 작은 선물($1~5 수준)을 넣고 가요. 2005년 한 승객이 시작한 문화로, 디즈니가 아니라 승객들이 페이스북 항차 그룹에서 조를 짜서 운영해요 — 출항 몇 달 전 그룹 가입이 먼저예요.",
+            },
+            {
+              heading: "4 · 부담되면 '픽시더스트'로 가볍게",
+              body: "FE는 사전 가입 + 선물 수십 개 준비라 첫 크루즈엔 부담일 수 있어요. 대안이 픽시더스트 — 그룹 없이, 지나가다 마음에 드는 문에 스티커나 사탕을 무작위로 선물하는 가벼운 버전이에요. 우리처럼 첫 승선이면 문꾸미기 + 픽시더스트 받는 쪽부터 시작해도 충분해요.",
+            },
+          ],
+          links: [
+            {
+              label: "문꾸미기·FE 실전 후기 (마일모아)",
+              url: "https://www.milemoa.com/bbs/board/11097909",
+            },
+            {
+              label: "셀프 문꾸미기 아이디어·DIY (베스트크루즈)",
+              url: "https://bestcruise4u.com/%EB%94%94%EC%A6%88%EB%8B%88-%ED%81%AC%EB%A3%A8%EC%A6%88-%ED%95%84%EC%88%98-%EC%84%A0%EC%8B%A4-%EB%AC%B8-%EA%BE%B8%EB%AF%B8%EA%B8%B0-%EC%95%84%EC%9D%B4%EB%94%94%EC%96%B4-%EC%A7%81%EC%A0%91-%EB%A7%8C/",
+            },
+            {
+              label: "Fish Extender 완전 가이드 (Cruise Critic, 영문)",
+              url: "https://www.cruisecritic.com/articles/fish-extenders-on-disney-cruise-line",
+            },
+            {
+              label: "문꾸미기 영상 (인스타그램)",
+              url: "https://www.instagram.com/p/DWL3XFjk8Ld/",
+            },
+          ],
+          note: "디즈니 어드벤처(싱가포르)는 취항 초기라 FE 문화가 미국 노선만큼 정착되진 않았어요 — 우리 항차 페이스북 그룹에 FE 모집 글이 있는지 먼저 확인하고, 없어도 문꾸미기만으로 충분히 재밌어요. 참고: 일부 컨시어지 등급은 목재 문이라 자석이 안 붙어요.",
+        },
+      ],
       gallery: [
         {
           src: "https://images.unsplash.com/photo-1700597312989-435871dce1fd?fm=jpg&q=60&w=3000&auto=format&fit=crop",
