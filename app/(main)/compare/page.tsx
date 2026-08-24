@@ -67,7 +67,7 @@ function OptionCard({ option, index }: { option: TripOption; index: number }) {
               <p className="text-lg font-bold tabular-nums tracking-tight text-foreground">
                 {option.costPerFamily}
                 <span className="ml-1 text-xs font-normal text-muted-foreground">
-                  / {option.group === "trail" ? "1인" : "가족"}
+                  / {option.costUnit ?? (option.group === "trail" ? "1인" : "가족")}
                 </span>
               </p>
               <span className="inline-flex items-center gap-0.5 text-xs font-medium text-primary">
@@ -131,7 +131,7 @@ function ConceptCardView({ card, index }: { card: ConceptCard; index: number }) 
 /** 비교표 행 정의 — label + 옵션별 셀 렌더러 */
 const ROWS: { label: string; render: (o: TripOption) => React.ReactNode }[] = [
   {
-    label: "가족당 예상 비용",
+    label: "예상 비용 (인원 기준 표기)",
     render: (o) => (
       <div>
         <p className="text-base font-bold tabular-nums">{o.costPerFamily}</p>
@@ -152,7 +152,7 @@ const ROWS: { label: string; render: (o: TripOption) => React.ReactNode }[] = [
   },
   { label: "12월 날씨", render: (o) => o.weather },
   {
-    label: "아이 친화도 (3·5·7세)",
+    label: "아이 친화도",
     render: (o) => (
       <div className="space-y-1">
         <KidScore score={o.kidScore} />
@@ -228,8 +228,8 @@ export default function ComparePage() {
       <motion.header {...fadeUp} transition={{ duration: 0.4 }}>
         <h1 className="text-2xl font-bold tracking-tight">여행비교</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          두 가족(어른 4 · 아이 3·5·7세)의 다음 여행 — 겨울 시나리오 6개와 걷기·아웃도어
-          컨셉까지 비교하고 함께 결정해요
+          가족들의 다음 여행 — 겨울 시나리오 6개와 걷기·아웃도어 컨셉까지, 옵션별 인원
+          기준으로 비교하고 함께 결정해요
         </p>
       </motion.header>
 

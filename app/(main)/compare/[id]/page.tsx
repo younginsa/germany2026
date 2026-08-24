@@ -128,7 +128,9 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
           </div>
           <div>
             <dt className="text-xs text-muted-foreground">
-              {isTrail ? "1인 예상 · 체력 난이도" : "가족당 예상 · 아이 친화도"}
+              {`${option.costUnit ?? (isTrail ? "1인" : "가족당")} 예상 · ${
+                isTrail ? "체력 난이도" : "아이 친화도"
+              }`}
             </dt>
             <dd className="mt-1 text-sm font-bold tabular-nums">{option.costPerFamily}</dd>
             <dd className="mt-1">
@@ -315,7 +317,7 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
           ) : (
             <Baby className="h-4 w-4 shrink-0 text-primary" aria-hidden />
           )}
-          {isTrail ? "우리 둘에게" : "3·5·7세 아이들에겐"}
+          {isTrail ? "우리 둘에게" : "아이들에겐"}
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-foreground/90">{detail.kids}</p>
       </Section>
