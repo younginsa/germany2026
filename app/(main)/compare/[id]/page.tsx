@@ -11,6 +11,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ExternalLink,
+  Footprints,
   Lightbulb,
   PartyPopper,
   Ticket,
@@ -68,6 +69,8 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
   }
 
   const { detail } = option;
+  // 트레일 그룹은 성인 2인(나+친구) 기준 — 라벨이 달라져요
+  const isTrail = option.group === "trail";
 
   return (
     <article className="mx-auto max-w-3xl">
@@ -123,7 +126,9 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
             <dd className="mt-1 text-sm font-medium leading-snug">{option.weather}</dd>
           </div>
           <div>
-            <dt className="text-xs text-muted-foreground">가족당 예상 · 아이 친화도</dt>
+            <dt className="text-xs text-muted-foreground">
+              {isTrail ? "1인 예상 · 체력 난이도" : "가족당 예상 · 아이 친화도"}
+            </dt>
             <dd className="mt-1 text-sm font-bold tabular-nums">{option.costPerFamily}</dd>
             <dd className="mt-1">
               <KidScore score={option.kidScore} />
@@ -254,8 +259,12 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
       {/* 아이들에겐 */}
       <Section delay={0.2}>
         <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
-          <Baby className="h-4 w-4 shrink-0 text-primary" aria-hidden />
-          3·5·7세 아이들에겐
+          {isTrail ? (
+            <Footprints className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+          ) : (
+            <Baby className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+          )}
+          {isTrail ? "우리 둘에게" : "3·5·7세 아이들에겐"}
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-foreground/90">{detail.kids}</p>
       </Section>

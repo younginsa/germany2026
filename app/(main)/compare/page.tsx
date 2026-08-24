@@ -66,7 +66,9 @@ function OptionCard({ option, index }: { option: TripOption; index: number }) {
             <div className="flex items-end justify-between pt-1">
               <p className="text-lg font-bold tabular-nums tracking-tight text-foreground">
                 {option.costPerFamily}
-                <span className="ml-1 text-xs font-normal text-muted-foreground">/ 가족</span>
+                <span className="ml-1 text-xs font-normal text-muted-foreground">
+                  / {option.group === "trail" ? "1인" : "가족"}
+                </span>
               </p>
               <span className="inline-flex items-center gap-0.5 text-xs font-medium text-primary">
                 자세히
@@ -246,7 +248,7 @@ export default function ComparePage() {
       {/* 걷기·트레일 여행 */}
       <section className="space-y-4">
         <motion.h2 {...fadeUp} transition={{ duration: 0.4 }} className="text-lg font-semibold tracking-tight">
-          🥾 걷기 · 트레일 여행
+          🥾 걷기 · 트레일 여행 <span className="text-sm font-normal text-muted-foreground">어른 둘 — 나와 친구의 여행, 1인 기준 비용</span>
         </motion.h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {trailOptions.map((option, i) => (
