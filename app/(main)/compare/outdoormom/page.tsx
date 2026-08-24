@@ -60,10 +60,10 @@ const ACCOUNTS = [
   },
   {
     handle: "@eileenroseunderwood",
-    name: "확인 필요",
-    note: "웹 검색으로는 확인 불가 (비공개·소규모·개명 계정 추정) — 인스타 앱에서 직접 확인해 주세요.",
+    name: "Eileen Underwood | Motherhood Outdoors",
+    note: "이 컨셉의 원조 계정 — 뉴잉글랜드 기반, 팔로워 18.3만. 'Motherhood · Mountains · Moments of Whimsy'. 비 오는 숲 산책, 산 전망 모닝커피, 자전거 트레일러 라이드. 하이라이트에 케이프코드·아카디아·Huttopia 여행기.",
     url: "https://www.instagram.com/eileenroseunderwood/",
-    verified: false,
+    verified: true,
   },
   {
     handle: "@vanfamilies",
@@ -95,8 +95,15 @@ const ACCOUNTS = [
   },
 ];
 
-/** 후보 방향 — 자리표시 카드를 실제 스팟으로 바꿀 때의 세 갈래 */
+/** 후보 방향 — 자리표시 카드를 실제 스팟으로 바꿀 때의 갈래들 */
 const DIRECTIONS = [
+  {
+    title: "미국 뉴잉글랜드 — 컨셉의 원조 코스",
+    body: "@eileenroseunderwood가 실제로 다니는 동선이에요: 아카디아 국립공원(바다+숲+호수가 한 공원에), 케이프코드 해변, 화이트마운틴의 Huttopia 글램핑(숲속 텐트·캐빈). 오션 모닝·포레스트 워크·호수까지 세 장면이 전부 있는 유일한 단일 목적지 — 대신 비행이 길어요 (보스턴 직항 14시간).",
+    tag: "컨셉 원조 · 3장면 모두",
+    url: "https://www.nps.gov/acad/index.htm",
+    linkLabel: "아카디아 국립공원 공식 (NPS)",
+  },
   {
     title: "국내 동해안 — 솔숲 + 바다",
     body: "강릉 연곡 해변 캠핑장(솔숲과 바다가 붙은 사계절 캠핑장), 동해 추암(촛대바위 해돋이), 강릉 사천·고성 아야진까지. 오션뷰 모닝을 국내에서 가장 쉽게 실현하는 방향이에요.",
@@ -238,7 +245,7 @@ export default function OutdoormomBoardPage() {
       <Section delay={0.16}>
         <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
           <Compass className="h-4 w-4 shrink-0 text-primary" aria-hidden />
-          후보 방향 — 자리표시 카드를 채울 세 갈래
+          후보 방향 — 자리표시 카드를 채울 네 갈래
         </h2>
         <div className="mt-4 space-y-5">
           {DIRECTIONS.map((direction) => (
