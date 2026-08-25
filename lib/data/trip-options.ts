@@ -319,6 +319,205 @@ export const tripOptions: TripOption[] = [
         "식료품·기념품은 12/24 오전이 마감 — 이후 귀국까지 상점이 거의 안 열어요",
         "12/24~26 저녁 식사는 호텔 레스토랑 사전 예약이 안전 (기차역 마트는 연휴에도 영업)",
       ],
+      guides: [
+        {
+          title: "🎠 5살과 독일 — 이 나이에 딱 맞는 스팟들",
+          intro:
+            "다섯 살 눈높이에 맞는, 그리고 무엇보다 '12월에 실제로 여는' 곳만 골랐어요. 레고랜드·라벤스부르거 슈필란트 같은 야외 테마파크는 겨울 휴장이라 뺐습니다. 아래 다섯 곳이 우리 루트(프랑크푸르트→뉘른베르크→뮌헨) 위에 그대로 얹혀요.",
+          steps: [
+            {
+              heading: "1 · 플레이모빌 펀파크 윈터차우버 (뉘른베르크 근교)",
+              body: "11월 말~2월 겨울 시즌으로 여는 몇 안 되는 키즈 파크예요. 수천 개 조명이 켜진 야간 트레일, 진짜 얼음 스케이트장 2개 — 동물 모형을 잡고 타는 초보존이 있어서 5살 첫 스케이트에 딱이에요. 추우면 5,000㎡ 실내 HOB센터(플레이모빌 놀이마을)로 피신. 12월엔 건물 창문 전체가 아이들이 꾸민 대형 어드벤트 캘린더가 돼요. 날씨(강풍·혹한)에 따라 야외 일부가 닫힐 수 있어요.",
+            },
+            {
+              heading: "2 · 뉘른베르크 장난감 박물관 — 마켓 바로 옆",
+              body: "킨더바이나흐트에서 도보 2분. 곰인형 '엠마'가 안내하는 어린이 오디오가이드(영어)가 있고, 꼭대기층이 통째로 놀이 공간이에요. 레고·플레이모빌·바비 등 아이가 아는 장난감의 100년 전 조상들을 구경하는 재미. 마켓 기간엔 월요일도 열어요.",
+            },
+            {
+              heading: "3 · 케테 볼파르트 크리스마스 박물관 (로텐부르크)",
+              body: "입구의 실물 크기 호두까기 인형, 조명 12,500개·오너먼트 1,600개가 달린 5m 회전 트리 — 5살에겐 박물관이라기보다 크리스마스 원더랜드예요. 로텐부르크 마켓·상점과 묶어 1~2시간 코스.",
+            },
+            {
+              heading: "4 · 뮌헨 독일박물관 킨더라이히",
+              body: "3~8세 전용 체험관 — 걸어 들어가는 거대 기타, 경광등 켜지는 진짜 소방차 운전석, 수문 달린 물놀이 존. 6세 미만 무료이고 입장 인원 제한제(현장 신호등 표시)라 오전에 가는 게 안전해요. 일요일엔 뮌헨 박물관 대부분이 1유로!",
+            },
+            {
+              heading: "5 · 젠켄베르크 자연사박물관 (프랑크푸르트) — 시차 적응일 코스",
+              body: "유럽 최대급 공룡 화석 전시 — T-렉스 전신 골격과 트리케라톱스 앞에서 입이 벌어져요. 만지고 관찰하는 체험 코너도 있어서 도착 직후 몽롱한 첫 이틀의 실내 코스로 최적. 중앙역에서 도보 15분.",
+            },
+          ],
+          links: [
+            {
+              label: "플레이모빌 펀파크 — 운영시간·요금 (영문)",
+              url: "https://www.playmobil-funpark.de/en/oeffnungszeiten-preise",
+            },
+            {
+              label: "독일박물관 킨더라이히 안내",
+              url: "https://www.deutsches-museum.de/museumsinsel/ausstellung/kinderreich",
+            },
+            {
+              label: "뉘른베르크 장난감 박물관 (독일관광청)",
+              url: "https://www.germany.travel/en/cities-culture/toy-museum.html",
+            },
+            {
+              label: "로텐부르크 크리스마스 박물관 (공식)",
+              url: "https://gotisches-haus.de/en/rothenburg-ob-der-tauber-en/german-christmas-museum-rothenburg/",
+            },
+          ],
+          note: "뉘른베르크 카드(2일권, 성인 €38)는 장난감 박물관 포함 시내 박물관 + 대중교통이 전부 포함이라 뉘른베르크에서 1박 이상이면 계산해볼 가치가 있어요.",
+          photos: [
+            {
+              src: "https://images.unsplash.com/photo-1542332606-b2d1c52a6c33?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2hyaXN0bWFzJTIwY2Fyb3VzZWx8ZW58MHx8MHx8fDA%3D",
+              alt: "크리스마스 마켓의 회전목마",
+              caption: "마켓마다 있는 앤티크 회전목마 — 5살의 최애",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1561424412-6c2125ecb1cc?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y2hyaXN0bWFzJTIwY2Fyb3VzZWx8ZW58MHx8MHx8fDA%3D",
+              alt: "점등된 회전목마",
+              caption: "해 지면 점등되는 회전목마",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1544212415-b269f18bf7ed?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z2VybWFuJTIwY2hyaXN0bWFzJTIwbWFya2V0fGVufDB8fDB8fHww",
+              alt: "독일 크리스마스 마켓의 장난감 노점",
+              caption: "수공예 장난감·오너먼트 노점 구경",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1513038630932-13873b1a7f29?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGlub3NhdXIlMjBtdXNldW0lMjBza2VsZXRvbnxlbnwwfHwwfHx8MA%3D%3D",
+              alt: "자연사박물관의 공룡 골격",
+              caption: "젠켄베르크의 공룡 홀 — 첫 이틀 실내 코스",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1601182207230-1b165dea2212?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZGlub3NhdXIlMjBtdXNldW0lMjBza2VsZXRvbnxlbnwwfHwwfHx8MA%3D%3D",
+              alt: "공룡 화석 전시",
+              caption: "T-렉스 앞에서 멈추는 시간",
+            },
+          ],
+        },
+        {
+          title: "🌍 국경 너머 — 이웃 나라 크리스마스 원정",
+          intro:
+            "독일은 유럽 한가운데라, 우리 루트에서 차·기차로 2~3시간이면 나라가 바뀌어요. 관건은 날짜 궁합 — 12/18~27 일정 기준으로 '언제까지 여는지'를 함께 적었어요. 12/25 이후에도 열리는 곳: 잘츠부르크(1/1)·콜마르(12/29)·프라하(1/6)·바젤 조명(1/3).",
+          steps: [
+            {
+              heading: "🇦🇹 잘츠부르크 — 뮌헨에서 기차 1시간 45분, 우리 일정의 정답",
+              body: "대성당 광장 크리스킨들마켓이 1/1까지 열어서 독일이 다 닫는 12/25·26에도 갈 수 있어요. 아이 프로그램이 특히 강한 도시 — 헬브룬 궁전 '어드벤트차우버'엔 어린이 전용 구역(크리스마스 기차, 크리스트킨트 우체국, 보물찾기)이 있고, 모차르트광장 아이스링크는 1/31까지. 호엔잘츠부르크 요새에 오르면 알프스를 배경으로 한 구시가 설경이 펼쳐져요. 바이에른 티켓이면 가족 왕복 기차가 저렴해요. 참고: 크람푸스(무서운 산타 동행자) 퍼레이드는 5살이 놀랄 수 있으니 일정 확인.",
+            },
+            {
+              heading: "🇫🇷 스트라스부르 & 콜마르 — 프랑크푸르트에서 차 2~2.5시간",
+              body: "스트라스부르는 1570년부터 이어진 '크리스마스의 수도' — 대성당 앞 광장과 클레베르 광장의 대형 트리가 도시 전체를 무대로 만들어요 (본 마켓은 12/24 18시 종료). 콜마르는 12/29까지 열고, 프티트 베니스 지구에 산타와 놀이기구가 있는 어린이 전용 마켓이 따로 있어요 — 수·토엔 어린이 합창단이 운하 배 위에서 캐럴을 불러요. 하프팀버 골목은 '미녀와 야수' 마을의 실제 모델급 동화 뷰. 콜마르 구시가는 차량 진입 금지 — 외곽 주차 후 도보.",
+            },
+            {
+              heading: "🇨🇭 스위스 (바젤·취리히·루체른) — 마켓은 일찍 닫아요",
+              body: "스위스 마켓은 12/21~24에 대부분 종료라 우리 일정 후반과는 안 맞아요 (루체른 12/21, 바젤·취리히 12/23~24). 대신 바젤의 시내 조명은 1/3까지 켜져 있고, 뮌스터 광장·바르퓌서 광장에 샬레 150개가 서는 스위스 최대 마켓이에요 (12/2~20엔 성 마르틴 탑에서 구시가 야경 조망, CHF 5). 루체른은 카펠교+호수+알프스를 배경으로 한 중세 광장 마켓 — 여행 초반(12/18~21)에만 가능한 카드예요. 프랑크푸르트에서 바젤은 차 3시간.",
+            },
+            {
+              heading: "🇨🇿 프라하 — 뉘른베르크에서 차 3시간, 연휴 공백의 해결사",
+              body: "구시가 광장 마켓이 1/6까지 열고, 12/25·26에도 정오~22시 운영 — 독일의 '연휴 셧다운'을 정확히 메워주는 카드예요. 틴 성당 첨탑 + 천문시계 + 대형 트리 조합은 유럽 마켓 뷰의 정점으로 꼽히고, 구시가 청사 탑에 오르면 마켓 전체가 한눈에 내려다보여요. 광장 한가운데 전망대는 무료 수준, 매시 정각엔 천문시계 인형극.",
+            },
+          ],
+          links: [
+            {
+              label: "잘츠부르크 어드벤트 공식 (영문)",
+              url: "https://www.salzburg.info/en/salzburg/advent/salzburg-christmas-market",
+            },
+            {
+              label: "스트라스부르 마켓 가이드 (영문)",
+              url: "https://beyondtheguidebooks.com/strasbourg-christmas-market/",
+            },
+            {
+              label: "바젤 크리스마스 공식 (영문)",
+              url: "https://www.basel.com/en/events/christmas/christmas-market",
+            },
+            {
+              label: "프라하 마켓 일정·가이드 (영문)",
+              url: "https://www.pragueexperience.com/events/christmas-markets.asp",
+            },
+          ],
+          note: "렌터카로 국경을 넘을 땐 렌터카사에 사전 고지(대부분 무료 허용)하고, 스위스 고속도로는 비네트(통행 스티커, 연간 CHF 40)가 필요해요. 오스트리아도 고속도로 비네트 필수 — 잘츠부르크는 기차가 속 편한 이유예요.",
+          photos: [
+            {
+              src: "https://images.unsplash.com/photo-1604685779820-d3857fcb4dac?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3RyYXNib3VyZyUyMGNocmlzdG1hc3xlbnwwfHwwfHx8MA%3D%3D",
+              alt: "스트라스부르의 크리스마스 장식 거리",
+              caption: "🇫🇷 스트라스부르 — '크리스마스의 수도'",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1580112613591-a4be59e156a5?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3RyYXNib3VyZyUyMGNocmlzdG1hc3xlbnwwfHwwfHx8MA%3D%3D",
+              alt: "스트라스부르 대성당과 크리스마스 마켓",
+              caption: "🇫🇷 대성당 앞 마켓 — 1570년부터",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1701943523362-4fc34a738dc4?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c3RyYXNib3VyZyUyMGNocmlzdG1hc3xlbnwwfHwwfHx8MA%3D%3D",
+              alt: "스트라스부르 골목의 크리스마스 장식",
+              caption: "🇫🇷 골목마다 걸린 장식들",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1601913463132-42453ea75691?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29sbWFyJTIwZnJhbmNlfGVufDB8fDB8fHww",
+              alt: "콜마르의 하프팀버 하우스",
+              caption: "🇫🇷 콜마르 — 동화책 그 자체",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1584109504427-f9b960c94cdb?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y29sbWFyJTIwZnJhbmNlfGVufDB8fDB8fHww",
+              alt: "콜마르 운하와 옛 골목",
+              caption: "🇫🇷 프티트 베니스 — 배 위의 캐럴 합창",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1506892215-0b05442bfc9e?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y29sbWFyJTIwZnJhbmNlfGVufDB8fDB8fHww",
+              alt: "콜마르 거리 풍경",
+              caption: "🇫🇷 콜마르 구시가 — 12/29까지 마켓",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1677652646789-7c13af77bd21?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c2FsemJ1cmclMjB3aW50ZXJ8ZW58MHx8MHx8fDA%3D",
+              alt: "잘츠부르크의 겨울 풍경",
+              caption: "🇦🇹 잘츠부르크 — 마켓이 1/1까지",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1742160492576-abd2940e826f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c2FsemJ1cmclMjB3aW50ZXJ8ZW58MHx8MHx8fDA%3D",
+              alt: "잘츠부르크 구시가와 요새",
+              caption: "🇦🇹 호엔잘츠부르크 요새와 구시가",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1578300689752-6acba2879bec?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8c2FsemJ1cmclMjB3aW50ZXJ8ZW58MHx8MHx8fDA%3D",
+              alt: "알프스를 배경으로 한 잘츠부르크",
+              caption: "🇦🇹 알프스 설경을 배경으로",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1553713822-6b472e98ef99?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJhZ3VlJTIwY2hyaXN0bWFzJTIwbWFya2V0fGVufDB8fDB8fHww",
+              alt: "프라하 구시가 광장의 크리스마스 마켓",
+              caption: "🇨🇿 프라하 구시가 광장 — 1/6까지, 12/25도 오픈",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1639488013074-dcd13020150b?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJhZ3VlJTIwY2hyaXN0bWFzJTIwbWFya2V0fGVufDB8fDB8fHww",
+              alt: "틴 성당과 크리스마스 트리",
+              caption: "🇨🇿 틴 성당 + 대형 트리 — 유럽 마켓 뷰의 정점",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1650099077872-9b384deb8fe3?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cHJhZ3VlJTIwY2hyaXN0bWFzJTIwbWFya2V0fGVufDB8fDB8fHww",
+              alt: "프라하의 겨울 야경",
+              caption: "🇨🇿 천문시계 탑에서 내려다본 마켓",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1477271706509-fecda7438b68?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bHVjZXJuZSUyMHN3aXR6ZXJsYW5kfGVufDB8fDB8fHww",
+              alt: "루체른 카펠교",
+              caption: "🇨🇭 루체른 카펠교 — 마켓은 12/21까지",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1518079521743-d5f88b127929?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bHVjZXJuZSUyMHN3aXR6ZXJsYW5kfGVufDB8fDB8fHww",
+              alt: "루체른 호수와 알프스",
+              caption: "🇨🇭 호수 너머 알프스 — 루체른",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1543788860-6f99bdcd4b75?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8enVyaWNoJTIwY2hyaXN0bWFzfGVufDB8fDB8fHww",
+              alt: "취리히의 크리스마스 조명",
+              caption: "🇨🇭 취리히 — 유럽 최대 실내 마켓의 도시",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1639337665352-288e448db1c4?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8enVyaWNoJTIwY2hyaXN0bWFzfGVufDB8fDB8fHww",
+              alt: "취리히 시내의 겨울 풍경",
+              caption: "🇨🇭 바젤·취리히 조명은 1/3까지",
+            },
+          ],
+        },
+      ],
       gallery: [
         {
           src: "https://images.unsplash.com/photo-1543783111-ea3c70001cde?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Z2VybWFuJTIwY2hyaXN0bWFzJTIwbWFya2V0fGVufDB8fDB8fHww",
