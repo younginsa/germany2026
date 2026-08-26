@@ -24,8 +24,10 @@ import { KidScore } from "@/components/compare/kid-score";
 import {
   tripOptions,
   type TripBookingGuide,
+  type TripEvent,
   type TripGalleryImage,
 } from "@/lib/data/trip-options";
+import { cn } from "@/lib/utils";
 
 const fadeUp = {
   initial: { opacity: 0, y: 12 },
@@ -182,6 +184,63 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
   // 트레일 그룹은 성인 2인(나+친구) 기준 — 라벨이 달라져요
   const isTrail = option.group === "trail";
 
+  // 이벤트를 소구역(section)별로 묶어요 — 순서 유지
+  const eventGroups = (detail.events ?? []).reduce<
+    { section?: string; items: TripEvent[] }[]
+  >((acc, ev) => {
+    const last = acc[acc.length - 1];
+    if (last && last.section === ev.section) last.items.push(ev);
+    else acc.push({ section: ev.section, items: [ev] });
+    return acc;
+  }, []);
+
+  const noticeBody = detail.notice ? (
+    <>
+      <ul className="mt-4 space-y-3">
+        {detail.notice.items.map((item) => (
+          <li
+            key={item}
+            className="flex gap-2.5 border-l-2 border-amber-400/70 pl-3 text-sm leading-relaxed"
+          >
+            {item}
+          </li>
+        ))}
+      </ul>
+      {detail.notice.footnote && (
+        <p className="mt-3 text-xs text-muted-foreground">{detail.notice.footnote}</p>
+      )}
+    </>
+  ) : null;
+
+  const introSection = (
+    <Section delay={0.08}>
+      <p className="text-[15px] leading-relaxed">{detail.intro}</p>
+    </Section>
+  );
+
+  const flowSection = (
+    <Section delay={detail.flowFirst ? 0.08 : 0.15}>
+      <h2 className="text-base font-semibold tracking-tight">여행의 흐름</h2>
+      <div className="mt-4 space-y-5">
+        {detail.flow.map((section) => (
+          <div key={section.heading} className="space-y-1.5">
+            <h3 className="text-sm font-semibold text-primary">{section.heading}</h3>
+            <p className="text-sm leading-relaxed text-foreground/90">{section.body}</p>
+          </div>
+        ))}
+      </div>
+      {detail.flowFirst && detail.notice && (
+        <div className="mt-7 border-t pt-5">
+          <h3 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
+            <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500" aria-hidden />
+            {detail.notice.title}
+          </h3>
+          {noticeBody}
+        </div>
+      )}
+    </Section>
+  );
+
   return (
     <article className="mx-auto max-w-3xl">
       {/* 뒤로가기 */}
@@ -249,31 +308,17 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
         </dl>
       </Section>
 
-      {/* 도입부 */}
-      <Section delay={0.08}>
-        <p className="text-[15px] leading-relaxed">{detail.intro}</p>
-      </Section>
+      {/* 도입부 자리 — flowFirst면 여행의 흐름이 먼저 와요 */}
+      {detail.flowFirst ? flowSection : introSection}
 
-      {/* 현지 휴무·주의 정보 — 가독성 우선: 기본 글자색 + 앰버는 포인트만 */}
-      {detail.notice && (
+      {/* 현지 휴무·주의 정보 — flowFirst면 여행의 흐름 안에 포함 */}
+      {!detail.flowFirst && detail.notice && (
         <Section delay={0.1}>
           <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
             <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500" aria-hidden />
             {detail.notice.title}
           </h2>
-          <ul className="mt-4 space-y-3">
-            {detail.notice.items.map((item) => (
-              <li
-                key={item}
-                className="flex gap-2.5 border-l-2 border-amber-400/70 pl-3 text-sm leading-relaxed"
-              >
-                {item}
-              </li>
-            ))}
-          </ul>
-          {detail.notice.footnote && (
-            <p className="mt-3 text-xs text-muted-foreground">{detail.notice.footnote}</p>
-          )}
+          {noticeBody}
         </Section>
       )}
 
@@ -284,33 +329,47 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
             <PartyPopper className="h-4 w-4 shrink-0 text-primary" aria-hidden />
             12월 시즌 이벤트
           </h2>
-          <div className="mt-4 grid gap-x-16 gap-y-5 sm:grid-cols-2">
-            {detail.events.map((event, i) => (
-              <div key={event.name} className="contents">
-                {event.section && event.section !== detail.events![i - 1]?.section && (
-                  <h3 className="mt-1 border-b pb-1.5 text-sm font-semibold tracking-tight text-foreground sm:col-span-2">
-                    {event.section}
-                  </h3>
-                )}
-                <div className="space-y-1">
-                <h3 className="text-sm font-semibold leading-snug">{event.name}</h3>
-                <p className="text-xs text-muted-foreground">{event.period}</p>
-                <p className="text-sm leading-relaxed text-foreground/90">{event.body}</p>
-                {event.url && (
-                  <a
-                    href={event.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs font-medium text-primary underline-offset-2 hover:underline"
+          {eventGroups.map((group) => (
+            <div key={group.section ?? "all"} className="mt-5 first:mt-4">
+              {group.section && (
+                <h3 className="border-b pb-1.5 text-sm font-semibold tracking-tight">
+                  {group.section}
+                </h3>
+              )}
+              <div className="mt-3 grid gap-4 sm:grid-cols-2">
+                {group.items.map((event) => (
+                  <div
+                    key={event.name}
+                    className="space-y-1 rounded-xl border border-border/70 p-4"
                   >
-                    자세히 보기
-                    <ExternalLink className="h-3 w-3" aria-hidden />
-                  </a>
-                )}
-                </div>
+                    <h4 className="text-sm font-semibold leading-snug">{event.name}</h4>
+                    <p className="text-xs text-muted-foreground">{event.period}</p>
+                    <p className="text-sm leading-relaxed text-foreground/90">{event.body}</p>
+                    {event.url && (
+                      <a
+                        href={event.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs font-medium text-primary underline-offset-2 hover:underline"
+                      >
+                        자세히 보기
+                        <ExternalLink className="h-3 w-3" aria-hidden />
+                      </a>
+                    )}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+              {group.section && detail.eventSectionPhotos?.[group.section] && (
+                <PhotoStrip
+                  photos={detail.eventSectionPhotos[group.section]}
+                  label={`${group.section} 사진`}
+                  onOpen={(i) =>
+                    openLightbox(detail.eventSectionPhotos![group.section!], i)
+                  }
+                />
+              )}
+            </div>
+          ))}
 
           {/* 이벤트 사진 캐러셀 — 클릭하면 크게 보기 */}
           {detail.eventPhotos && detail.eventPhotos.length > 0 && (
@@ -333,15 +392,30 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
           {table.intro && (
             <p className="mt-2 text-sm text-muted-foreground">{table.intro}</p>
           )}
-          <div className="mt-4 overflow-x-auto rounded-xl border">
-            <table className="w-full min-w-[760px] border-collapse text-[13px]">
+          <div className={cn("mt-4 rounded-xl border", !table.compact && "overflow-x-auto")}>
+            <table
+              className={cn(
+                "w-full border-collapse text-[13px]",
+                !table.compact && "min-w-[760px]"
+              )}
+            >
               <thead>
                 <tr className="border-b bg-secondary/50">
-                  <th className="sticky left-0 z-10 w-32 min-w-32 bg-secondary/50 p-3 backdrop-blur" />
+                  <th
+                    className={cn(
+                      "p-3",
+                      table.compact
+                        ? "w-20"
+                        : "sticky left-0 z-10 w-32 min-w-32 bg-secondary/50 backdrop-blur"
+                    )}
+                  />
                   {table.columns.map((column) => (
                     <th
                       key={column}
-                      className="min-w-48 p-3 text-left align-bottom text-sm font-semibold tracking-tight"
+                      className={cn(
+                        "p-3 text-left align-bottom text-sm font-semibold tracking-tight",
+                        table.compact ? "break-words px-2" : "min-w-48"
+                      )}
                     >
                       {column}
                     </th>
@@ -353,12 +427,23 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
                   <tr key={row.label} className="border-b align-top last:border-b-0">
                     <th
                       scope="row"
-                      className="sticky left-0 z-10 w-32 min-w-32 bg-card/95 p-3 text-left align-top text-xs font-medium text-muted-foreground backdrop-blur"
+                      className={cn(
+                        "bg-card/95 p-3 text-left align-top text-xs font-medium text-muted-foreground",
+                        table.compact
+                          ? "w-20 break-words px-2"
+                          : "sticky left-0 z-10 w-32 min-w-32 backdrop-blur"
+                      )}
                     >
                       {row.label}
                     </th>
                     {row.cells.map((cell, ci) => (
-                      <td key={ci} className="min-w-48 p-3 leading-relaxed">
+                      <td
+                        key={ci}
+                        className={cn(
+                          "p-3 leading-relaxed",
+                          table.compact ? "break-words px-2" : "min-w-48"
+                        )}
+                      >
                         {cell}
                       </td>
                     ))}
@@ -380,18 +465,8 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
         </Section>
       ))}
 
-      {/* 여행의 흐름 */}
-      <Section delay={0.15}>
-        <h2 className="text-base font-semibold tracking-tight">여행의 흐름</h2>
-        <div className="mt-4 space-y-5">
-          {detail.flow.map((section) => (
-            <div key={section.heading} className="space-y-1.5">
-              <h3 className="text-sm font-semibold text-primary">{section.heading}</h3>
-              <p className="text-sm leading-relaxed text-foreground/90">{section.body}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
+      {/* 여행의 흐름 자리 — flowFirst면 도입부가 이리로 내려와요 */}
+      {detail.flowFirst ? introSection : flowSection}
 
       {/* 갤러리 — 2컬럼 썸네일 */}
       <Section delay={0.18}>
