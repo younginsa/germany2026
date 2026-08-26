@@ -370,6 +370,13 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
           {table.note && (
             <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{table.note}</p>
           )}
+          {table.photos && table.photos.length > 0 && (
+            <PhotoStrip
+              photos={table.photos}
+              label={`${table.title} 출처 스크린샷`}
+              onOpen={(i) => openLightbox(table.photos!, i)}
+            />
+          )}
         </Section>
       ))}
 
