@@ -285,8 +285,14 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
             12월 시즌 이벤트
           </h2>
           <div className="mt-4 grid gap-x-16 gap-y-5 sm:grid-cols-2">
-            {detail.events.map((event) => (
-              <div key={event.name} className="space-y-1">
+            {detail.events.map((event, i) => (
+              <div key={event.name} className="contents">
+                {event.section && event.section !== detail.events![i - 1]?.section && (
+                  <h3 className="mt-1 border-b pb-1.5 text-sm font-semibold tracking-tight text-foreground sm:col-span-2">
+                    {event.section}
+                  </h3>
+                )}
+                <div className="space-y-1">
                 <h3 className="text-sm font-semibold leading-snug">{event.name}</h3>
                 <p className="text-xs text-muted-foreground">{event.period}</p>
                 <p className="text-sm leading-relaxed text-foreground/90">{event.body}</p>
@@ -301,6 +307,7 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
                     <ExternalLink className="h-3 w-3" aria-hidden />
                   </a>
                 )}
+                </div>
               </div>
             ))}
           </div>
