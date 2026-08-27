@@ -332,7 +332,7 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
           {eventGroups.map((group) => (
             <div key={group.section ?? "all"} className="mt-5 first:mt-4">
               {group.section && (
-                <h3 className="border-b pb-1.5 text-sm font-semibold tracking-tight">
+                <h3 className="text-sm font-semibold tracking-tight">
                   {group.section}
                 </h3>
               )}
