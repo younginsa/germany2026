@@ -407,6 +407,27 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
         </dl>
       </Section>
 
+      {/* 한눈 체크리스트 — 아주 간단하게, 최상단 */}
+      {detail.checklist && detail.checklist.length > 0 && (
+        <Section delay={0.06}>
+          <h2 className="text-base font-semibold tracking-tight">한눈 체크리스트</h2>
+          <ul className="mt-3 grid gap-x-12 gap-y-1.5 sm:grid-cols-2">
+            {detail.checklist.map((item) => (
+              <li
+                key={item.label}
+                className={cn(
+                  "flex gap-2 text-sm leading-relaxed",
+                  item.done && "text-muted-foreground line-through decoration-muted-foreground/40"
+                )}
+              >
+                <span aria-hidden>{item.done ? "✅" : "⬜"}</span>
+                {item.label}
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
+
       {/* 도입부 자리 — flowFirst면 여행의 흐름이 먼저 와요 (흐름 뒤엔 afterFlow 표) */}
       {detail.flowFirst ? (
         <>
@@ -507,24 +528,13 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
         </>
       )}
 
-      {/* 갤러리 — 2컬럼 썸네일 */}
+      {/* 갤러리 — 캐러셀, 클릭하면 라이트박스 확대 */}
       <Section delay={0.18}>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {detail.gallery.map((img) => (
-            <figure key={img.src} className="space-y-1.5">
-              <div className="relative h-48 w-full overflow-hidden rounded-xl">
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  fill
-                  sizes="(max-width: 640px) 100vw, 384px"
-                  className="object-cover"
-                />
-              </div>
-              <figcaption className="text-xs text-muted-foreground">{img.caption}</figcaption>
-            </figure>
-          ))}
-        </div>
+        <PhotoStrip
+          photos={detail.gallery}
+          label="갤러리"
+          onOpen={(i) => openLightbox(detail.gallery, i)}
+        />
       </Section>
 
       {/* 아이들에겐 */}
