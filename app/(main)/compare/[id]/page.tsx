@@ -26,6 +26,7 @@ import {
   type TripBookingGuide,
   type TripEvent,
   type TripGalleryImage,
+  type TripMiniTable,
 } from "@/lib/data/trip-options";
 import { cn } from "@/lib/utils";
 
@@ -130,6 +131,95 @@ function GuideSection({
   );
 }
 
+/** 미니 비교표 본문 — Section 래퍼 없이 제목+표+노트+사진을 렌더링 (일반 자리·여행흐름 아래 공용) */
+function MiniTableBlock({
+  table,
+  onOpenPhoto,
+}: {
+  table: TripMiniTable;
+  onOpenPhoto: (photos: TripGalleryImage[], index: number) => void;
+}) {
+  return (
+    <>
+      <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
+        <Table2 className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+        {table.title}
+      </h2>
+      {table.intro && <p className="mt-2 text-sm text-muted-foreground">{table.intro}</p>}
+      <div className={cn("mt-4 rounded-xl border", !table.compact && "overflow-x-auto")}>
+        <table
+          className={cn(
+            "w-full border-collapse text-[13px]",
+            !table.compact && "min-w-[760px]"
+          )}
+        >
+          <thead>
+            <tr className="border-b bg-secondary/50">
+              <th
+                className={cn(
+                  "p-3",
+                  table.compact
+                    ? "w-20"
+                    : "sticky left-0 z-10 w-32 min-w-32 bg-secondary/50 backdrop-blur"
+                )}
+              />
+              {table.columns.map((column) => (
+                <th
+                  key={column}
+                  className={cn(
+                    "p-3 text-left align-bottom text-sm font-semibold tracking-tight",
+                    table.compact ? "break-words px-2" : "min-w-48"
+                  )}
+                >
+                  {column}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {table.rows.map((row) => (
+              <tr key={row.label} className="border-b align-top last:border-b-0">
+                <th
+                  scope="row"
+                  className={cn(
+                    "bg-card/95 p-3 text-left align-top text-xs font-medium text-muted-foreground",
+                    table.compact
+                      ? "w-20 break-words px-2"
+                      : "sticky left-0 z-10 w-32 min-w-32 backdrop-blur"
+                  )}
+                >
+                  {row.label}
+                </th>
+                {row.cells.map((cell, ci) => (
+                  <td
+                    key={ci}
+                    className={cn(
+                      "p-3 leading-relaxed",
+                      table.compact ? "break-words px-2" : "min-w-48"
+                    )}
+                  >
+                    {cell}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {table.note && (
+        <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{table.note}</p>
+      )}
+      {table.photos && table.photos.length > 0 && (
+        <PhotoStrip
+          photos={table.photos}
+          label={`${table.title} 출처 스크린샷`}
+          onOpen={(i) => onOpenPhoto(table.photos!, i)}
+        />
+      )}
+    </>
+  );
+}
+
 /** 구분선으로 나뉘는 본문 섹션 (airbnb 스타일) */
 function Section({
   children,
@@ -217,6 +307,15 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
       <p className="text-[15px] leading-relaxed">{detail.intro}</p>
     </Section>
   );
+
+  // 여행의 흐름 바로 아래 붙는 비교표들 (afterFlow)
+  const afterFlowTableSections = detail.tables
+    ?.filter((table) => table.afterFlow)
+    .map((table) => (
+      <Section key={table.title} delay={0.1}>
+        <MiniTableBlock table={table} onOpenPhoto={openLightbox} />
+      </Section>
+    ));
 
   const flowSection = (
     <Section delay={detail.flowFirst ? 0.08 : 0.15}>
@@ -308,8 +407,15 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
         </dl>
       </Section>
 
-      {/* 도입부 자리 — flowFirst면 여행의 흐름이 먼저 와요 */}
-      {detail.flowFirst ? flowSection : introSection}
+      {/* 도입부 자리 — flowFirst면 여행의 흐름이 먼저 와요 (흐름 뒤엔 afterFlow 표) */}
+      {detail.flowFirst ? (
+        <>
+          {flowSection}
+          {afterFlowTableSections}
+        </>
+      ) : (
+        introSection
+      )}
 
       {/* 현지 휴무·주의 정보 — flowFirst면 여행의 흐름 안에 포함 */}
       {!detail.flowFirst && detail.notice && (
@@ -382,91 +488,24 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
         </Section>
       )}
 
-      {/* 미니 비교표 — 이동수단·일정 배분 등 */}
-      {detail.tables?.map((table) => (
-        <Section key={table.title} delay={0.13}>
-          <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
-            <Table2 className="h-4 w-4 shrink-0 text-primary" aria-hidden />
-            {table.title}
-          </h2>
-          {table.intro && (
-            <p className="mt-2 text-sm text-muted-foreground">{table.intro}</p>
-          )}
-          <div className={cn("mt-4 rounded-xl border", !table.compact && "overflow-x-auto")}>
-            <table
-              className={cn(
-                "w-full border-collapse text-[13px]",
-                !table.compact && "min-w-[760px]"
-              )}
-            >
-              <thead>
-                <tr className="border-b bg-secondary/50">
-                  <th
-                    className={cn(
-                      "p-3",
-                      table.compact
-                        ? "w-20"
-                        : "sticky left-0 z-10 w-32 min-w-32 bg-secondary/50 backdrop-blur"
-                    )}
-                  />
-                  {table.columns.map((column) => (
-                    <th
-                      key={column}
-                      className={cn(
-                        "p-3 text-left align-bottom text-sm font-semibold tracking-tight",
-                        table.compact ? "break-words px-2" : "min-w-48"
-                      )}
-                    >
-                      {column}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {table.rows.map((row) => (
-                  <tr key={row.label} className="border-b align-top last:border-b-0">
-                    <th
-                      scope="row"
-                      className={cn(
-                        "bg-card/95 p-3 text-left align-top text-xs font-medium text-muted-foreground",
-                        table.compact
-                          ? "w-20 break-words px-2"
-                          : "sticky left-0 z-10 w-32 min-w-32 backdrop-blur"
-                      )}
-                    >
-                      {row.label}
-                    </th>
-                    {row.cells.map((cell, ci) => (
-                      <td
-                        key={ci}
-                        className={cn(
-                          "p-3 leading-relaxed",
-                          table.compact ? "break-words px-2" : "min-w-48"
-                        )}
-                      >
-                        {cell}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {table.note && (
-            <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{table.note}</p>
-          )}
-          {table.photos && table.photos.length > 0 && (
-            <PhotoStrip
-              photos={table.photos}
-              label={`${table.title} 출처 스크린샷`}
-              onOpen={(i) => openLightbox(table.photos!, i)}
-            />
-          )}
-        </Section>
-      ))}
+      {/* 미니 비교표 — 이동수단·일정 배분 등 (afterFlow 표는 여행의 흐름 아래에서 렌더링) */}
+      {detail.tables
+        ?.filter((table) => !table.afterFlow)
+        .map((table) => (
+          <Section key={table.title} delay={0.13}>
+            <MiniTableBlock table={table} onOpenPhoto={openLightbox} />
+          </Section>
+        ))}
 
       {/* 여행의 흐름 자리 — flowFirst면 도입부가 이리로 내려와요 */}
-      {detail.flowFirst ? introSection : flowSection}
+      {detail.flowFirst ? (
+        introSection
+      ) : (
+        <>
+          {flowSection}
+          {afterFlowTableSections}
+        </>
+      )}
 
       {/* 갤러리 — 2컬럼 썸네일 */}
       <Section delay={0.18}>
