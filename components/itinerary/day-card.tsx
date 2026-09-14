@@ -12,15 +12,15 @@ import {
   BedDouble,
   CalendarDays,
   Car,
-  CarFront,
+  CarTaxiFront,
+  PartyPopper,
+  Ship,
+  Sun,
   ChevronDown,
   Clock,
   MessageCircle,
   NotebookPen,
   Pencil,
-  Snowflake,
-  SquareParking,
-  TreePine,
   UtensilsCrossed,
   type LucideIcon,
 } from "lucide-react";
@@ -262,7 +262,7 @@ export function DayCard({
               )}
 
               {hasValue(day.christmasMarket) && (
-                <Section icon={TreePine} label="크리스마스 마켓" tone="#dc2626" className="sm:col-span-2">
+                <Section icon={PartyPopper} label="시즌 이벤트·쇼" tone="#dc2626" className="sm:col-span-2">
                   <CommentableText
                     dayId={day.id}
                     fieldKey="christmasMarket"
@@ -272,7 +272,7 @@ export function DayCard({
               )}
 
               {hasValue(day.parking) && (
-                <Section icon={SquareParking} label="주차" tone="#2563eb">
+                <Section icon={CarTaxiFront} label="이동·택시" tone="#2563eb">
                   <CommentableText dayId={day.id} fieldKey="parking" text={day.parking} />
                 </Section>
               )}
@@ -284,7 +284,7 @@ export function DayCard({
               )}
 
               {hasValue(day.rentalCarNotes) && (
-                <Section icon={CarFront} label="렌터카 메모" tone="#0891b2">
+                <Section icon={Ship} label="크루즈·예약 메모" tone="#0891b2">
                   <CommentableText
                     dayId={day.id}
                     fieldKey="rentalCarNotes"
@@ -294,7 +294,7 @@ export function DayCard({
               )}
 
               {hasValue(day.winterDrivingNotes) && (
-                <Section icon={Snowflake} label="겨울 운전 참고" tone="#0ea5e9">
+                <Section icon={Sun} label="날씨·더위 대비" tone="#f59e0b">
                   <CommentableText
                     dayId={day.id}
                     fieldKey="winterDrivingNotes"

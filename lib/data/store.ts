@@ -16,8 +16,8 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
  * 도메인 타입과 1:1 로 직렬화됩니다. (supabase/migrations 참고)
  */
 
-// v1은 familyIds 기반 구스키마 — 호환되지 않아 키를 올려 폐기합니다.
-const LS_KEY = "germany2026:data:v2";
+// v1은 familyIds 기반 구스키마, v2는 독일 여행 시드 — 싱가포르 크루즈로 바뀌며 키를 올려 새 시드를 적용합니다.
+const LS_KEY = "germany2026:data:v3";
 const LS_USER_KEY = "germany2026:user";
 
 /** 구버전/손상된 localStorage 데이터로 인한 크래시 방지 — 형태가 맞는 행만 유지 */

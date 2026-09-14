@@ -301,7 +301,7 @@ export function UploadDialog({
                 id="doc-title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="예: 인천-프랑크푸르트 항공권"
+                placeholder="예: 인천-싱가포르 항공권"
               />
             </div>
             <div className="grid gap-1.5">

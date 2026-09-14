@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { CalendarDays, CheckSquare, FolderOpen, Scale, TreePine } from "lucide-react";
+import { CalendarDays, CheckSquare, FolderOpen, Scale, Ship } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NotificationCenter } from "@/components/layout/notification-center";
 import { UserMenu } from "@/components/layout/user-menu";
@@ -27,9 +27,9 @@ export function TopNav() {
         {/* 로고 — 클릭 시 홈으로 */}
         <Link href="/" className="mr-0.5 flex shrink-0 items-center gap-2 sm:mr-1" aria-label="홈">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
-            <TreePine className="h-4 w-4 text-primary" aria-hidden />
+            <Ship className="h-4 w-4 text-primary" aria-hidden />
           </span>
-          <span className="hidden text-sm font-bold tracking-tight sm:block">독일 2026</span>
+          <span className="hidden text-sm font-bold tracking-tight sm:block">싱가포르 2026</span>
         </Link>
 
         {/* 주 내비게이션 — 모바일 포함 항상 표시 */}

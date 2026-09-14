@@ -1,20 +1,20 @@
-import { CloudSnow, Snowflake, type LucideIcon } from "lucide-react";
+import { CloudRain, Sun, Waves, type LucideIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-/** 12월 독일 평년 날씨 — 프랑크푸르트(도착) · 뮌헨(마지막) */
+/** 12월 싱가포르 평년 날씨 — 시내(도착·하선) · 해상(크루즈 4박) */
 const WEATHER: { city: string; icon: LucideIcon; low: number; high: number; desc: string }[] = [
-  { city: "프랑크푸르트", icon: CloudSnow, low: -1, high: 4, desc: "눈 조금" },
-  { city: "뮌헨", icon: Snowflake, low: -5, high: 1, desc: "눈" },
+  { city: "싱가포르 시내", icon: CloudRain, low: 24, high: 31, desc: "습함 · 오후 스콜" },
+  { city: "해상 (크루즈)", icon: Waves, low: 25, high: 30, desc: "바람 · 구름 조금" },
 ];
 
-/** 독일 날씨 카드 — 두 도시를 나란히 표시 */
+/** 싱가포르 날씨 카드 — 시내와 해상을 나란히 표시 */
 export function WeatherCard() {
   return (
     <Card className="h-full">
       <CardHeader className="flex-row items-center justify-between space-y-0 pb-3">
         <CardTitle className="flex items-center gap-2">
-          <Snowflake className="h-4 w-4 text-primary" />
-          독일 날씨
+          <Sun className="h-4 w-4 text-primary" />
+          싱가포르 날씨
         </CardTitle>
         <span className="text-xs font-medium text-muted-foreground">12월 평년</span>
       </CardHeader>

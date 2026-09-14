@@ -5,10 +5,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "독일 2026 · 여행 워크스페이스",
-    template: "%s · 독일 2026",
+    default: "싱가포르 디즈니 크루즈 2026 · 여행 워크스페이스",
+    template: "%s · 싱가포르 2026",
   },
-  description: "함께 만드는 독일 크리스마스 마켓 여행 계획",
+  description: "넷이서 떠나는 싱가포르 디즈니 크루즈 여행 계획",
 };
 
 export const viewport: Viewport = {

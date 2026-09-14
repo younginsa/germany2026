@@ -90,7 +90,7 @@ export default function SettingsPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `germany2026-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `singapore2026-backup-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
     toast.success("데이터를 내보냈습니다");

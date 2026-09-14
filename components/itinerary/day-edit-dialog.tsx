@@ -244,7 +244,7 @@ export function DayEditDialog({ day, onClose }: DayEditDialogProps) {
 
           {/* 기타 텍스트 필드 */}
           <div className="space-y-1.5">
-            <Label htmlFor="edit-market">크리스마스 마켓</Label>
+            <Label htmlFor="edit-market">시즌 이벤트·쇼</Label>
             <Textarea
               id="edit-market"
               rows={2}
@@ -253,7 +253,7 @@ export function DayEditDialog({ day, onClose }: DayEditDialogProps) {
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="edit-parking">주차</Label>
+            <Label htmlFor="edit-parking">이동·택시</Label>
             <Input
               id="edit-parking"
               value={form.parking}
@@ -270,7 +270,7 @@ export function DayEditDialog({ day, onClose }: DayEditDialogProps) {
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="edit-rental">렌터카 메모</Label>
+            <Label htmlFor="edit-rental">크루즈·예약 메모</Label>
             <Textarea
               id="edit-rental"
               rows={2}
@@ -279,7 +279,7 @@ export function DayEditDialog({ day, onClose }: DayEditDialogProps) {
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="edit-winter">겨울 운전 참고</Label>
+            <Label htmlFor="edit-winter">날씨·더위 대비</Label>
             <Textarea
               id="edit-winter"
               rows={2}

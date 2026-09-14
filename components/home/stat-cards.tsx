@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CalendarDays, Euro, MapPin, Users } from "lucide-react";
+import { CalendarDays, DollarSign, MapPin, Users } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import {
   useItineraryDays,
@@ -9,21 +9,23 @@ import {
   useTrip,
 } from "@/hooks/use-app-data";
 
-/** 유로 → 원 환율 카드 (ECB 무료 API · 실패 시 "—") */
+/** 싱가포르달러·미달러 → 원 환율 카드 (Frankfurter 무료 API · 실패 시 "—") */
 function ExchangeCard() {
-  const [rate, setRate] = useState<number | null>(null);
+  const [rates, setRates] = useState<{ sgd: number; usd: number } | null>(null);
   const [asOf, setAsOf] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     const ctrl = new AbortController();
-    fetch("https://api.frankfurter.dev/v1/latest?base=EUR&symbols=KRW", {
+    fetch("https://api.frankfurter.dev/v1/latest?base=USD&symbols=KRW,SGD", {
       signal: ctrl.signal,
     })
       .then((r) => r.json())
-      .then((data: { rates?: { KRW?: number }; date?: string }) => {
-        if (data.rates?.KRW) {
-          setRate(data.rates.KRW);
+      .then((data: { rates?: { KRW?: number; SGD?: number }; date?: string }) => {
+        const krw = data.rates?.KRW;
+        const sgd = data.rates?.SGD;
+        if (krw && sgd) {
+          setRates({ sgd: krw / sgd, usd: krw });
           if (data.date) setAsOf(data.date);
         } else setFailed(true);
       })
@@ -34,18 +36,18 @@ function ExchangeCard() {
   return (
     <Card className="flex items-start gap-3 p-4 sm:p-5">
       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-        <Euro className="h-4 w-4" />
+        <DollarSign className="h-4 w-4" />
       </span>
       <div className="min-w-0">
         <p className="text-xs font-medium text-muted-foreground">환율</p>
         <p className="mt-0.5 truncate text-base font-bold tracking-tight sm:text-lg">
-          {rate ? `1€ = ${Math.round(rate).toLocaleString()}원` : failed ? "1€ = —" : "…"}
+          {rates ? `1 S$ = ${Math.round(rates.sgd).toLocaleString()}원` : failed ? "1 S$ = —" : "…"}
         </p>
         <p className="mt-0.5 truncate text-xs text-muted-foreground">
-          {rate
-            ? asOf
-              ? `${asOf.replaceAll("-", ".")} 기준`
-              : "실시간 환율"
+          {rates
+            ? `1 US$ = ${Math.round(rates.usd).toLocaleString()}원${
+                asOf ? ` · ${asOf.replaceAll("-", ".")} 기준` : ""
+              }`
             : failed
               ? "환율을 불러오지 못했어요"
               : "불러오는 중"}
@@ -88,7 +90,7 @@ export function StatCards() {
       icon: MapPin,
       label: "방문 도시",
       value: `${cityCount}곳`,
-      sub: "로맨틱 가도 따라",
+      sub: "싱가포르 + 바다 위",
     },
     {
       icon: Users,
@@ -115,7 +117,7 @@ export function StatCards() {
         </Card>
       ))}
 
-      {/* 원 ↔ 유로 환율 */}
+      {/* 원 ↔ 싱가포르달러·미달러 환율 */}
       <ExchangeCard />
     </div>
   );

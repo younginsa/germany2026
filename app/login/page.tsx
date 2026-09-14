@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Mail, Snowflake, Sparkles, TreePine } from "lucide-react";
+import { Mail, Ship, Sparkles, Sun } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -102,9 +102,9 @@ export default function LoginPage() {
       >
         <div className="mb-8 text-center">
           <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
-            <TreePine className="h-7 w-7 text-primary" aria-hidden />
+            <Ship className="h-7 w-7 text-primary" aria-hidden />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight">독일 크리스마스 마켓 여행</h1>
+          <h1 className="text-2xl font-bold tracking-tight">싱가포르 디즈니 크루즈 여행</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             함께 만드는 여행 워크스페이스
           </p>
@@ -180,8 +180,8 @@ export default function LoginPage() {
         </Card>
 
         <p className="mt-6 flex items-center justify-center gap-1.5 text-center text-xs text-muted-foreground">
-          <Snowflake className="h-3 w-3" />
-          2026년 12월 18일 – 12월 27일 · 프랑크푸르트에서 뮌헨까지
+          <Sun className="h-3 w-3" />
+          2026년 12월 23일 – 12월 29일 · 싱가포르 1박 + 디즈니 어드벤처 4박 + 싱가포르 1박
         </p>
       </motion.div>
     </main>

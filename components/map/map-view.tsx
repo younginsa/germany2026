@@ -28,8 +28,8 @@ import { cn } from "@/lib/utils";
 import { CATEGORY_META } from "./category-meta";
 import type { PlaceCandidate } from "./add-place-dialog";
 
-const DEFAULT_CENTER = { lat: 49.2, lng: 10.2 };
-const DEFAULT_ZOOM = 7;
+const DEFAULT_CENTER = { lat: 1.2831, lng: 103.8607 };
+const DEFAULT_ZOOM = 12;
 
 /** 구글 place types → 앱 카테고리 추정 */
 function guessCategory(types: string[]): PlaceCategory {

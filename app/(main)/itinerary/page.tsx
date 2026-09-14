@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * 일정 페이지 — 10일 여정 타임라인 + 구글 독스 스타일 인라인 댓글.
+ * 일정 페이지 — 여정 타임라인 + 구글 독스 스타일 인라인 댓글.
  *
  * ?day=<dayId>            해당 일차 자동 펼침 + 스크롤
  * ?comment=<commentId>    해당 댓글 하이라이트로 스크롤 + 플래시 + 패널 오픈
@@ -103,7 +103,11 @@ function ItineraryContent() {
             <h1 className="text-2xl font-bold tracking-tight">일정</h1>
             <p className="mt-1 text-sm text-muted-foreground">
               {days.length}일간의 여정
-              {firstCity && lastCity && ` · ${firstCity}에서 ${lastCity}까지`}
+              {firstCity &&
+                lastCity &&
+                (firstCity === lastCity
+                  ? ` · ${firstCity} 왕복`
+                  : ` · ${firstCity}에서 ${lastCity}까지`)}
             </p>
           </div>
           <Button

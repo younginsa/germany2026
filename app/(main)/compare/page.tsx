@@ -228,8 +228,8 @@ export default function ComparePage() {
       <motion.header {...fadeUp} transition={{ duration: 0.4 }}>
         <h1 className="text-2xl font-bold tracking-tight">여행비교</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          가족들의 다음 여행 — 겨울 시나리오 6개와 걷기·아웃도어 컨셉까지, 옵션별 인원
-          기준으로 비교하고 함께 결정해요
+          결정 완료 — 우리집은 🚢 싱가포르 디즈니 크루즈, 친구네는 🎄 독일로 각자 떠나요.
+          나머지 겨울 시나리오와 걷기·아웃도어 컨셉은 다음 여행을 위한 참고용이에요
         </p>
       </motion.header>
 
