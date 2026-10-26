@@ -12,7 +12,9 @@ import { useItineraryDays, usePlaces } from "@/hooks/use-app-data";
 import { Button } from "@/components/ui/button";
 import { AddPlaceDialog, type PlaceCandidate } from "@/components/map/add-place-dialog";
 import { CategoryFilter } from "@/components/map/category-filter";
+import { HotelDetailCard, HotelLayer, HotelList } from "@/components/map/hotel-compare";
 import { MapPreview, MapView } from "@/components/map/map-view";
+import { HOTEL_CANDIDATES } from "@/lib/data/hotel-candidates";
 import { MapBottomSheet, type SheetSnap } from "@/components/map/map-bottom-sheet";
 import { PlaceDetailCard } from "@/components/map/place-detail-card";
 import { PlaceList } from "@/components/map/place-list";
@@ -64,6 +66,55 @@ function MapPageInner() {
     router.replace("/map", { scroll: false });
   }, [router]);
 
+  // ?view=hotels — 호텔 비교 모드 (고정 후보 호텔 + 크루즈·공항·시내 기준점), ?hotel=<id> 선택
+  const hotelMode = searchParams.get("view") === "hotels";
+  const selectedHotelId = hotelMode ? searchParams.get("hotel") : null;
+  const selectedHotel = useMemo(
+    () => HOTEL_CANDIDATES.find((h) => h.id === selectedHotelId) ?? null,
+    [selectedHotelId]
+  );
+
+  const toggleHotelMode = useCallback(() => {
+    setSelectedId(null);
+    setCandidate(null);
+    router.replace(hotelMode ? "/map" : "/map?view=hotels", { scroll: false });
+  }, [hotelMode, router]);
+
+  const selectHotel = useCallback(
+    (id: string) => {
+      setSheetSnap("peek");
+      router.replace(`/map?view=hotels&hotel=${id}`, { scroll: false });
+    },
+    [router]
+  );
+
+  const clearHotel = useCallback(() => {
+    router.replace("/map?view=hotels", { scroll: false });
+  }, [router]);
+
+  // 호텔 비교 중 카테고리 칩을 누르면 일반 장소 보기로 돌아가요
+  const changeCategories = useCallback(
+    (next: PlaceCategory[]) => {
+      if (hotelMode) router.replace("/map", { scroll: false });
+      setCategories(next);
+    },
+    [hotelMode, router]
+  );
+
+  const filteredHotels = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    if (!needle) return HOTEL_CANDIDATES;
+    return HOTEL_CANDIDATES.filter((h) =>
+      [h.name, h.nameEn, h.area].some((v) => v.toLowerCase().includes(needle))
+    );
+  }, [query]);
+
+  const hotelCompare = {
+    active: hotelMode,
+    count: HOTEL_CANDIDATES.length,
+    onToggle: toggleHotelMode,
+  };
+
   // 검색어만 반영한 목록 (칩 카운트용)
   const searched = useMemo(
     () => places.filter((p) => matchesQuery(p, query.trim())),
@@ -107,7 +158,12 @@ function MapPageInner() {
     [places, select]
   );
 
-  const countLabel = (
+  const countLabel = hotelMode ? (
+    <>
+      후보 호텔 <span className="font-semibold text-foreground tabular-nums">{filteredHotels.length}</span>곳 ·
+      트립어드바이저 평점순
+    </>
+  ) : (
     <>
       저장된 장소 <span className="font-semibold text-foreground tabular-nums">{places.length}</span>곳
       {filtered.length !== places.length && (
@@ -129,8 +185,8 @@ function MapPageInner() {
       <input
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="장소 검색…"
-        aria-label="장소 검색"
+        placeholder={hotelMode ? "후보 호텔 검색…" : "장소 검색…"}
+        aria-label={hotelMode ? "후보 호텔 검색" : "장소 검색"}
         className="h-full min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
       />
       <span className="flex size-9 shrink-0 items-center justify-center text-muted-foreground" aria-hidden>
@@ -146,12 +202,16 @@ function MapPageInner() {
         {isGoogleMapsConfigured ? (
           <MapView
             fullscreen
-            places={filtered}
-            selectedId={selectedId}
+            places={hotelMode ? [] : filtered}
+            selectedId={hotelMode ? null : selectedId}
             onSelect={select}
-            onPickCandidate={handlePick}
-            candidate={candidate}
-          />
+            onPickCandidate={hotelMode ? () => {} : handlePick}
+            candidate={hotelMode ? null : candidate}
+          >
+            {hotelMode && (
+              <HotelLayer hotels={filteredHotels} selectedId={selectedHotelId} onSelect={selectHotel} />
+            )}
+          </MapView>
         ) : (
           <MapPreview fullscreen placeCount={places.length} />
         )}
@@ -161,13 +221,23 @@ function MapPageInner() {
       <aside className="absolute inset-y-0 left-0 z-20 hidden w-[380px] flex-col gap-3 border-r bg-card/95 p-4 backdrop-blur lg:flex">
         {searchBar}
         <p className="px-1 text-xs text-muted-foreground">{countLabel}</p>
-        <PlaceList places={filtered} days={days} selectedId={selectedId} onSelect={select} />
+        {hotelMode ? (
+          <HotelList hotels={filteredHotels} selectedId={selectedHotelId} onSelect={selectHotel} />
+        ) : (
+          <PlaceList places={filtered} days={days} selectedId={selectedId} onSelect={select} />
+        )}
       </aside>
 
       {/* ─── 데스크톱: 필터 칩을 지도 위(패널 오른쪽 상단)에 플로팅 (배경 없이 칩만) ─── */}
       <div className="pointer-events-none absolute left-[396px] right-4 top-4 z-30 hidden lg:block">
         <div className="pointer-events-auto inline-flex max-w-full">
-          <CategoryFilter selected={categories} onChange={setCategories} counts={counts} className="pb-0" />
+          <CategoryFilter
+            selected={categories}
+            onChange={changeCategories}
+            counts={counts}
+            hotelCompare={hotelCompare}
+            className="pb-0"
+          />
         </div>
       </div>
 
@@ -177,14 +247,25 @@ function MapPageInner() {
       >
         <div className="pointer-events-auto flex">{searchBar}</div>
         <div className="pointer-events-auto">
-          <CategoryFilter selected={categories} onChange={setCategories} counts={counts} />
+          <CategoryFilter
+            selected={categories}
+            onChange={changeCategories}
+            counts={counts}
+            hotelCompare={hotelCompare}
+          />
         </div>
       </div>
 
       {/* ─── 선택된 장소 상세 / 저장 후보 ─── */}
       <div className="pointer-events-none absolute inset-x-3 bottom-[136px] z-40 lg:inset-x-auto lg:bottom-4 lg:left-[396px] lg:w-[360px]">
         <AnimatePresence mode="wait">
-          {selectedPlace ? (
+          {hotelMode ? (
+            selectedHotel ? (
+              <div key={`hotel-${selectedHotel.id}`} className="pointer-events-auto">
+                <HotelDetailCard hotel={selectedHotel} onClose={clearHotel} />
+              </div>
+            ) : null
+          ) : selectedPlace ? (
             <div key={`sel-${selectedPlace.id}`} className="pointer-events-auto">
               <PlaceDetailCard place={selectedPlace} days={days} onClose={clearSelection} />
             </div>
@@ -231,7 +312,11 @@ function MapPageInner() {
         onSnapChange={setSheetSnap}
         header={<p className="text-sm text-muted-foreground">{countLabel}</p>}
       >
-        <PlaceList places={filtered} days={days} selectedId={selectedId} onSelect={select} />
+        {hotelMode ? (
+          <HotelList hotels={filteredHotels} selectedId={selectedHotelId} onSelect={selectHotel} />
+        ) : (
+          <PlaceList places={filtered} days={days} selectedId={selectedId} onSelect={select} />
+        )}
       </MapBottomSheet>
 
       <AddPlaceDialog

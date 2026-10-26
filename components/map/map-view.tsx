@@ -62,6 +62,8 @@ interface MapViewProps {
   candidate?: PlaceCandidate | null;
   /** 전체 화면(몰입형) 모드 — 카드 테두리/힌트 제거 */
   fullscreen?: boolean;
+  /** 추가 지도 레이어 (예: 호텔 비교 마커) — Map 자식으로 렌더 */
+  children?: React.ReactNode;
 }
 
 /** 선택된 장소/후보로 지도 이동 (Map 자식으로 렌더) */
@@ -149,6 +151,7 @@ export function MapView({
   onPickCandidate,
   candidate,
   fullscreen,
+  children,
 }: MapViewProps) {
   const selected = places.find((p) => p.id === selectedId) ?? null;
   const hasMapId = Boolean(GOOGLE_MAPS_MAP_ID);
@@ -252,6 +255,8 @@ export function MapView({
           ) : (
             <Marker position={{ lat: candidate.lat, lng: candidate.lng }} />
           ))}
+
+        {children}
       </GoogleMap>
 
       {/* 지도 클릭 → 장소 추가 힌트 (비몰입 모드에서만) */}
